@@ -105,12 +105,10 @@
 <body class="is-logged-out" id="mainBody">
 
 <div class="modal-overlay" id="calcModal">
-    <div class="modal-content">
-        <h3 style="color:var(--main-deep-blue); border-bottom:2px solid #eee; padding-bottom:15px; margin-bottom:20px;">🧮 프리미엄 통합 계산기</h3>
-        <span style="position:absolute; right:25px; top:20px; font-size:30px; cursor:pointer;" onclick="closeCalc()">&times;</span>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;"><input type="number" id="c_price" placeholder="상품가(￥)" style="padding:10px; border:1px solid #ddd;"><input type="number" id="c_weight" placeholder="무게(kg)" style="padding:10px; border:1px solid #ddd;"></div>
-        <button class="btn-login" style="background:var(--point-orange); margin-top:20px; padding:15px;" onclick="runCalc()">견적 확인</button>
-        <div id="c_res" style="margin-top:20px; background:#f8faff; padding:15px; display:none;"></div>
+    <div class="modal-content" style="max-width: 950px; height: 80vh; padding: 0; overflow: hidden;">
+        <span style="position:absolute; right:20px; top:15px; font-size:30px; cursor:pointer; z-index: 9999;" onclick="closeCalc()">&times;</span>
+        
+        <iframe src="final_no.html" style="width:100%; height:100%; border:none;"></iframe>
     </div>
 </div>
 
@@ -222,4 +220,5 @@
     }
 </script>
 </body>
+
 </html>

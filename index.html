@@ -99,7 +99,59 @@
         .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
         footer { background: var(--footer-bg); color: #fff; padding: 50px 5%; font-size: 13px; margin-top: 50px; }
 
-        @media (max-width: 1024px) { .hero-section, .shop-grid, .grid-prod, .review-grid { grid-template-columns: repeat(2, 1fr); } .hero-section { height: auto; } .status-grid { grid-template-columns: repeat(5, 1fr); } }
+        /* [모바일 대응 핵심 수정] */
+@media (max-width: 768px) {
+    /* 1. 배너와 로그인창을 위아래로 배치 */
+    .hero-section {
+        grid-template-columns: 1fr; /* 가로 2줄에서 1줄로 변경 */
+        height: auto;               /* 고정 높이 280px 해제 */
+        gap: 15px;
+    }
+
+    /* 2. 배너 영역 높이 및 패딩 조절 */
+    .hero-banner {
+        height: 180px;              /* 모바일에서 적당한 높이 */
+        padding: 20px;
+        text-align: center;         /* 텍스트 중앙 정렬 */
+        align-items: center;
+    }
+
+    .hero-banner h1 {
+        font-size: 20px;            /* 제목 크기 축소 */
+        margin-bottom: 5px;
+    }
+
+    .hero-banner p {
+        font-size: 13px;
+    }
+
+    /* 3. 로그인/정보창 너비 조정 */
+    .side-auth-box {
+        height: auto;
+        padding: 20px;
+    }
+
+    /* 4. 면세 한도 박스 위치 조정 */
+    .customs-cut-box {
+        position: static;           /* 절대 위치 해제 */
+        margin-top: 15px;
+        width: 100%;
+        text-align: center;
+    }
+
+    /* 5. 하단 현황판 및 그리드 조정 */
+    .status-grid {
+        grid-template-columns: repeat(5, 1fr); /* 10열에서 5열로 (2줄 배치) */
+    }
+    
+    .shop-grid, .grid-prod {
+        grid-template-columns: repeat(2, 1fr); /* 2열로 고정 */
+    }
+
+    .review-grid {
+        grid-template-columns: 1fr; /* 후기는 1줄로 길게 */
+    }
+}
     </style>
 </head>
 <body class="is-logged-out" id="mainBody">
@@ -222,3 +274,4 @@
 </body>
 
 </html>
+

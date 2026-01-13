@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bid4U - 마이페이지</title>
+    <style>
+        /* [1. index.html 공통 테마] */
+        :root {
+            --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
+            --footer-bg: #05102a; --point-orange: #ff8c00; --bg-grey: #f4f6f9;
+            --border-light: #e1e5eb;
+        }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; }
+        ul, p, h1, h2, h3 { margin: 0; padding: 0; list-style: none; }
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        * { box-sizing: border-box; }
+
+        /* [2. 상단 & 헤더 (index 양식 유지)] */
+        .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
+        header { padding: 25px 5%; text-align: center; background: #fff; }
+        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
+        .main-nav { background: var(--main-deep-blue); box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 2000; }
+        .main-nav ul { display: flex; justify-content: center; }
+        .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; }
+
+        /* [3. 마이페이지 메인 레이아웃] */
+        .main-content { padding: 30px 5%; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 240px 1fr; gap: 30px; }
+
+        .side-menu-box { display: flex; flex-direction: column; gap: 20px; }
+        .user-profile { background: #fff; border: 1px solid var(--border-light); border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        .user-grade { display: inline-block; background: var(--point-orange); color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 10px; margin-top: 5px; }
+        
+        .side-nav { background: #fff; border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden; }
+        .side-nav li a { display: block; padding: 15px 20px; font-size: 14px; border-bottom: 1px solid #f1f1f1; color: #555; }
+        .side-nav li:last-child a { border-bottom: none; }
+        .side-nav li.active a { background: var(--main-royal-blue); color: #fff; font-weight: bold; }
+
+        .content-section { display: flex; flex-direction: column; gap: 25px; }
+        .content-card { background: #fff; border: 1px solid var(--border-light); border-radius: 15px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
+        .section-title { font-size: 18px; font-weight: 800; color: var(--main-deep-blue); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+
+        /* [4. 현황판 - 클릭 가능하도록 수정] */
+        .status-grid { display: grid; grid-template-columns: repeat(10, 1fr); border: 1px solid #eee; border-radius: 10px; overflow: hidden; }
+        .grid-col { text-align: center; border-right: 1px solid #eee; padding: 15px 2px; background: #fff; cursor: pointer; transition: 0.2s; }
+        .grid-col:last-child { border-right: none; }
+        .grid-col:hover { background: #f0f4f8; }
+        .grid-label { display: block; font-size: 9px; color: #555; margin-bottom: 8px; font-weight: 600; line-height: 1.1; pointer-events: none; }
+        .grid-count { font-size: 14px; font-weight: 800; color: #333; pointer-events: none; }
+        .grid-col.active { background: #f8faff; }
+        .grid-col.active .grid-count { color: var(--main-royal-blue); }
+
+        /* [가이드 박스 스타일] */
+        .status-guide-box {
+            margin-top: 20px; background: #f0f7ff; border: 1px solid #d0e3ff; border-left: 5px solid var(--main-royal-blue);
+            border-radius: 8px; padding: 15px 20px; display: flex; align-items: flex-start; gap: 15px; transition: 0.3s;
+        }
+        .guide-icon { font-size: 20px; }
+        .guide-text strong { display: block; font-size: 14px; color: var(--main-deep-blue); margin-bottom: 5px; }
+        .guide-text p { margin: 0; font-size: 13px; color: #666; line-height: 1.5; }
+
+        /* [5. 탭 메뉴] */
+        .tab-menu { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .tab-item { padding: 10px 20px; font-size: 14px; font-weight: bold; color: #888; cursor: pointer; border-radius: 8px; }
+        .tab-item.active { background: var(--main-deep-blue); color: #fff; }
+
+        /* [6. 주문 리스트] */
+        .order-list-wrapper { display: flex; flex-direction: column; gap: 15px; }
+        .order-card { 
+            border: 1px solid #eee; border-radius: 10px; padding: 20px; 
+            display: grid; grid-template-columns: 100px 1fr 150px; 
+            gap: 20px; background: #fff; align-items: center; 
+        }
+        .order-img { background: #f9f9f9; border-radius: 8px; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .order-img img { width: 100%; height: auto; }
+        .order-info { display: flex; flex-direction: column; gap: 5px; }
+        
+        .status-badge { 
+            display: inline-block; width: fit-content; background: var(--main-royal-blue); color: #fff; 
+            padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 800; 
+            margin-bottom: 8px; box-shadow: 0 2px 5px rgba(30,58,138,0.2); 
+        }
+        .order-title { font-size: 14px; font-weight: bold; color: #333; }
+        .order-text { font-size: 12px; color: #777; }
+        .order-price { font-size: 15px; font-weight: 800; color: var(--point-orange); margin-top: 5px; }
+
+        .order-btns { display: flex; flex-direction: column; gap: 8px; }
+        .btn-action { padding: 10px; border-radius: 6px; font-size: 12px; font-weight: bold; border: 1px solid #ddd; background: #fff; cursor: pointer; text-align: center; }
+        .btn-action.primary { background: var(--main-deep-blue); color: #fff; border: none; }
+
+        /* [7. 모달 & 사이드바] */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,31,77,0.8); z-index: 3000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .modal-content { background: #fff; width: 95%; max-width: 950px; height: 80vh; border-radius: 20px; overflow: hidden; position: relative; }
+        .side-quick { position: fixed; right: 10px; top: 200px; width: 65px; z-index: 1000; background: #555; border-radius: 8px; overflow: hidden; }
+        .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
+        footer { background: var(--footer-bg); color: #fff; padding: 50px 5%; font-size: 13px; margin-top: 50px; text-align: center; }
+
+        @media (max-width: 1024px) {
+            .main-content { grid-template-columns: 1fr; }
+            .status-grid { grid-template-columns: repeat(5, 1fr); }
+            .order-card { grid-template-columns: 1fr; text-align: center; }
+            .order-img { margin: 0 auto; }
+            .status-badge { margin: 0 auto 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="modal-overlay" id="calcModal">
+    <div class="modal-content">
+        <span style="position:absolute; right:20px; top:15px; font-size:30px; cursor:pointer; z-index: 9999;" onclick="closeCalc()">&times;</span>
+        <iframe src="final_no.html" style="width:100%; height:100%; border:none;"></iframe>
+    </div>
+</div>
+
+<div class="side-quick">
+    <div class="side-btn" onclick="openCalc()"><i>🧮</i>계산기</div>
+    <div class="side-btn"><i>💬</i>문의</div>
+    <div style="background:#333; color:#fff; text-align:center; padding:10px; font-size:10px;">TOP</div>
+</div>
+
+<div class="top-util">
+    <span><b>고시 환율:</b> 100￥ = 994원</span>
+    <div><b>홍길동</b>님 반갑습니다! | <a href="#" style="color:#fff">로그아웃</a></div>
+</div>
+
+<header><a href="index.html" class="logo">Bid4U</a></header>
+
+<nav class="main-nav">
+    <ul><li><a href="#">야후옥션</a></li><li><a href="#">메루카리</a></li><li><a href="#">라쿠텐</a></li><li><a href="#">구매대행신청</a></li></ul>
+</nav>
+
+<main class="main-content">
+    <aside class="side-menu-box">
+        <div class="user-profile">
+            <div style="font-weight: 900; font-size: 18px;">홍길동 님</div>
+            <div class="user-grade">BRONZE 등급</div>
+            <p style="font-size: 12px; color: #888; margin-top: 15px;">사이버머니: <b style="color:var(--point-orange)">15,200원</b></p>
+        </div>
+        <ul class="side-nav">
+            <li><a href="#">나의 지갑</a></li>
+            <li class="active"><a href="#">대행신청 현황</a></li>
+            <li><a href="#">사이버머니 충전/환불</a></li>
+            <li><a href="#">관심물품 보기</a></li>
+            <li><a href="#">회원정보 수정</a></li>
+        </ul>
+    </aside>
+
+    <div class="content-section">
+        <section class="content-card">
+            <h2 class="section-title">📊 나의 대행신청 현황</h2>
+            <div class="status-grid">
+                <div class="grid-col" onclick="updateGuide('fail')"><span class="grid-label">실패</span><div class="grid-count">34</div></div>
+                <div class="grid-col" onclick="updateGuide('request')"><span class="grid-label">입찰요청</span><div class="grid-count">0</div></div>
+                <div class="grid-col" onclick="updateGuide('approve')"><span class="grid-label">낙찰승인</span><div class="grid-count">15</div></div>
+                <div class="grid-col active" onclick="updateGuide('pay1')"><span class="grid-label">1차결제완료</span><div class="grid-count">1</div></div>
+                <div class="grid-col" onclick="updateGuide('local')"><span class="grid-label">현지배송</span><div class="grid-count">0</div></div>
+                <div class="grid-col" onclick="updateGuide('unify')"><span class="grid-label">통합진행</span><div class="grid-count">0</div></div>
+                <div class="grid-col" onclick="updateGuide('pay2req')"><span class="grid-label">2차요청</span><div class="grid-count">0</div></div>
+                <div class="grid-col" onclick="updateGuide('pay2done')"><span class="grid-label">2차완료</span><div class="grid-count">0</div></div>
+                <div class="grid-col" onclick="updateGuide('intl')"><span class="grid-label">국제배송</span><div class="grid-count">1</div></div>
+                <div class="grid-col" style="border-right:none;" onclick="updateGuide('done')"><span class="grid-label">배송완료</span><div class="grid-count">7</div></div>
+            </div>
+
+            <div id="guideBox" class="status-guide-box">
+                <div class="guide-icon">💡</div>
+                <div class="guide-text">
+                    <strong id="guideTitle">1차결제완료</strong>
+                    <p id="guideDesc">당사는 판매자에게 대금을 지불하고 상품을 인수하는 단계입니다. 현지 도착까지 3~5일 정도 소요됩니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-card">
+            <div class="tab-menu">
+                <div class="tab-item active">🇯🇵 일본</div>
+                <div class="tab-item">💳 결제대행</div>
+            </div>
+
+            <h3 style="font-size: 15px; margin-bottom: 15px; color: #555;">📦 1차결제 완료 리스트</h3>
+
+            <div class="order-list-wrapper">
+                <div class="order-card">
+                    <div class="order-img"><img src="https://picsum.photos/100/100?random=1" alt="상품"></div>
+                    <div class="order-info">
+                        <div class="status-badge">1차결제완료 / 주문완료</div>
+                        <div class="order-title">경매번호: 123 | 123 | 123</div>
+                        <div class="order-text">주문번호: <b>308371</b> | 수량: 1개</div>
+                        <div class="order-price">총 결제금액: ₩14,192</div>
+                    </div>
+                    <div class="order-btns">
+                        <button class="btn-action primary">상세보기</button>
+                        <button class="btn-action">문의하기</button>
+                    </div>
+                </div>
+                </div>
+        </section>
+    </div>
+</main>
+
+<footer>비드포유 | donacorporation8988@gmail.com | 〒546-0024 大阪府大阪市東住吉区公園南矢田 4-3-7</footer>
+
+<script>
+    function openCalc(){ document.getElementById('calcModal').style.display = 'flex'; }
+    function closeCalc(){ document.getElementById('calcModal').style.display = 'none'; }
+
+    // 가이드 데이터 정의
+    const statusInfo = {
+        'fail': { title: '실패/취소', desc: '입찰에 실패했거나 주문이 취소된 내역입니다.' },
+        'request': { title: '입찰/구매요청', desc: '관리자가 확인 후 상품 확보 절차를 시작합니다.' },
+        'approve': { title: '낙찰/구매승인', desc: '낙찰되었습니다! 상품 대금 결제를 진행해 주세요.' },
+        'pay1': { title: '1차결제완료', desc: '대금 지불이 완료되었습니다. 현지 센터로 배송 중입니다.' },
+        'local': { title: '현지배송중', desc: '일본 내 현지 판매자가 상품을 발송한 상태입니다.' },
+        'unify': { title: '통합진행중', desc: '여러 상품을 하나로 합쳐 배송비를 절약하는 단계입니다.' },
+        'pay2req': { title: '2차결제요청', desc: '검수 완료! 국제 배송비를 결제하시면 한국으로 발송됩니다.' },
+        'pay2done': { title: '2차결제완료', desc: '모든 비용 결제가 끝났습니다. 발송 준비 중입니다.' },
+        'intl': { title: '국제배송중', desc: '상품이 한국으로 오고 있습니다. 송장 번호를 확인하세요!' },
+        'done': { title: '배송완료', desc: '수령 완료! 소중한 이용 후기를 남겨주시면 혜택을 드립니다.' }
+    };
+
+    function updateGuide(key) {
+        // 선택 효과 변경
+        document.querySelectorAll('.grid-col').forEach(el => el.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+
+        // 가이드 박스 업데이트 (부드러운 애니메이션 효과)
+        const box = document.getElementById('guideBox');
+        box.style.opacity = '0.5';
+        setTimeout(() => {
+            document.getElementById('guideTitle').innerText = statusInfo[key].title;
+            document.getElementById('guideDesc').innerText = statusInfo[key].desc;
+            box.style.opacity = '1';
+        }, 150);
+    }
+</script>
+
+</body>
+</html>

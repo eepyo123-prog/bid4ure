@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bid4U - 야후옥션 피규어 전문관</title>
+    <style>
+        /* [1. 공통 테마 및 초기화] */
+        :root {
+            --main-deep-blue: #0a1f4d; 
+            --main-royal-blue: #1e3a8a; 
+            --yahoo-purple: #6001d2; 
+            --bid-red: #e60012;      
+            --point-orange: #ff8c00; 
+            --bg-grey: #f4f6f9;
+            --border-light: #e1e5eb;
+        }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; transition: background 0.3s; overflow-x: hidden; }
+        ul, p, h1, h2, h3 { margin: 0; padding: 0; list-style: none; }
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        * { box-sizing: border-box; }
+
+        /* [2. 모드 제어 클래스] */
+        .simple-only { display: block; }
+        .pro-only { display: none !important; }
+        body.pro-mode .simple-only { display: none !important; }
+        body.pro-mode .pro-only { display: block !important; }
+        body.pro-mode { background-color: #fff; }
+
+        /* [3. 상단 유틸 & 헤더] */
+        .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
+        header { padding: 25px 5%; text-align: center; background: #fff; }
+        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
+        .main-nav { background: var(--main-deep-blue); box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 2000; }
+        .main-nav ul { display: flex; justify-content: center; overflow-x: auto; white-space: nowrap; }
+        .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; }
+
+        /* 모드 스위처 */
+        .mode-switcher-bar { background: #fff; border-bottom: 1px solid #ddd; padding: 10px 5%; display: flex; justify-content: flex-end; align-items: center; position: sticky; top: 51px; z-index: 1900; }
+        .toggle-box { display: flex; background: #eee; border-radius: 20px; padding: 3px; }
+        .mode-btn { padding: 6px 15px; border-radius: 17px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .mode-btn.active { background: var(--yahoo-purple); color: #fff; }
+
+        /* [4. 이미지 반영: 야후옥션 히어로 섹션] */
+        .yahoo-hero {
+            background: #0f172a; /* 다크 네이비 배경 */
+            padding: 60px 5% 40px; text-align: center; color: #fff;
+        }
+        .yahoo-hero h1 { font-size: 32px; font-weight: 900; margin-bottom: 10px; }
+        .yahoo-hero h1 span { font-weight: 300; font-size: 24px; color: #ccc; }
+        .yahoo-hero p { font-size: 15px; opacity: 0.8; margin-bottom: 35px; }
+
+        /* 이미지 8 스타일의 캡슐 검색창 */
+        .search-capsule {
+            max-width: 900px; margin: 0 auto; background: #fff; border-radius: 50px; 
+            display: flex; align-items: center; padding: 5px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .search-capsule input {
+            flex: 1; border: none; padding: 15px 30px; font-size: 16px; border-radius: 50px; outline: none; color: #333;
+        }
+        .search-capsule button {
+            background: var(--yahoo-purple); color: #fff; border: none; padding: 15px 45px; border-radius: 40px; font-size: 16px; font-weight: bold; cursor: pointer;
+        }
+
+        /* [이미지 5 반영: 아이콘 정보 바] */
+        .yahoo-info-bar {
+            background: #fff; border-bottom: 1px solid #eee; padding: 15px 5%;
+            display: flex; justify-content: center; gap: 40px; align-items: center;
+        }
+        .info-item { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: #444; }
+        .info-item i { font-style: normal; font-size: 18px; }
+        .info-item b { color: var(--yahoo-purple); }
+
+        /* [5. 전문가용 정밀 필터 (이미지 4 반영)] */
+        .pro-filter-container { background: #f9f9f9; border-bottom: 1px solid #ddd; padding: 25px 5%; }
+        .pro-filter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; font-size: 12px; margin-top: 20px; }
+        .filter-card { background: #fff; border: 1px solid #ddd; padding: 15px; border-radius: 6px; }
+        .filter-card h4 { margin-bottom: 10px; font-size: 13px; color: var(--yahoo-purple); border-bottom: 1px solid #eee; padding-bottom: 6px; }
+        .filter-card label { display: block; margin-bottom: 5px; cursor: pointer; }
+
+        /* [6. 상품 리스트 및 그리드 스타일 (이미지 7 반영)] */
+        .section-container { max-width: 1300px; margin: 40px auto; padding: 0 5%; }
+        .auction-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        body.pro-mode .auction-grid { grid-template-columns: repeat(5, 1fr); gap: 12px; }
+
+        .auction-item { background: #fff; border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; transition: 0.3s; }
+        .img-box { width: 100%; aspect-ratio: 1/1; background-size: cover; background-position: center; border-bottom: 1px solid #f0f0f0; }
+        .info-box { padding: 15px; flex-grow: 1; }
+        
+        .badge-row { display: flex; gap: 4px; margin-bottom: 10px; flex-wrap: wrap; }
+        .badge { font-size: 10px; padding: 3px 6px; border-radius: 3px; color: #fff; font-weight: bold; }
+        .badge.free { background: var(--badge-grey); } .badge.now { background: var(--bid-red); }    
+        .badge.store { background: #333; } .badge.end { border: 1px solid #333; color: #333; background: #fff; }
+
+        .prod-name { font-size: 13.5px; line-height: 1.5; color: #333; height: 40px; overflow: hidden; margin-bottom: 12px; font-weight: 500; }
+        .price-main { font-size: 18px; font-weight: 800; color: #000; }
+        .price-sub { font-size: 11px; color: #888; font-weight: normal; }
+
+        .bid-detail { border-top: 1px solid #f5f5f5; padding-top: 12px; font-size: 12.5px; color: #666; margin-top: 10px; line-height: 1.8; }
+        .bid-detail span { color: #333; font-weight: 700; }
+
+        .item-footer { border-top: 1px solid var(--border-light); text-align: center; }
+        .end-time { font-size: 12px; padding: 10px 0; color: var(--bid-red); border-bottom: 1px solid var(--border-light); background: #fffafb; }
+        .btn-wish { width: 100%; padding: 14px 0; background: #fff; border: none; font-size: 13px; color: #666; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+        /* 가로 스크롤 섹션 */
+        .horizontal-scroll-wrapper { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; -webkit-overflow-scrolling: touch; }
+        .scroll-card { min-width: 300px; flex-shrink: 0; }
+
+        @media (max-width: 768px) {
+            .auction-grid, body.pro-mode .auction-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px; }
+            .yahoo-info-bar { flex-wrap: wrap; gap: 15px; justify-content: flex-start; }
+            .yahoo-hero h1 { font-size: 24px; }
+            .search-capsule { border-radius: 10px; padding: 10px; }
+            .search-capsule button { padding: 12px 20px; font-size: 14px; border-radius: 10px; }
+        }
+    </style>
+</head>
+<body class="simple-mode" id="targetBody">
+
+<div class="top-util">
+    <span><b>고시 환율:</b> 100￥ = 994원</span>
+    <div>로그인 | 회원가입 | 고객센터</div>
+</div>
+<header><a href="index.html" class="logo">Bid4U</a></header>
+
+<nav class="main-nav">
+    <ul>
+        <li><a href="#" style="color:var(--point-orange)">야후옥션</a></li>
+        <li><a href="#">메루카리</a></li>
+        <li><a href="#">라쿠텐</a></li>
+        <li><a href="#">구매대행신청</a></li>
+    </ul>
+</nav>
+
+<div class="mode-switcher-bar">
+    <div style="margin-right: 15px; font-size: 12px; font-weight: bold; color: #666;">화면 모드 선택</div>
+    <div class="toggle-box">
+        <div class="mode-btn active" id="simpleBtn" onclick="toggleMode('simple')">일반 모드</div>
+        <div class="mode-btn" id="proBtn" onclick="toggleMode('pro')">전문가 모드</div>
+    </div>
+</div>
+
+<section class="yahoo-hero">
+    <h1>YAHOO AUCTION </h1>
+    <p>일본 최대 경매 사이트의 희귀 매물을 실시간으로 입찰하세요</p>
+    <div class="search-capsule">
+        <input type="text" placeholder="모델명, 시리즈, 혹은 경매 ID를 입력하세요">
+        <button>검색</button>
+    </div>
+</section>
+
+<div class="yahoo-info-bar">
+    <div class="info-item"><i>🔨</i> 입찰수수료 <b>200엔</b></div>
+    <div class="info-item"><i>📦</i> 오사카 <b>직영물류</b> 검수</div>
+    <div class="info-item"><i>⚡</i> 실시간 <b>자동입찰</b> 지원</div>
+    <div class="info-item"><i>💹</i> 고시환율 <b>9.94원</b></div>
+</div>
+
+<section class="pro-only">
+    <div class="pro-filter-container">
+        <div class="pro-filter-grid">
+            <div class="filter-card"><h4>상세 옵션</h4><label><input type="checkbox" checked> 스토어포함</label><label><input type="checkbox"> 무료배송만</label></div>
+            <div class="filter-card"><h4>상품 상태</h4><label><input type="radio" name="c" checked> 전체</label><label><input type="radio" name="c"> 미개봉</label></div>
+            <div class="filter-card"><h4>가격 설정</h4><input type="number" placeholder="최소" style="width:45%;"> ~ <input type="number" placeholder="최대" style="width:45%;"></div>
+            <div class="filter-card"><h4>정렬 방식</h4><select style="width:100%;"><option>추천순</option><option>종료임박순</option></select></div>
+        </div>
+    </div>
+</section>
+
+<main class="section-container">
+    <div style="margin-bottom: 50px;">
+        <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 20px;">🔥 경매 진행 리스트</h2>
+        <div class="horizontal-scroll-wrapper">
+            <div class="auction-item scroll-card">
+                <div class="img-box" style="background-image: url('https://picsum.photos/400/400?random=21')"></div>
+                <div class="info-box">
+                    <div class="badge-row"><span class="badge now">즉시결제</span><span class="badge store">스토어</span></div>
+                    <div class="prod-name">SH 피규어 가면 라이더 빌드 클로즈 약 145mm 도장 완성품</div>
+                    <div class="price-main">12,860엔 <span class="price-sub">(127,828원)</span></div>
+                    <div class="bid-detail">입찰수 : <span>0</span> | 즉결가 : <span>12,860￥</span></div>
+                </div>
+                <div class="item-footer">
+                    <div class="end-time">종료 : <b>2026-01-13 14:20:15</b></div>
+                    <button class="btn-wish">★ 관심상품등록</button>
+                </div>
+            </div>
+            </div>
+    </div>
+
+    <hr style="border: 0; border-top: 1px solid #eee; margin-bottom: 40px;">
+
+    <h2 style="font-size: 22px; margin-bottom: 25px;">🔎 야후옥션 검색 결과</h2>
+    <div class="auction-grid">
+        <div class="auction-item">
+            <div class="img-box" style="background-image: url('https://picsum.photos/400/400?random=51')"></div>
+            <div class="info-box">
+                <div class="badge-row"><span class="badge now">즉시결제</span><span class="badge end">오늘종료</span></div>
+                <div class="prod-name">로젠 메이든 넨도로이드 진홍 장미 처녀 세트</div>
+                <div class="price-main">13,200엔 <span class="price-sub">(131,208원)</span></div>
+                <div class="bid-detail">입찰수 : <span>12</span> | 즉결가 : <span>13,200￥</span></div>
+            </div>
+            <div class="item-footer">
+                <div class="end-time">종료 : <b>2026-01-13 15:45:00</b></div>
+                <button class="btn-wish">★ 관심상품등록</button>
+            </div>
+        </div>
+        </div>
+</main>
+
+<footer style="background:var(--main-deep-blue); color:white; padding:50px 5%; font-size:13px; text-align:center;">
+    비드포유 야후옥션 대행 서비스 | donacorporation8988@gmail.com <br>
+    〒546-0024 大阪府大阪市東住吉区公園南矢田 4-3-7
+</footer>
+
+<script>
+    function toggleMode(mode) {
+        const body = document.getElementById('targetBody');
+        const simpleBtn = document.getElementById('simpleBtn');
+        const proBtn = document.getElementById('proBtn');
+        if (mode === 'pro') {
+            body.classList.add('pro-mode');
+            proBtn.classList.add('active');
+            simpleBtn.classList.remove('active');
+        } else {
+            body.classList.remove('pro-mode');
+            simpleBtn.classList.add('active');
+            proBtn.classList.remove('active');
+        }
+    }
+</script>
+
+</body>
+</html>

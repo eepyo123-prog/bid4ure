@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bid4U - 메루카리 전문관 (맞춤모드)</title>
+    <style>
+        /* [1. 공통 테마 및 초기화] */
+        :root {
+            --main-deep-blue: #0a1f4d; 
+            --main-royal-blue: #1e3a8a; 
+            --mercari-red: #ff0021;   /* 메루카리 포인트 컬러 */
+            --point-orange: #ff8c00; 
+            --bg-grey: #f4f6f9;
+            --border-light: #e1e5eb;
+            --badge-grey: #767676;   
+        }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; transition: background 0.3s; overflow-x: hidden; }
+        ul, p, h1, h2, h3 { margin: 0; padding: 0; list-style: none; }
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        * { box-sizing: border-box; }
+
+        /* [2. 모드 제어 클래스] */
+        .simple-only { display: block; }
+        .pro-only { display: none !important; }
+
+        body.pro-mode .simple-only { display: none !important; }
+        body.pro-mode .pro-only { display: block !important; }
+        body.pro-mode { background-color: #fff; }
+
+        /* [3. 상단 레이아웃 (공통)] */
+        .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
+        header { padding: 25px 5%; text-align: center; background: #fff; }
+        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
+        .main-nav { background: var(--main-deep-blue); box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 2000; }
+        .main-nav ul { display: flex; justify-content: center; overflow-x: auto; white-space: nowrap; }
+        .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; }
+
+        /* 모드 스위처 (스티키) */
+        .mode-switcher-bar { background: #fff; border-bottom: 1px solid #ddd; padding: 10px 5%; display: flex; justify-content: flex-end; align-items: center; position: sticky; top: 51px; z-index: 1900; }
+        .toggle-box { display: flex; background: #eee; border-radius: 20px; padding: 3px; }
+        .mode-btn { padding: 6px 15px; border-radius: 17px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .mode-btn.active { background: var(--mercari-red); color: #fff; }
+
+        /* [4. 모드별 상단 구성] */
+        /* 일반 모드 히어로 (상단 로고/환율 통합) */
+        .mercari-hero { background: linear-gradient(rgba(10,31,77,0.85), rgba(10,31,77,0.85)), url('https://picsum.photos/1200/400?grayscale'); background-size: cover; background-position: center; padding: 60px 5%; text-align: center; color: #fff; }
+        .search-box-simple { max-width: 750px; margin: 25px auto 0; position: relative; }
+        .search-box-simple input { width: 100%; padding: 18px 30px; border-radius: 40px; border: none; font-size: 17px; outline: none; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .search-box-simple button { position: absolute; right: 8px; top: 7px; background: var(--mercari-red); color: #fff; border: none; padding: 11px 35px; border-radius: 30px; font-weight: bold; cursor: pointer; }
+
+        .hero-bottom-info { margin-top: 25px; display: flex; justify-content: center; align-items: center; gap: 25px; font-size: 14px; opacity: 0.9; }
+        .hero-bottom-info .mini-logo { font-weight: 900; letter-spacing: -1px; border-right: 1px solid rgba(255,255,255,0.3); padding-right: 20px; }
+
+        /* 전문가 모드 대시보드 및 필터 */
+        .pro-filter-container { background: #f9f9f9; border-bottom: 1px solid #ddd; padding: 25px 5%; }
+        .pro-dashboard-bar { display: flex; justify-content: space-between; align-items: center; background: #eee; padding: 12px 20px; border-radius: 4px; margin-bottom: 20px; font-size: 12px; }
+        .pro-filter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; font-size: 12px; }
+        .filter-card { background: #fff; border: 1px solid #ddd; padding: 15px; border-radius: 6px; }
+        .filter-card h4 { margin-bottom: 10px; font-size: 13px; color: var(--mercari-red); border-bottom: 1px solid #eee; padding-bottom: 6px; }
+        .filter-card label { display: block; margin-bottom: 5px; cursor: pointer; }
+
+        /* [5. 서비스 정보 바 (이미지 5 양식)] */
+        .mercari-info-bar { background: #fff; border-bottom: 1px solid #eee; padding: 18px 5%; display: flex; justify-content: center; gap: 45px; align-items: center; }
+        .info-item { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 700; color: #444; }
+        .info-item b { color: var(--mercari-red); }
+
+        /* [6. 상품 리스트 및 그리드 디자인] */
+        .section-container { max-width: 1350px; margin: 40px auto; padding: 0 5%; }
+        .auction-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; }
+        body.pro-mode .auction-grid { grid-template-columns: repeat(5, 1fr); gap: 15px; }
+
+        .auction-item { background: #fff; border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; transition: 0.3s; }
+        .auction-item:hover { box-shadow: 0 12px 24px rgba(0,0,0,0.08); transform: translateY(-3px); }
+        .img-box { width: 100%; aspect-ratio: 1/1; background-size: cover; background-position: center; border-bottom: 1px solid #f0f0f0; }
+        
+        .info-box { padding: 18px; flex-grow: 1; }
+        .badge-row { display: flex; gap: 5px; margin-bottom: 12px; flex-wrap: wrap; }
+        .badge { font-size: 10px; padding: 3px 6px; border-radius: 3px; color: #fff; font-weight: bold; }
+        .badge.free { background: var(--badge-grey); } 
+        .badge.now { background: var(--mercari-red); }    
+        .badge.photo { background: var(--point-orange); } /* 안심 사진 촬영 */
+
+        .prod-name { font-size: 14px; line-height: 1.5; color: #333; height: 42px; overflow: hidden; margin-bottom: 15px; font-weight: 500; }
+        .price-main { font-size: 19px; font-weight: 800; color: #000; }
+        .price-sub { font-size: 12px; color: #888; font-weight: normal; margin-left: 5px; }
+
+        .item-footer { border-top: 1px solid var(--border-light); text-align: center; }
+        .btn-wish { width: 100%; padding: 14px 0; background: #fff; border: none; font-size: 13px; color: #666; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+        /* 가로 스크롤 섹션 */
+        .horizontal-scroll-wrapper { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 25px; -webkit-overflow-scrolling: touch; }
+        .scroll-card { min-width: 310px; flex-shrink: 0; }
+
+        @media (max-width: 768px) {
+            .auction-grid, body.pro-mode .auction-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px; }
+            .mercari-info-bar { flex-wrap: wrap; gap: 15px; justify-content: center; }
+            .hero-bottom-info { flex-direction: column; gap: 10px; }
+            .hero-bottom-info .mini-logo { border-right: none; padding-right: 0; }
+            .pro-filter-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body class="simple-mode" id="targetBody">
+
+<div class="top-util">
+    <span><b>고시 환율:</b> 100￥ = 994원</span>
+    <div>로그인 | 회원가입 | 고객센터</div>
+</div>
+<header><a href="index.html" class="logo">Bid4U</a></header>
+
+<nav class="main-nav">
+    <ul>
+         <li><a href="auctions2.html">야후옥션</a></li>
+        <li><a href="mercari.html">메루카리</a></li>
+        <li><a href="rakuten.html">라쿠텐</a></li>
+        <li><a href="request.html">구매대행신청</a></li>
+        <li><a href="mypage.html" style="background: rgba(255,255,255,0.1); border-radius: 4px;">마이페이지</a></li>
+    </ul>
+</nav>
+
+<div class="mode-switcher-bar">
+    <div style="margin-right: 15px; font-size: 12px; font-weight: bold; color: #666;">화면 구성 선택</div>
+    <div class="toggle-box">
+        <div class="mode-btn active" id="simpleBtn" onclick="toggleMode('simple')">일반 모드</div>
+        <div class="mode-btn" id="proBtn" onclick="toggleMode('pro')">전문가 모드</div>
+    </div>
+</div>
+
+<section class="simple-only">
+    <div class="mercari-hero">
+        <h1 style="margin:0; font-size:32px; font-weight: 900;">MERCARI JP</h1>
+        <p style="opacity: 0.9; margin-top: 10px;">일본 최대 중고장터 메루카리, 비드포유가 가장 안전합니다</p>
+        <div class="search-box-simple">
+            <input type="text" placeholder="상품명, 피규어 시리즈, 혹은 메루카리 상품 번호 입력">
+            <button>검색</button>
+        </div>
+        <div class="hero-bottom-info">
+            <a href="index.html" class="mini-logo">Bid4U <span style="font-weight:300; font-size:11px;">Shopping Supporter</span></a>
+            <span><b>오늘의 환율:</b> 100￥ = <span style="color:var(--point-orange); font-weight:bold;">994원</span></span>
+            <span>📍 <b>오사카 물류센터:</b> 정상 운영 중</span>
+        </div>
+    </div>
+</section>
+
+<section class="pro-only">
+    <div class="pro-filter-container">
+        <div style="display:flex; gap:10px; margin-bottom:15px; max-width:1200px;">
+            <input type="text" placeholder="메루카리 정밀 키워드 검색 (제목+설명문 포함)" style="flex:1; padding:12px; border:1px solid #ddd; outline:none; border-radius: 4px;">
+            <button style="background:var(--mercari-red); color:#fff; border:none; padding:0 35px; font-weight:bold; cursor:pointer; border-radius: 4px;">검색</button>
+        </div>
+
+        <div class="pro-dashboard-bar">
+            <div class="pro-dashboard-info">
+                <span><b>Bid4U MERCARI PRO</b></span>
+                <span>적용 환율: <b>9.94원</b></span>
+                <span>구매 수수료: <b>200엔</b></span>
+                <span>검수: <b>오사카 직영센터</b></span>
+            </div>
+            <div style="color:#666; font-weight:bold;">홍길동 님 (Bronze 등급)</div>
+        </div>
+
+        <div class="pro-filter-grid">
+            <div class="filter-card">
+                <h4>판매 상태</h4>
+                <label><input type="checkbox" checked> 판매 중인 상품만</label>
+                <label><input type="checkbox"> 품절 포함</label>
+            </div>
+            <div class="filter-card">
+                <h4>상품 상태</h4>
+                <label><input type="radio" name="cond" checked> 전체</label>
+                <label><input type="radio" name="cond"> 신품/미사용</label>
+                <label><input type="radio" name="cond"> 깨끗한 중고</label>
+            </div>
+            <div class="filter-card">
+                <h4>가격대 설정 (￥)</h4>
+                <div style="display:flex; align-items:center; gap:5px;">
+                    <input type="number" placeholder="최소" style="width:45%; padding:5px; border:1px solid #ccc;"> ~ 
+                    <input type="number" placeholder="최대" style="width:45%; padding:5px; border:1px solid #ccc;">
+                </div>
+            </div>
+            <div class="filter-card">
+                <h4>정렬 방식</h4>
+                <select style="width:100%; padding:5px; border:1px solid #ccc;">
+                    <option>추천순</option>
+                    <option>가격 낮은 순</option>
+                    <option>가격 높은 순</option>
+                    <option>최신 등록 순</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="mercari-info-bar">
+    <div class="info-item">📦 오사카 <b>직영물류</b> 검수</div>
+    <div class="info-item">💰 수수료 <b>200엔</b> 혁명</div>
+    <div class="info-item">📸 <b>안심 사진</b> 촬영 지원</div>
+    <div class="info-item">💹 고시환율 <b>9.94원</b></div>
+</div>
+
+<main class="section-container">
+    <div style="margin-bottom: 50px;">
+        <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 20px;">🔥 메루카리 실시간 등록 상품</h2>
+        <div class="horizontal-scroll-wrapper">
+            <div class="auction-item scroll-card">
+                <div class="img-box" style="background-image: url('https://picsum.photos/400/400?random=61')"></div>
+                <div class="info-box">
+                    <div class="badge-row"><span class="badge now">즉시구매</span><span class="badge photo">사진지원</span></div>
+                    <div class="prod-name">MGSD 건담 바바토스 미조립 신품</div>
+                    <div class="price-main">4,500엔 <span class="price-sub">(44,730원)</span></div>
+                </div>
+                <div class="item-footer"><button class="btn-wish">★ 관심상품등록</button></div>
+            </div>
+            <div class="auction-item scroll-card">
+                <div class="img-box" style="background-image: url('https://picsum.photos/400/400?random=62')"></div>
+                <div class="info-box">
+                    <div class="badge-row"><span class="badge free">무료배송</span><span class="badge now">즉시구매</span></div>
+                    <div class="prod-name">포켓몬 카드 리자몽 ex SAR [최상급]</div>
+                    <div class="price-main">28,000엔 <span class="price-sub">(278,320원)</span></div>
+                </div>
+                <div class="item-footer"><button class="btn-wish">★ 관심상품등록</button></div>
+            </div>
+            </div>
+    </div>
+
+    <hr style="border: 0; border-top: 1px solid #eee; margin-bottom: 40px;">
+
+    <h2 style="font-size: 22px; margin-bottom: 25px;">🔎 메루카리 검색 결과</h2>
+    <div class="auction-grid">
+        <div class="auction-item">
+            <div class="img-box" style="background-image: url('https://picsum.photos/400/400?random=71')"></div>
+            <div class="info-box">
+                <div class="badge-row"><span class="badge now">즉시구매</span><span class="badge photo">사진지원</span></div>
+                <div class="prod-name">넨도로이드 나카노 요바 「5등분의 신부」 [미개봉]</div>
+                <div class="price-main">8,050엔 <span class="price-sub">(80,017원)</span></div>
+            </div>
+            <div class="item-footer"><button class="btn-wish">★ 관심상품등록</button></div>
+        </div>
+        </div>
+</main>
+
+<footer style="background:var(--main-deep-blue); color:white; padding:50px 5%; font-size:13px; text-align:center;">
+    비드포유 메루카리 대행 서비스 | donacorporation8988@gmail.com <br>
+    〒546-0024 大阪府大阪市東住吉区公園南矢田 4-3-7
+</footer>
+
+<script>
+    function toggleMode(mode) {
+        const body = document.getElementById('targetBody');
+        const simpleBtn = document.getElementById('simpleBtn');
+        const proBtn = document.getElementById('proBtn');
+        if (mode === 'pro') {
+            body.classList.add('pro-mode');
+            proBtn.classList.add('active');
+            simpleBtn.classList.remove('active');
+        } else {
+            body.classList.remove('pro-mode');
+            simpleBtn.classList.add('active');
+            proBtn.classList.remove('active');
+        }
+    }
+</script>
+
+</body>
+</html>

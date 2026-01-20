@@ -29,7 +29,37 @@
 
         .side-menu-box { display: flex; flex-direction: column; gap: 20px; }
         .user-profile { background: #fff; border: 1px solid var(--border-light); border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
-        .user-grade { display: inline-block; background: var(--point-orange); color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 10px; margin-top: 5px; }
+        /* [1] 등급별 고유 컬러 (그라데이션) */
+.grade-BRONZE { background: linear-gradient(135deg, #CD7F32, #A76E4B); }
+.grade-SILVER { background: linear-gradient(135deg, #A0A0A0, #C0C0C0); }
+.grade-GOLD { background: linear-gradient(135deg, #FFD700, #D4AF37); color: #000 !important; }
+.grade-PLATINUM { background: linear-gradient(135deg, #3D64AD, #6B8ED6); }
+.grade-DIAMOND { background: linear-gradient(135deg, #45B3E0, #B0E0E6); }
+.grade-B2B { background: var(--main-deep-blue); }
+
+/* [2] 공통 디자인 및 효과 (기존 한 줄을 대체하는 핵심 코드) */
+.user-grade { 
+    display: inline-block; 
+    color: #fff; 
+    font-size: 10px; 
+    padding: 3px 12px; 
+    border-radius: 12px; 
+    margin-top: 8px; 
+    font-weight: 800;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 마우스 호버 시 은은한 광택 효과 */
+.user-grade:hover { transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.user-grade::after {
+    content: ""; position: absolute; top: 0; left: -150%; width: 50%; height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+    transform: skewX(-25deg); transition: 0.7s;
+}
+.user-grade:hover::after { left: 200%; }
         
         .side-nav { background: #fff; border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden; }
         .side-nav li a { display: block; padding: 15px 20px; font-size: 14px; border-bottom: 1px solid #f1f1f1; color: #555; }
@@ -138,11 +168,15 @@
 
 <main class="main-content">
     <aside class="side-menu-box">
-        <div class="user-profile">
-            <div style="font-weight: 900; font-size: 18px;">홍길동 님</div>
-            <div class="user-grade">BRONZE 등급</div>
-            <p style="font-size: 12px; color: #888; margin-top: 15px;">사이버머니: <b style="color:var(--point-orange)">15,200원</b></p>
-        </div>
+<div class="user-profile">
+    <div style="font-weight: 900; font-size: 18px;">홍길동 님</div>
+    
+    <div class="user-grade grade-BRONZE">BRONZE 등급</div>
+    
+    <p style="font-size: 12px; color: #888; margin-top: 15px;">
+        사이버머니: <b style="color:var(--point-orange)">15,200원</b>
+    </p>
+</div>
         <ul class="side-nav">
             <li><a href="#">나의 지갑</a></li>
             <li class="active"><a href="#">대행신청 현황</a></li>
@@ -243,3 +277,4 @@
 </body>
 
 </html>
+

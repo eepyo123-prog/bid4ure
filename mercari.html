@@ -99,6 +99,19 @@
             .hero-bottom-info .mini-logo { border-right: none; padding-right: 0; }
             .pro-filter-grid { grid-template-columns: repeat(2, 1fr); }
         }
+        /* [7. 상세페이지 연동을 위한 링크 스타일] */
+.auction-item a {
+    color: inherit;       /* 부모 요소의 글자색 상속 (검정색 유지) */
+    text-decoration: none; /* 밑줄 제거 */
+    display: block;        /* 카드 영역 전체를 클릭 가능하게 확장 */
+}
+
+/* 마우스를 올렸을 때 카드 효과와 링크가 자연스럽게 작동하도록 설정 */
+.auction-item:hover {
+    box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+    transform: translateY(-3px);
+    cursor: pointer;
+}
     </style>
 </head>
 <body class="simple-mode" id="targetBody">
@@ -267,4 +280,5 @@
 </body>
 
 </html>
+
 

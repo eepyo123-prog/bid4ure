@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bid4U - 프리미엄 통합 플랫폼</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        
         /* [1. 테마 및 초기화] */
         :root {
             --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
@@ -16,13 +19,32 @@
         a { text-decoration: none; color: inherit; transition: 0.2s; }
         * { box-sizing: border-box; }
 
+        /* [2. 등급별 프리미엄 컬러 & 효과] */
+        .grade-BRONZE { background: linear-gradient(135deg, #CD7F32, #A76E4B); }
+        .grade-SILVER { background: linear-gradient(135deg, #A0A0A0, #C0C0C0); }
+        .grade-GOLD { background: linear-gradient(135deg, #FFD700, #D4AF37); color: #000 !important; }
+        .grade-PLATINUM { background: linear-gradient(135deg, #3D64AD, #6B8ED6); }
+        .grade-DIAMOND { background: linear-gradient(135deg, #45B3E0, #B0E0E6); }
+        .grade-B2B { background: var(--main-deep-blue); }
+
+        .user-grade { 
+            display: inline-block; color: #fff; border-radius: 12px; font-weight: 800;
+            position: relative; overflow: hidden; transition: all 0.4s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .user-grade::after {
+            content: ""; position: absolute; top: 0; left: -150%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+            transform: skewX(-25deg); transition: 0.7s;
+        }
+        .user-grade:hover::after { left: 200%; }
+
         /* [상태 제어] */
         .is-logged-in .view-logout { display: none !important; }
         .is-logged-out .view-login { display: none !important; }
-        /* 로그인 안했을 때 현황판 아예 숨김 */
         .is-logged-out .status-container { display: none !important; }
 
-        /* [2. 상단 & 헤더] */
+        /* [3. 상단 & 헤더] */
         .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
         header { padding: 25px 5%; text-align: center; background: #fff; }
         .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
@@ -35,10 +57,8 @@
         .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; white-space: nowrap; }
         @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* [3. 메인 콘텐츠 레이아웃] */
+        /* [4. 메인 콘텐츠 레이아웃] */
         .main-content { padding: 30px 5%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 35px; }
-        
-        /* 히어로 섹션 - 280px 고정 */
         .hero-section { display: grid; grid-template-columns: 2.3fr 1fr; gap: 20px; height: 280px; }
         .hero-banner { 
             background: linear-gradient(135deg, var(--main-deep-blue), var(--main-royal-blue)); 
@@ -49,38 +69,7 @@
             position: absolute; bottom: 20px; right: 20px; background: rgba(255,255,255,0.1); 
             border: 1px solid rgba(255,255,255,0.2); padding: 10px 15px; border-radius: 8px; backdrop-filter: blur(5px); font-size: 11px;
         }
-/* [등급별 프리미엄 그라데이션 컬러] */
-.grade-BRONZE { background: linear-gradient(135deg, #CD7F32, #A76E4B); }
-.grade-SILVER { background: linear-gradient(135deg, #A0A0A0, #C0C0C0); }
-.grade-GOLD { background: linear-gradient(135deg, #FFD700, #D4AF37); color: #000 !important; }
-.grade-PLATINUM { background: linear-gradient(135deg, #3D64AD, #6B8ED6); }
-.grade-DIAMOND { background: linear-gradient(135deg, #45B3E0, #B0E0E6); }
-.grade-B2B { background: var(--main-deep-blue); }
 
-/* [개선된 등급 배지 스타일 - 싼티 방지 효과] */
-.user-grade { 
-    display: inline-block; 
-    color: #fff; 
-    font-size: 10px; 
-    padding: 3px 12px; 
-    border-radius: 12px; 
-    margin-top: 8px; 
-    font-weight: 800;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.4s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-/* 마우스 호버 시 은은한 광택(쉬머) 효과 */
-.user-grade:hover { transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
-.user-grade::after {
-    content: ""; position: absolute; top: 0; left: -150%; width: 50%; height: 100%;
-    background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
-    transform: skewX(-25deg); transition: 0.7s;
-}
-.user-grade:hover::after { left: 200%; }
-        /* 로그인 & 정보창 배치 수정 */
         .side-auth-box { 
             background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border-light); 
             height: 100%; display: flex; flex-direction: column; justify-content: center; 
@@ -88,11 +77,8 @@
         }
         .login-form input { width: 100%; padding: 12px; border: 1px solid #eee; border-radius: 6px; margin-bottom: 8px; font-size: 13px; }
         .btn-login { width: 100%; background: var(--main-deep-blue); color: #fff; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border-top: 1px solid #f1f1f1; padding-top: 20px; margin-top: 15px; }
-        .stat-item { text-align: center; }
-        .stat-value { font-size: 14px; font-weight: 800; color: var(--point-orange); }
 
-        /* [4. 대행신청 현황 - 10열 고정] */
+        /* [5. 대행신청 현황] */
         .status-container { background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border-light); }
         .status-grid { display: grid; grid-template-columns: repeat(10, 1fr); border: 1px solid #eee; border-radius: 10px; overflow: hidden; }
         .grid-col { text-align: center; border-right: 1px solid #eee; padding: 15px 2px; background: #fff; }
@@ -102,122 +88,56 @@
         .grid-count { font-size: 14px; font-weight: 800; color: #333; }
         .grid-count.active { color: var(--point-orange); }
 
-        /* [5. 상점 그리드 - 8개 복구] */
+        /* [6. 하단 그리드 섹션] */
         .section-title { font-size: 19px; font-weight: 800; color: var(--main-deep-blue); margin-bottom: 18px; padding-bottom: 8px; border-bottom: 2px solid var(--main-deep-blue); }
         .shop-grid { display: grid; grid-template-columns: repeat(4, 1fr); background: #fff; border: 1px solid #eee; border-radius: 12px; overflow: hidden; }
         .shop-item { padding: 20px; text-align: center; border-right: 1px solid #eee; border-bottom: 1px solid #eee; cursor: pointer; }
         .shop-item:hover { background: #f8faff; }
         .shop-name { font-size: 13px; font-weight: 700; color: #444; }
 
-        /* [6. 특가 상품존] */
         .grid-prod { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
         .prod-card { background: #fff; border: 1px solid #eee; border-radius: 12px; overflow: hidden; transition: 0.3s; }
         .prod-img { width: 100%; aspect-ratio: 1/1; background-size: cover; background-position: center; border-bottom: 1px solid #f1f1f1; background-color: #f9f9f9; }
         .prod-info { padding: 15px; }
 
-        /* [7. 이용 후기 그리드] */
         .review-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .review-card { background: #fff; padding: 20px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
 
-        /* [8. 카카오 상담 배너] */
-        .kakao-full-banner { background: var(--kakao-yellow); border-radius: 15px; padding: 30px 40px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .kakao-full-banner { background: var(--kakao-yellow); border-radius: 15px; padding: 30px 40px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; margin-top: 20px; }
 
-        /* 모달 & 사이드바 */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,31,77,0.8); z-index: 3000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-        .modal-content { background: #fff; width: 95%; max-width: 800px; border-radius: 20px; padding: 30px; position: relative; }
-        .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 1000; background: #555; border-radius: 8px 0 0 8px; }
-        .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
-        footer { background: var(--footer-bg); color: #fff; padding: 50px 5%; font-size: 13px; margin-top: 50px; }
-
-        /* [모바일 대응 핵심 수정] */
-@media (max-width: 768px) {
-    /* 1. 배너와 로그인창을 위아래로 배치 */
-    .hero-section {
-        grid-template-columns: 1fr; /* 가로 2줄에서 1줄로 변경 */
-        height: auto;               /* 고정 높이 280px 해제 */
-        gap: 15px;
-    }
-
-    /* 2. 배너 영역 높이 및 패딩 조절 */
-    .hero-banner {
-        height: 180px;              /* 모바일에서 적당한 높이 */
-        padding: 20px;
-        text-align: center;         /* 텍스트 중앙 정렬 */
-        align-items: center;
-    }
-
-    .hero-banner h1 {
-        font-size: 20px;            /* 제목 크기 축소 */
-        margin-bottom: 5px;
-    }
-
-    .hero-banner p {
-        font-size: 13px;
-    }
-
-    /* 3. 로그인/정보창 너비 조정 */
-    .side-auth-box {
-        height: auto;
-        padding: 20px;
-    }
-
-    /* 4. 면세 한도 박스 위치 조정 */
-    .customs-cut-box {
-        position: static;           /* 절대 위치 해제 */
-        margin-top: 15px;
-        width: 100%;
-        text-align: center;
-    }
-
-    /* 5. 하단 현황판 및 그리드 조정 */
-    .status-grid {
-        grid-template-columns: repeat(5, 1fr); /* 10열에서 5열로 (2줄 배치) */
-    }
-    
-    .shop-grid, .grid-prod {
-        grid-template-columns: repeat(2, 1fr); /* 2열로 고정 */
-    }
-
-    .review-grid {
-        grid-template-columns: 1fr; /* 후기는 1줄로 길게 */
-    }
-}
-    lick="closeCalc()">&times;</span></style>
+        @media (max-width: 768px) {
+            .hero-section { grid-template-columns: 1fr; height: auto; gap: 15px; }
+            .hero-banner { height: 180px; padding: 20px; text-align: center; align-items: center; }
+            .status-grid { grid-template-columns: repeat(5, 1fr); }
+            .shop-grid, .grid-prod { grid-template-columns: repeat(2, 1fr); }
+            .review-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body class="is-logged-out" id="mainBody">
-
-<div class="modal-overlay" id="calcModal">
-    <div class="modal-content" style="max-width: 950px; height: 80vh; padding: 0; overflow: hidden;">
-        <span style="position:absolute; right:20px; top:15px; font-size:30px; cursor:pointer; z-index: 9999;" onc
-        
-        <iframe src="final_no.html" style="width:100%; height:100%; border:none;"></iframe>
-    </div>
-</div>
-
-<div class="side-quick"><div class="side-btn" onclick="openCalc()"><i>🧮</i>계산기</div><div class="side-btn"><i>💬</i>문의</div><div style="background:#333; color:#fff; text-align:center; padding:10px; font-size:10px;">TOP</div></div>
 
 <div class="top-util">
     <span><b>고시 환율:</b> 100￥ = 994원</span>
     <div class="view-logout">로그인 | 회원가입 | 고객센터</div>
-    
     <div class="view-login">
         <a href="mypage.html"><b>홍길동</b>님 반갑습니다!</a> | 
         <a href="mypage.html" style="color:var(--point-orange); font-weight:bold;">[마이페이지]</a> | 
         <a href="javascript:toggleLogin(false)" style="color:#fff">로그아웃</a>
     </div>
 </div>
-<header>
-    <a href="index.html" class="logo">Bid4U</a>
-</header>
+
+<header><a href="index.html" class="logo">Bid4U</a></header>
+
 <nav class="main-nav">
     <ul>
-        <li><a href="auctions2.html">야후옥션</a></li>
-        <li><a href="mercari.html">메루카리</a></li>
-        <li><a href="rakuten.html">라쿠텐</a></li>
-        <li><a href="offer.html">구매대행신청</a></li>
-        <li><a href="mypage.html" style="background: rgba(255,255,255,0.1); border-radius: 4px;">마이페이지</a></li>
+        <li><a href="#">야후옥션</a></li>
+        <li><a href="#">메루카리</a></li>
+        <li><a href="#">라쿠텐</a></li>
+        <li><a href="#">구매대행신청</a></li>
+        <li><a href="#">마이페이지</a></li>
     </ul>
 </nav>
+
 <div class="ticker"><div class="ticker-label">NOTICE</div><div class="ticker-text-wrapper"><div class="ticker-text">[이벤트] 수수료 200엔 혁명! &nbsp;&nbsp;&nbsp;&nbsp; [안내] 26년 1월 구정 연휴 오사카 물류센터 정상 운영</div></div></div>
 
 <main class="main-content">
@@ -227,28 +147,34 @@
             <p>오사카 직영 물류센터 운영으로 더 빠르게</p>
             <div class="customs-cut-box">오늘의 면세 한도 ($150)<br><b>약 202,500원 미만</b> 구매 시 면세</div>
         </div>
-        <div class="side-auth-box">
-            <div class="login-form view-logout"><input type="text" placeholder="아이디"><input type="password" placeholder="비밀번호"><button class="btn-login" onclick="toggleLogin(true)">로그인</button></div>
-          <div class="member-info view-login">
-    <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px;">
-        <span class="user-name" style="font-weight: 900; font-size: 18px;">홍길동 님</span>
-        <div class="user-grade grade-GOLD" style="margin-top: 0; font-size: 9px; padding: 2px 10px;">GOLD 등급</div>
-    </div>
 
-    <div class="stat-grid" style="border-top: 1px solid #f1f1f1; padding-top: 15px;">
-        <div class="stat-item">
-            <span style="font-size: 11px; color: #888; display: block; margin-bottom: 2px;">사이버머니</span>
-            <div class="stat-value" style="font-size: 15px;">15,200원</div>
-        </div>
-        <div class="stat-item">
-            <span style="font-size: 11px; color: #888; display: block; margin-bottom: 2px;">할인쿠폰</span>
-            <div class="stat-value" style="color: #333; font-size: 15px;">3장</div>
+        <div class="side-auth-box">
+            <div class="login-form view-logout">
+                <input type="text" placeholder="아이디">
+                <input type="password" placeholder="비밀번호">
+                <button class="btn-login" onclick="toggleLogin(true)">로그인</button>
+            </div>
+
+            <div class="member-info view-login">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px;">
+                    <span style="font-weight: 900; font-size: 17px;">홍길동 님</span>
+                    <div class="user-grade grade-GOLD" style="font-size: 9px; padding: 2px 10px; line-height: 1;">GOLD 등급</div>
+                </div>
+                <div style="border-top: 1px solid #f1f1f1; padding-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div style="text-align: center;">
+                        <span style="font-size: 11px; color: #999; display: block; margin-bottom: 2px;">사이버머니</span>
+                        <div style="font-size: 15px; font-weight: 800; color: var(--point-orange);">15,200원</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <span style="font-size: 11px; color: #999; display: block; margin-bottom: 2px;">할인쿠폰</span>
+                        <div style="font-size: 15px; font-weight: 800; color: #333;">3장</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
     <div id="dynamic-area" style="display: flex; flex-direction: column; gap: 35px;">
-        
         <div class="status-container" style="order: 1;">
             <h3 class="section-title" style="border:none; margin-bottom:10px;">📊 대행신청 현황 (일본)</h3>
             <div class="status-grid">
@@ -301,11 +227,10 @@
     </div>
 </main>
 
-<footer><div class="footer-grid">
-    <div class="footer-column"><h3>Support</h3><p>donacorporation8988@gmail.com</p></div>
-    <div class="footer-column"><h3>Bank</h3><p>신한: 140-011-832950 / 국민: 750601-01-266837</p></div>
-    <div class="footer-column"><h3>Warehouse</h3><p>〒546-0024 大阪府大阪市東住吉区公園南矢田 4-3-7</p></div>
-</div></footer>
+<footer style="background:var(--footer-bg); color:white; padding:50px 5%; font-size:13px; text-align:center;">
+    비드포유 메루카리 대행 서비스 | donacorporation8988@gmail.com <br>
+    〒546-0024 大阪府大阪市東住吉区公園南矢田 4-3-7
+</footer>
 
 <script>
     function toggleLogin(l){ 
@@ -313,24 +238,14 @@
         const rs = document.getElementById('review-section');
         if(l){ 
             b.classList.remove('is-logged-out'); b.classList.add('is-logged-in');
-            rs.style.order = "2"; // 로그인 시 후기 섹션은 현황판(1) 아래로
+            rs.style.order = "2";
         } else { 
             b.classList.remove('is-logged-in'); b.classList.add('is-logged-out');
-            rs.style.order = "0"; // 로그아웃 시 후기 섹션을 배너 바로 아래로 최우선 배치
+            rs.style.order = "0";
         } 
-    }
-    function openCalc(){ document.getElementById('calcModal').style.display = 'flex'; }
-    function closeCalc(){ document.getElementById('calcModal').style.display = 'none'; }
-    function runCalc(){
-        const p = parseFloat(document.getElementById('c_price').value) || 0;
-        const total = Math.round((p * 9.94) + (200 * 9.94));
-        document.getElementById('c_res').innerHTML = `<b>Bronze 예상 합계:</b> ${total.toLocaleString()}원`;
-        document.getElementById('c_res').style.display = 'block';
     }
 </script>
 </body>
-
-
 </html>
 
 

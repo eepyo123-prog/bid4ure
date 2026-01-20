@@ -19,7 +19,7 @@
         a { text-decoration: none; color: inherit; transition: 0.2s; }
         * { box-sizing: border-box; }
 
-        /* [2. 등급별 프리미엄 스타일 - 메탈릭 효과] */
+        /* [2. 등급별 프리미엄 컬러 & 쉬머 효과] */
         .grade-BRONZE { background: linear-gradient(135deg, #CD7F32, #A76E4B); }
         .grade-SILVER { background: linear-gradient(135deg, #A0A0A0, #C0C0C0); }
         .grade-GOLD { background: linear-gradient(135deg, #FFD700, #D4AF37); color: #000 !important; }
@@ -57,17 +57,6 @@
         @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
         .main-content { padding: 30px 5%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 35px; }
-        .hero-section { display: grid; grid-template-columns: 2.3fr 1fr; gap: 20px; height: 280px; }
-        .hero-banner { 
-            background: linear-gradient(135deg, var(--main-deep-blue), var(--main-royal-blue)); 
-            border-radius: 15px; padding: 40px; color: white; height: 100%; 
-            display: flex; flex-direction: column; justify-content: center; position: relative;
-        }
-        .customs-cut-box { position: absolute; bottom: 20px; right: 20px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 10px 15px; border-radius: 8px; backdrop-filter: blur(5px); font-size: 11px; }
-
-        .side-auth-box { background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border-light); height: 100%; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .login-form input { width: 100%; padding: 12px; border: 1px solid #eee; border-radius: 6px; margin-bottom: 8px; font-size: 13px; }
-        .btn-login { width: 100%; background: var(--main-deep-blue); color: #fff; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
         /* [4. 퀵 메뉴 & 모달] */
         .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 1000; background: #555; border-radius: 8px 0 0 8px; overflow: hidden; box-shadow: -2px 0 10px rgba(0,0,0,0.2); }
@@ -76,26 +65,18 @@
         .side-btn i { font-style: normal; font-size: 18px; margin-bottom: 4px; }
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,31,77,0.8); z-index: 5000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-        .modal-content { background: #fff; width: 95%; max-width: 950px; height: 85vh; border-radius: 20px; overflow: hidden; position: relative; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+        .modal-content { background: #fff; width: 95%; max-width: 950px; height: 85vh; border-radius: 20px; overflow: hidden; position: relative; }
 
-        /* 기타 섹션 스타일 */
-        .status-container { background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border-light); }
-        .status-grid { display: grid; grid-template-columns: repeat(10, 1fr); border: 1px solid #eee; border-radius: 10px; overflow: hidden; }
-        .grid-col { text-align: center; border-right: 1px solid #eee; padding: 15px 2px; background: #fff; }
-        .grid-label { display: block; font-size: 9px; color: #555; margin-bottom: 8px; font-weight: 600; height: 24px; display: flex; align-items: center; justify-content: center; }
-        .grid-icon { font-size: 16px; margin-bottom: 5px; display: block; }
-        .grid-count { font-size: 14px; font-weight: 800; color: #333; }
-        .grid-count.active { color: var(--point-orange); }
-
+        /* [5. 하단 배너 및 그리드] */
         .section-title { font-size: 19px; font-weight: 800; color: var(--main-deep-blue); margin-bottom: 18px; padding-bottom: 8px; border-bottom: 2px solid var(--main-deep-blue); }
-        .shop-grid { display: grid; grid-template-columns: repeat(4, 1fr); background: #fff; border: 1px solid #eee; border-radius: 12px; overflow: hidden; }
-        .shop-item { padding: 20px; text-align: center; border-right: 1px solid #eee; border-bottom: 1px solid #eee; cursor: pointer; }
-        .shop-item:hover { background: #f8faff; }
+        .kakao-full-banner { background: var(--kakao-yellow); border-radius: 15px; padding: 30px 40px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; margin-top: 20px; }
+        
+        .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; max-width: 1200px; margin: 0 auto; text-align: left; }
+        .footer-column h3 { font-size: 14px; margin-bottom: 15px; color: #fff; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px; }
 
         @media (max-width: 768px) {
-            .hero-section { grid-template-columns: 1fr; height: auto; gap: 15px; }
-            .status-grid { grid-template-columns: repeat(5, 1fr); }
-            .shop-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: 1fr; text-align: center; }
+            .kakao-full-banner { flex-direction: column; text-align: center; gap: 20px; }
         }
     </style>
 </head>
@@ -139,85 +120,103 @@
 <div class="ticker"><div class="ticker-label">NOTICE</div><div class="ticker-text-wrapper"><div class="ticker-text">[이벤트] 수수료 200엔 혁명! &nbsp;&nbsp;&nbsp;&nbsp; [안내] 26년 1월 구정 연휴 오사카 물류센터 정상 운영</div></div></div>
 
 <main class="main-content">
-    <div class="hero-section">
-        <div class="hero-banner">
-            <h1>수수료 200엔의 혁명</h1>
-            <p>오사카 직영 물류센터 운영으로 더 빠르게</p>
-            <div class="customs-cut-box">오늘의 면세 한도 ($150)<br><b>약 202,500원 미만</b> 구매 시 면세</div>
+    <div class="grid grid-cols-1 lg:grid-cols-[2.3fr_1fr] gap-5 h-auto lg:h-[280px]">
+        <div class="bg-gradient-to-br from-[#0a1f4d] to-[#1e3a8a] rounded-2xl p-10 text-white flex flex-col justify-center relative">
+            <h1 class="text-3xl font-black mb-2">수수료 200엔의 혁명</h1>
+            <p class="opacity-80">오사카 직영 물류센터 운영으로 더 빠르게</p>
+            <div class="mt-8 bg-white/10 border border-white/20 p-3 rounded-lg backdrop-blur-md w-fit text-xs">
+                오늘의 면세 한도 ($150) <br> <b>약 202,500원 미만</b> 구매 시 면세
+            </div>
         </div>
 
-        <div class="side-auth-box">
-            <div class="login-form view-logout">
-                <input type="text" placeholder="아이디">
-                <input type="password" placeholder="비밀번호">
-                <button class="btn-login" onclick="toggleLogin(true)">로그인</button>
+        <div class="bg-white rounded-2xl p-6 border border-gray-200 shadow-lg flex flex-col justify-center">
+            <div class="view-logout space-y-2">
+                <input type="text" placeholder="아이디" class="w-full p-3 border border-gray-100 rounded-lg text-sm outline-none">
+                <input type="password" placeholder="비밀번호" class="w-full p-3 border border-gray-100 rounded-lg text-sm outline-none">
+                <button onclick="toggleLogin(true)" class="w-full bg-[#0a1f4d] text-white py-3 rounded-lg font-bold">로그인</button>
             </div>
-
-            <div class="member-info view-login">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px;">
-                    <span style="font-weight: 900; font-size: 17px;">홍길동 님</span>
-                    <div class="user-grade grade-GOLD" style="font-size: 9px; padding: 2px 10px; line-height: 1;">GOLD 등급</div>
+            <div class="view-login text-center">
+                <div class="flex items-center justify-center gap-2 mb-5">
+                    <span class="font-black text-lg">홍길동 님</span>
+                    <div class="user-grade grade-GOLD text-[9px] px-3 py-1">GOLD 등급</div>
                 </div>
-                <div style="border-top: 1px solid #f1f1f1; padding-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <div style="text-align: center;">
-                        <span style="font-size: 11px; color: #999; display: block; margin-bottom: 2px;">사이버머니</span>
-                        <div style="font-size: 15px; font-weight: 800; color: var(--point-orange);">15,200원</div>
+                <div class="grid grid-cols-2 gap-2 border-t border-gray-50 pt-4">
+                    <div>
+                        <span class="text-[10px] text-gray-400 block">사이버머니</span>
+                        <b class="text-orange-500">15,200원</b>
                     </div>
-                    <div style="text-align: center;">
-                        <span style="font-size: 11px; color: #999; display: block; margin-bottom: 2px;">할인쿠폰</span>
-                        <div style="font-size: 15px; font-weight: 800; color: #333;">3장</div>
+                    <div>
+                        <span class="text-[10px] text-gray-400 block">할인쿠폰</span>
+                        <b>3장</b>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="dynamic-area" style="display: flex; flex-direction: column; gap: 35px;">
-        <div class="status-container" style="order: 1;">
-            <h3 class="section-title" style="border:none; margin-bottom:10px;">📊 대행신청 현황 (일본)</h3>
-            <div class="status-grid">
-                <div class="grid-col"><span class="grid-label">실패</span><span class="grid-icon">🗑️</span><div class="grid-count">34</div></div>
-                <div class="grid-col"><span class="grid-label">입찰요청</span><span class="grid-icon">📝</span><div class="grid-count">0</div></div>
-                <div class="grid-col"><span class="grid-label">낙찰승인</span><span class="grid-icon">🔨</span><div class="grid-count active">16</div></div>
-                <div class="grid-col"><span class="grid-label">1차결제</span><span class="grid-icon">💳</span><div class="grid-count">0</div></div>
-                <div class="grid-col"><span class="grid-label">현지배송</span><span class="grid-icon">🚚</span><div class="grid-count">0</div></div>
-                <div class="grid-col"><span class="grid-label">통합진행</span><span class="grid-icon">📦</span><div class="grid-count">0</div></div>
-                <div class="grid-col"><span class="grid-label">2차요청</span><span class="grid-icon">📑</span><div class="grid-count">0</div></div>
-                <div class="grid-col"><span class="grid-label">2차완료</span><span class="grid-icon">💳</span><div class="grid-count">0</div></div>
-                <div class="grid-col"><span class="grid-label">국제배송</span><span class="grid-icon">✈️</span><div class="grid-count active">1</div></div>
-                <div class="grid-col" style="border-right:none;"><span class="grid-label">배송완료</span><span class="grid-icon">🎁</span><div class="grid-count active">7</div></div>
-            </div>
+    <div class="status-container">
+        <h3 class="font-black text-lg mb-4">📊 대행신청 현황 (일본)</h3>
+        <div class="grid grid-cols-5 md:grid-cols-10 border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+            <div class="text-center py-4 bg-white border-r border-gray-50"><span class="text-[10px] text-gray-500 block mb-1">실패</span>🗑️<div class="font-bold">34</div></div>
+            <div class="text-center py-4 bg-white border-r border-gray-50"><span class="text-[10px] text-gray-500 block mb-1">입찰요청</span>📝<div class="font-bold">0</div></div>
+            <div class="text-center py-4 bg-white border-r border-gray-50"><span class="text-[10px] text-gray-500 block mb-1">낙찰승인</span>🔨<div class="font-bold text-blue-600">16</div></div>
+            <div class="text-center py-4 bg-white border-r border-gray-50"><span class="text-[10px] text-gray-500 block mb-1">1차결제</span>💳<div class="font-bold">0</div></div>
+            <div class="text-center py-4 bg-white border-r border-gray-50"><span class="text-[10px] text-gray-500 block mb-1">현지배송</span>🚚<div class="font-bold">0</div></div>
+            <div class="text-center py-4 bg-white border-r border-gray-50"><span class="text-[10px] text-gray-500 block mb-1">통합진행</span>📦<div class="font-bold">0</div></div>
+            <div class="text-center py-4 bg-white border-r border-gray-50"><span class="text-[10px] text-gray-500 block mb-1">2차요청</span>📑<div class="font-bold">0</div></div>
+            <div class="text-center py-4 bg-white border-r border-gray-50"><span class="text-[10px] text-gray-500 block mb-1">2차완료</span>💳<div class="font-bold">0</div></div>
+            <div class="text-center py-4 bg-white border-r border-gray-50"><span class="text-[10px] text-gray-500 block mb-1">국제배송</span>✈️<div class="font-bold text-orange-500">1</div></div>
+            <div class="text-center py-4 bg-white"><span class="text-[10px] text-gray-500 block mb-1">배송완료</span>🎁<div class="font-bold text-orange-500">7</div></div>
         </div>
-
-        <section id="review-section" style="order: 2;">
-            <h2 class="section-title">생생한 이용 후기</h2>
-            <div class="review-grid grid grid-cols-1 md:grid-cols-3 gap-5">
-                <div class="review-card">⭐⭐⭐⭐⭐<p class="text-sm text-gray-500 mt-2">"오사카 센터 검수가 정말 꼼꼼합니다!"</p></div>
-                <div class="review-card">⭐⭐⭐⭐⭐<p class="text-sm text-gray-500 mt-2">"수수료 200엔이라 가성비 최고예요."</p></div>
-                <div class="review-card">⭐⭐⭐⭐⭐<p class="text-sm text-gray-500 mt-2">"배송이 정말 빠르고 안전합니다."</p></div>
-            </div>
-        </section>
-
-        <section style="order: 3;">
-            <h2 class="section-title">해외 인기 온라인 상점</h2>
-            <div class="shop-grid">
-                <div class="shop-item"><div class="shop-name">메루카리</div></div>
-                <div class="shop-item"><div class="shop-name">아미아미</div></div>
-                <div class="shop-item"><div class="shop-name">애니메이트</div></div>
-                <div class="shop-item" style="border-right:none;"><div class="shop-name">스루가야</div></div>
-            </div>
-        </section>
     </div>
+
+    <section>
+        <h2 class="section-title">생생한 이용 후기</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm"><div class="text-yellow-400 mb-2">★★★★★</div><p class="text-sm text-gray-600">"오사카 센터 검수가 정말 꼼꼼합니다!"</p></div>
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm"><div class="text-yellow-400 mb-2">★★★★★</div><p class="text-sm text-gray-600">"수수료 200엔이라 가성비 최고예요."</p></div>
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm"><div class="text-yellow-400 mb-2">★★★★★</div><p class="text-sm text-gray-600">"배송이 정말 빠르고 안전합니다."</p></div>
+        </div>
+    </section>
+
+    <section>
+        <h2 class="section-title">해외 인기 온라인 상점</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 bg-white border border-gray-100 rounded-xl overflow-hidden">
+            <div class="p-6 text-center border-r border-b border-gray-50 hover:bg-gray-50 cursor-pointer font-bold text-sm text-gray-700">메루카리</div>
+            <div class="p-6 text-center border-r border-b border-gray-50 hover:bg-gray-50 cursor-pointer font-bold text-sm text-gray-700">아미아미</div>
+            <div class="p-6 text-center border-r border-b border-gray-50 hover:bg-gray-50 cursor-pointer font-bold text-sm text-gray-700">애니메이트</div>
+            <div class="p-6 text-center border-b border-gray-50 hover:bg-gray-50 cursor-pointer font-bold text-sm text-gray-700">스루가야</div>
+            <div class="p-6 text-center border-r border-gray-50 hover:bg-gray-50 cursor-pointer font-bold text-sm text-gray-700">멜론북스</div>
+            <div class="p-6 text-center border-r border-gray-50 hover:bg-gray-50 cursor-pointer font-bold text-sm text-gray-700">P-반다이</div>
+            <div class="p-6 text-center border-r border-gray-50 hover:bg-gray-50 cursor-pointer font-bold text-sm text-gray-700">부스(BOOTH)</div>
+            <div class="p-6 text-center hover:bg-gray-50 cursor-pointer font-bold text-sm text-gray-700">토라노아나</div>
+        </div>
+    </section>
 
     <div class="kakao-full-banner">
-        <div style="color:#3c1e1e;"><h2 style="font-size:22px; margin-bottom:5px;">비드포유 카카오톡 1:1 상담</h2><p style="font-size:14px; opacity:0.8;">평일 09~02시 / 주말 09~24시 실시간 상담</p></div>
-        <div style="background:#3c1e1e; color:#fff; padding:12px 30px; border-radius:30px; font-weight:bold;">상담 바로가기 ></div>
+        <div class="text-[#3c1e1e]">
+            <h2 class="text-2xl font-black mb-1">비드포유 카카오톡 1:1 상담</h2>
+            <p class="text-sm opacity-70">평일 09~02시 / 주말 09~24시 실시간 상담</p>
+        </div>
+        <div class="bg-[#3c1e1e] text-white px-8 py-3 rounded-full font-bold shadow-lg">상담 바로가기 ></div>
     </div>
 </main>
 
-<footer style="background:var(--footer-bg); color:white; padding:50px 5%; font-size:13px; text-align:center;">
-    비드포유 메루카리 대행 서비스 | donacorporation8988@gmail.com <br>
-    〒546-0024 大阪府大阪市東住吉区公園南矢田 4-3-7
+<footer class="bg-[#05102a] text-white py-16 px-[5%] mt-20">
+    <div class="footer-grid">
+        <div class="footer-column">
+            <h3>Support</h3>
+            <p class="text-sm opacity-50 mt-4 leading-loose">donacorporation8988@gmail.com <br> 고객센터 운영시간: 09:00 - 18:00</p>
+        </div>
+        <div class="footer-column">
+            <h3>Bank Info</h3>
+            <p class="text-sm opacity-50 mt-4 leading-loose">신한: 140-011-832950 <br> 국민: 750601-01-266837 <br> 예금주: (주)도나코퍼레이션</p>
+        </div>
+        <div class="footer-column">
+            <h3>Logistics Center</h3>
+            <p class="text-sm opacity-50 mt-4 leading-loose">〒546-0024 <br> 大阪府大阪市東住吉区公園南矢田 4-3-7 <br> Osaka, Japan</p>
+        </div>
+    </div>
 </footer>
 
 <script>
@@ -231,4 +230,3 @@
 </script>
 </body>
 </html>
-

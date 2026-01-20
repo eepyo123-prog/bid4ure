@@ -49,7 +49,37 @@
             position: absolute; bottom: 20px; right: 20px; background: rgba(255,255,255,0.1); 
             border: 1px solid rgba(255,255,255,0.2); padding: 10px 15px; border-radius: 8px; backdrop-filter: blur(5px); font-size: 11px;
         }
+/* [등급별 프리미엄 그라데이션 컬러] */
+.grade-BRONZE { background: linear-gradient(135deg, #CD7F32, #A76E4B); }
+.grade-SILVER { background: linear-gradient(135deg, #A0A0A0, #C0C0C0); }
+.grade-GOLD { background: linear-gradient(135deg, #FFD700, #D4AF37); color: #000 !important; }
+.grade-PLATINUM { background: linear-gradient(135deg, #3D64AD, #6B8ED6); }
+.grade-DIAMOND { background: linear-gradient(135deg, #45B3E0, #B0E0E6); }
+.grade-B2B { background: var(--main-deep-blue); }
 
+/* [개선된 등급 배지 스타일 - 싼티 방지 효과] */
+.user-grade { 
+    display: inline-block; 
+    color: #fff; 
+    font-size: 10px; 
+    padding: 3px 12px; 
+    border-radius: 12px; 
+    margin-top: 8px; 
+    font-weight: 800;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 마우스 호버 시 은은한 광택(쉬머) 효과 */
+.user-grade:hover { transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.user-grade::after {
+    content: ""; position: absolute; top: 0; left: -150%; width: 50%; height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+    transform: skewX(-25deg); transition: 0.7s;
+}
+.user-grade:hover::after { left: 200%; }
         /* 로그인 & 정보창 배치 수정 */
         .side-auth-box { 
             background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border-light); 
@@ -200,8 +230,15 @@
         <div class="side-auth-box">
             <div class="login-form view-logout"><input type="text" placeholder="아이디"><input type="password" placeholder="비밀번호"><button class="btn-login" onclick="toggleLogin(true)">로그인</button></div>
             <div class="member-info view-login">
-                <div class="user-name">홍길동 님</div><div style="text-align:center;"><span style="background:var(--point-orange); color:#fff; font-size:10px; padding:2px 8px; border-radius:10px;">Bronze 등급</span></div>
-                <div class="stat-grid">
+<div class="user-name">홍길동 님</div>
+<div style="text-align:center;">
+    <span style="background:var(--point-orange); color:#fff; font-size:10px; padding:2px 8px; border-radius:10px;">Bronze 등급</span>
+</div>
+
+<div class="user-name" style="font-weight: 900; font-size: 18px; text-align: center;">홍길동 님</div>
+<div style="text-align:center;">
+    <div class="user-grade grade-GOLD">GOLD 등급</div>
+</div>
                     <div class="stat-item"><span style="font-size:11px; color:#888;">사이버머니</span><div class="stat-value">15,200원</div></div>
                     <div class="stat-item"><span style="font-size:11px; color:#888;">할인쿠폰</span><div class="stat-value" style="color:#333;">3장</div></div>
                 </div>
@@ -294,4 +331,5 @@
 
 
 </html>
+
 

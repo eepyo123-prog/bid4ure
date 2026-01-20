@@ -229,22 +229,23 @@
         </div>
         <div class="side-auth-box">
             <div class="login-form view-logout"><input type="text" placeholder="아이디"><input type="password" placeholder="비밀번호"><button class="btn-login" onclick="toggleLogin(true)">로그인</button></div>
-            <div class="member-info view-login">
-<div class="user-name">홍길동 님</div>
-<div style="text-align:center;">
-    <span style="background:var(--point-orange); color:#fff; font-size:10px; padding:2px 8px; border-radius:10px;">Bronze 등급</span>
-</div>
+          <div class="member-info view-login">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px;">
+        <span class="user-name" style="font-weight: 900; font-size: 18px;">홍길동 님</span>
+        <div class="user-grade grade-GOLD" style="margin-top: 0; font-size: 9px; padding: 2px 10px;">GOLD 등급</div>
+    </div>
 
-<div class="user-name" style="font-weight: 900; font-size: 18px; text-align: center;">홍길동 님</div>
-<div style="text-align:center;">
-    <div class="user-grade grade-GOLD">GOLD 등급</div>
-</div>
-                    <div class="stat-item"><span style="font-size:11px; color:#888;">사이버머니</span><div class="stat-value">15,200원</div></div>
-                    <div class="stat-item"><span style="font-size:11px; color:#888;">할인쿠폰</span><div class="stat-value" style="color:#333;">3장</div></div>
-                </div>
-            </div>
+    <div class="stat-grid" style="border-top: 1px solid #f1f1f1; padding-top: 15px;">
+        <div class="stat-item">
+            <span style="font-size: 11px; color: #888; display: block; margin-bottom: 2px;">사이버머니</span>
+            <div class="stat-value" style="font-size: 15px;">15,200원</div>
+        </div>
+        <div class="stat-item">
+            <span style="font-size: 11px; color: #888; display: block; margin-bottom: 2px;">할인쿠폰</span>
+            <div class="stat-value" style="color: #333; font-size: 15px;">3장</div>
         </div>
     </div>
+</div>
 
     <div id="dynamic-area" style="display: flex; flex-direction: column; gap: 35px;">
         
@@ -331,5 +332,6 @@
 
 
 </html>
+
 
 

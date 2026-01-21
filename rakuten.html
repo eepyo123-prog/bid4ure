@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bid4U - 라쿠텐 검색</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* [1. 현재 빌드 테마 변수] */
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        
+        /* [1. 테마 변수] */
         :root {
             --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
             --footer-bg: #05102a; --point-orange: #ff8c00; --bg-grey: #f4f6f9;
@@ -15,25 +18,23 @@
         * { box-sizing: border-box; }
         a { text-decoration: none; color: inherit; }
 
-        /* [2. 상단 유틸리티 & 헤더 - 복구] */
+        /* [2. 공통 요소 CSS - header.html 로드 시 필요] */
         .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
         header { padding: 25px 5%; text-align: center; background: #fff; border-bottom: 1px solid #f1f1f1; }
         .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
-
-        /* [3. 네비게이션] */
         .main-nav { background: var(--main-deep-blue); box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
         .main-nav ul { display: flex; justify-content: center; list-style: none; padding: 0; margin: 0; }
         .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; }
-        .main-nav li.active { background: rgba(255,255,255,0.1); }
+        /* Active 메뉴 강조 스타일 */
+        .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
 
-        /* [4. 퀵 메뉴 & 모달 - 복구] */
+        /* [3. 퀵 메뉴 & 모달 CSS] */
         .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 1000; background: #555; border-radius: 8px 0 0 8px; overflow: hidden; }
         .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
-        .side-btn i { font-style: normal; font-size: 18px; margin-bottom: 4px; }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,31,77,0.8); z-index: 5000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
         .modal-content { background: #fff; width: 95%; max-width: 950px; height: 85vh; border-radius: 20px; overflow: hidden; position: relative; }
 
-        /* [5. 라쿠텐 검색 레이아웃] */
+        /* [4. 라쿠텐 전용 레이아웃] */
         .main-content { padding: 30px 5%; max-width: 1200px; margin: 0 auto; }
         .search-wrap { background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border-light); margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
         .search-title { font-size: 19px; font-weight: 800; color: var(--main-deep-blue); margin-bottom: 18px; border-bottom: 2px solid var(--main-deep-blue); padding-bottom: 8px; }
@@ -43,7 +44,7 @@
         .filter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; font-size: 13px; }
         .filter-grid select, .filter-grid input { width: 100%; padding: 8px; border: 1px solid #eee; border-radius: 4px; outline: none; }
 
-        /* [6. 상품 리스트 그리드] */
+        /* [5. 상품 그리드] */
         .rakuten-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
         .prod-card { background: #fff; border: 1px solid #eee; border-radius: 12px; overflow: hidden; transition: 0.3s; }
         .prod-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
@@ -56,7 +57,9 @@
         @media (max-width: 768px) { .rakuten-grid { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
-<body>
+<body class="is-logged-out" id="mainBody">
+
+<div id="header-load"></div>
 
 <div class="modal-overlay" id="calcModal">
     <div class="modal-content">
@@ -64,29 +67,6 @@
         <iframe src="final_no.html" style="width:100%; height:100%; border:none;"></iframe>
     </div>
 </div>
-
-<div class="side-quick">
-    <div class="side-btn" onclick="openCalc()"><i>🧮</i>계산기</div>
-    <div class="side-btn"><i>💬</i>문의</div>
-    <div onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="background:#333; color:#fff; text-align:center; padding:10px; font-size:10px; cursor:pointer;">TOP</div>
-</div>
-
-<div class="top-util">
-    <span><b>고시 환율:</b> 100￥ = 994원</span>
-    <div>로그인 | 회원가입 | 고객센터</div>
-</div>
-
-<header><a href="index.html" class="logo">Bid4U</a></header>
-
-<nav class="main-nav">
-    <ul>
-        <li><a href="auctions2.html">야후옥션</a></li>
-        <li><a href="mercari.html">메루카리</a></li>
-        <li class="active"><a href="rakuten.html">라쿠텐</a></li>
-        <li><a href="offer.html">구매대행신청</a></li>
-        <li><a href="mypage.html">마이페이지</a></li>
-    </ul>
-</nav>
 
 <main class="main-content">
     <section class="search-wrap">
@@ -121,14 +101,37 @@
     </div>
 </main>
 
-<footer style="background:var(--footer-bg); color:#fff; padding:50px 5%; font-size:13px; text-align:center;">
-    Bid4U | donacorporation8988@gmail.com | 〒546-0024 大阪府大阪市東住吉区公園南矢田 4-3-7
-</footer>
+<div id="footer-load"></div>
 
 <script>
-    // [계산기 스크립트 복구]
+    // 공통 컴포넌트 로드 함수
+    async function loadConfig() {
+        // 헤더 로드
+        const headerRes = await fetch('header.html');
+        document.getElementById('header-load').innerHTML = await headerRes.text();
+
+        // 푸터 로드
+        const footerRes = await fetch('footer.html');
+        document.getElementById('footer-load').innerHTML = await footerRes.text();
+
+        // [핵심] 현재 페이지 메뉴 강조 (Active)
+        const filename = window.location.pathname.split("/").pop() || 'index.html';
+        const menuId = 'menu-' + filename.replace('.html', '').replace('auctions2', 'auctions2');
+        const activeMenu = document.getElementById(menuId);
+        if(activeMenu) activeMenu.classList.add('active');
+    }
+
+    loadConfig();
+
     function openCalc(){ document.getElementById('calcModal').style.display = 'flex'; }
     function closeCalc(){ document.getElementById('calcModal').style.display = 'none'; }
+    
+    // 로그인 상태 토글 함수 (헤더 로드 후 작동)
+    function toggleLogin(l){ 
+        const b = document.getElementById('mainBody'); 
+        if(l){ b.classList.remove('is-logged-out'); b.classList.add('is-logged-in'); } 
+        else { b.classList.remove('is-logged-in'); b.classList.add('is-logged-out'); } 
+    }
 </script>
 
 </body>

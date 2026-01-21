@@ -3,94 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bid4U - 메루카리 전문관</title>
+    <title>Bid4U - 메루카리 상세정보</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         
         :root {
-            --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
-            --mercari-red: #ff0021; --point-orange: #ff8c00; 
+            --main-deep-blue: #0a1f4d; --mercari-red: #ff0021; --point-orange: #ff8c00; 
             --bg-grey: #f4f6f9; --border-light: #e1e5eb;
         }
-        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; transition: background 0.3s; }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); }
         * { box-sizing: border-box; }
 
-        /* [공통 요소 스타일 - Ticker 및 Nav 복구] */
-        .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
-        header { padding: 25px 5%; text-align: center; background: #fff; }
-        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
-        .main-nav { background: var(--main-deep-blue); box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 2000; }
-        .main-nav ul { display: flex; justify-content: center; list-style: none; padding: 0; margin: 0; }
-        .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; text-decoration: none; }
-        .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
-
-        /* [Ticker 애니메이션 복구] */
-        .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
-        .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; }
-        .ticker-text-wrapper { overflow: hidden; white-space: nowrap; flex: 1; }
-        .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; }
-        @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
-
-        /* [모드 제어 스타일] */
-        .simple-only { display: block; }
-        .pro-only { display: none !important; }
-        body.pro-mode .simple-only { display: none !important; }
-        body.pro-mode .pro-only { display: block !important; }
-        body.pro-mode { background-color: #fff; }
-
-        .mode-switcher-bar { background: #fff; border-bottom: 1px solid #ddd; padding: 10px 5%; display: flex; justify-content: flex-end; align-items: center; position: sticky; top: 51px; z-index: 1900; }
-        .toggle-box { display: flex; background: #eee; border-radius: 20px; padding: 3px; }
-        .mode-btn { padding: 6px 15px; border-radius: 17px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .mode-btn.active { background: var(--mercari-red); color: #fff; }
-
-        /* [그리드 레이아웃 고정] */
-        .auction-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; max-width: 1350px; margin: 0 auto; }
-        body.pro-mode .auction-grid { grid-template-columns: repeat(5, 1fr); gap: 15px; }
-        .auction-item { background: #fff; border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; transition: 0.3s; }
+        /* [상태바 전용 스타일 복구] */
+        .status-step { flex: 1; height: 8px; border-radius: 4px; background: #e2e8f0; position: relative; }
+        .status-step.active { background: #10b981; }
+        .tooltip-arrow {
+            content: ''; position: absolute; bottom: -5px; left: 50%;
+            transform: translateX(-50%); border-width: 5px 5px 0;
+            border-style: solid; border-color: #1e293b transparent transparent;
+        }
+        .help-btn { width: 1.25rem; height: 1.25rem; background-color: #e5e7eb; color: #6b7280; border-radius: 9999px; display: inline-flex; items-center; justify-content: center; font-size: 0.625rem; font-weight: 700; cursor: pointer; }
     </style>
 </head>
-<body class="simple-mode" id="targetBody">
+<body>
 
 <div id="header-load"></div>
 
-<div class="mode-switcher-bar">
-    <div style="margin-right: 15px; font-size: 12px; font-weight: bold; color: #666;">화면 구성 선택</div>
-    <div class="toggle-box">
-        <div class="mode-btn active" id="simpleBtn" onclick="toggleMode('simple')">일반 모드</div>
-        <div class="mode-btn" id="proBtn" onclick="toggleMode('pro')">전문가 모드</div>
-    </div>
-</div>
-
-<section class="simple-only">
-    <div class="mercari-hero" style="background: linear-gradient(rgba(10,31,77,0.85), rgba(10,31,77,0.85)), url('https://picsum.photos/1200/400?grayscale'); padding: 60px 5%; text-align: center; color: #fff;">
-        <h1 style="font-size:32px; font-weight: 900;">MERCARI JP</h1>
-        <p style="opacity: 0.9; margin-top: 10px;">가장 안전한 일본 중고장터 이용 경험</p>
-        <div style="max-width: 750px; margin: 25px auto 0; position: relative;">
-            <input type="text" placeholder="상품명 또는 번호 입력" style="width: 100%; padding: 18px 30px; border-radius: 40px; border: none; color:#333; outline:none;">
-            <button style="position: absolute; right: 8px; top: 7px; background: var(--mercari-red); color: #fff; border: none; padding: 11px 35px; border-radius: 30px; font-weight: bold;">검색</button>
+<main class="max-w-[1350px] mx-auto py-10 px-[5%]">
+    <div class="flex flex-col lg:flex-row gap-12">
+        <div class="lg:w-1/2">
+            <img src="https://picsum.photos/600/700?random=20" class="w-full rounded-3xl shadow-sm">
         </div>
-    </div>
-</section>
+        <div class="lg:w-1/2">
+            <h1 class="text-3xl font-black text-gray-900 mb-8">올리브 그린 슬랙스 사이즈 36 (M)</h1>
 
-<div class="mercari-info-bar" style="background: #fff; border-bottom: 1px solid #eee; padding: 18px 5%; display: flex; justify-content: center; gap: 45px; align-items: center;">
-    <div style="font-size: 15px; font-weight: 700; color: #444;">📦 오사카 <b>직영물류</b> 검수</div>
-    <div style="font-size: 15px; font-weight: 700; color: #444;">💰 수수료 <b>200엔</b> 혁명</div>
-</div>
-
-<main style="padding: 40px 5%;">
-    <div class="auction-grid">
-        <div class="auction-item">
-            <a href="mercariinfo.html">
-                <div style="width: 100%; aspect-ratio: 1/1; background-image: url('https://picsum.photos/400/400?random=62'); background-size: cover;"></div>
-                <div style="padding: 18px;">
-                    <div style="font-size: 14px; font-weight: 500;">올리브 그린 슬랙스 M</div>
-                    <div style="font-size: 19px; font-weight: 800; margin-top: 10px;">900엔 <span style="font-size: 12px; color: #888; font-weight: normal;">(약 8,730원)</span></div>
+            <div class="border-b border-gray-100 pb-8 mb-8">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">Item Condition</span>
+                    <button onclick="toggleModal('statusModal')" class="help-btn">?</button>
                 </div>
-            </a>
+                
+                <div class="bg-emerald-50 border border-emerald-100 p-5 rounded-2xl flex items-center justify-between mb-6">
+                    <div class="text-emerald-700">
+                        <span class="text-xs font-bold block opacity-70">현재 상품의 상태</span>
+                        <span class="text-xl font-black">신품 · 미사용</span>
+                    </div>
+                    <div class="bg-emerald-500 text-white px-4 py-1.5 rounded-full text-xs font-black shadow-sm">S-GRADE</div>
+                </div>
+
+                <div class="px-2">
+                    <div class="flex gap-1.5 mb-2">
+                        <div class="status-step active relative">
+                            <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap font-bold">
+                                상품 상태 <div class="tooltip-arrow"></div>
+                            </div>
+                        </div>
+                        <div class="status-step active"></div>
+                        <div class="status-step"></div>
+                        <div class="status-step"></div>
+                        <div class="status-step"></div>
+                    </div>
+                    <div class="flex justify-between text-[10px] font-bold text-gray-400 uppercase tracking-tighter">
+                        <span>미개봉 새상품</span><span>단순 개봉</span><span>중고 상품</span><span>사용감 많음</span><span>정크</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="w-full bg-[--mercari-red] text-white py-5 rounded-2xl font-black text-xl shadow-lg">이 상품 구매 신청하기</button>
         </div>
     </div>
 </main>
+
+<div id="statusModal" class="fixed inset-0 bg-black/60 hidden z-[5000] flex items-center justify-center p-6 backdrop-blur-sm">
+    <div class="bg-white rounded-[2.5rem] w-full max-w-md overflow-hidden">
+        <div class="bg-slate-900 p-6 text-white font-bold flex justify-between">상태 가이드 <button onclick="toggleModal('statusModal')">×</button></div>
+        <div class="p-8 space-y-4">
+            <div class="p-4 border-2 border-emerald-500 bg-emerald-50 rounded-2xl text-emerald-700 font-black">신품 · 미사용 (S)</div>
+            <div class="p-4 bg-gray-50 rounded-xl text-gray-400">미사용에 가까움 (A)</div>
+        </div>
+    </div>
+</div>
 
 <div id="footer-load"></div>
 
@@ -100,28 +93,11 @@
         document.getElementById('header-load').innerHTML = await headerRes.text();
         const footerRes = await fetch('footer.html');
         document.getElementById('footer-load').innerHTML = await footerRes.text();
-
-        const filename = window.location.pathname.split("/").pop() || 'index.html';
-        const menuId = 'menu-' + filename.replace('.html', '');
-        const activeMenu = document.getElementById(menuId);
-        if(activeMenu) activeMenu.classList.add('active');
+        document.getElementById('menu-mercari').classList.add('active');
     }
     loadConfig();
 
-    function toggleMode(mode) {
-        const body = document.getElementById('targetBody');
-        const simpleBtn = document.getElementById('simpleBtn');
-        const proBtn = document.getElementById('proBtn');
-        if (mode === 'pro') {
-            body.classList.add('pro-mode');
-            proBtn.classList.add('active');
-            simpleBtn.classList.remove('active');
-        } else {
-            body.classList.remove('pro-mode');
-            simpleBtn.classList.add('active');
-            proBtn.classList.remove('active');
-        }
-    }
+    function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
 </script>
 </body>
 </html>

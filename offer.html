@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bid4U - 대량 구매대행 신청</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* [1. 공통 테마 - 마이페이지 양식 유지] */
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        
+        /* [1. 공통 테마 및 초기화] */
         :root {
             --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
             --footer-bg: #05102a; --point-orange: #ff8c00; --bg-grey: #f4f6f9;
@@ -16,194 +19,99 @@
         a { text-decoration: none; color: inherit; transition: 0.2s; }
         * { box-sizing: border-box; }
 
-        /* [2. 상단 & 헤더] */
+        /* [2. 공통 요소 CSS - header.html 로드 시 필요] */
         .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
         header { padding: 25px 5%; text-align: center; background: #fff; }
         .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
         .main-nav { background: var(--main-deep-blue); box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 2000; }
         .main-nav ul { display: flex; justify-content: center; }
         .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; }
+        .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        
+        /* 띠 공지사항(Ticker) 스타일 유지 */
+        .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
+        .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; }
+        .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; white-space: nowrap; }
+        @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* [3. 레이아웃] */
+        /* [3. 오퍼 페이지 특화 스타일] */
         .main-content { padding: 30px 5%; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 240px 1fr; gap: 30px; }
-
-        /* 사이드바 */
-        .side-menu-box { display: flex; flex-direction: column; gap: 20px; }
-        .user-profile { background: #fff; border: 1px solid var(--border-light); border-radius: 12px; padding: 20px; text-align: center; }
-        .user-grade { display: inline-block; background: var(--point-orange); color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 10px; margin-top: 5px; }
-        .side-nav { background: #fff; border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden; }
-        .side-nav li a { display: block; padding: 15px 20px; font-size: 14px; border-bottom: 1px solid #f1f1f1; color: #555; }
         .side-nav li.active a { background: var(--main-royal-blue); color: #fff; font-weight: bold; }
-
-        /* 본문 및 신청서 카드 */
-        .content-section { display: flex; flex-direction: column; gap: 20px; }
-        .content-card { background: #fff; border: 1px solid var(--border-light); border-radius: 15px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
-        .section-title { font-size: 18px; font-weight: 800; color: var(--main-deep-blue); margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #f1f1f1; }
-
-        .guide-box { background: #f8faff; border-left: 5px solid var(--main-royal-blue); padding: 15px; margin-bottom: 20px; font-size: 13px; border-radius: 4px; }
-
-        /* 개별 상품 카드 */
-        .product-item-card { 
-            border: 1px solid #eee; border-radius: 12px; padding: 20px; margin-bottom: 20px; 
-            background: #fff; position: relative; transition: 0.3s;
-        }
-        .product-item-card:hover { border-color: var(--main-royal-blue); }
-        .item-count-label { 
-            position: absolute; left: -10px; top: -10px; background: var(--main-deep-blue); 
-            color: #fff; padding: 2px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;
-        }
-        .btn-remove-item {
-            position: absolute; right: 15px; top: 15px; background: #fff; border: 1px solid #ddd;
-            color: #888; border-radius: 4px; padding: 5px 10px; cursor: pointer; font-size: 11px;
-        }
-        .btn-remove-item:hover { background: var(--bid-red); color: #fff; border-color: var(--bid-red); }
-
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
-        .form-label { font-size: 12px; font-weight: 700; color: #666; }
-        .form-input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; outline: none; }
-        .form-input:focus { border-color: var(--main-royal-blue); }
-
-        /* 상품 추가 버튼 */
-        .btn-add-product {
-            width: 100%; padding: 15px; border: 2px dashed #ddd; background: #fafafa;
-            color: var(--main-royal-blue); font-weight: 800; font-size: 15px; border-radius: 10px;
-            cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        .btn-add-product:hover { background: #f0f7ff; border-color: var(--main-royal-blue); }
-
-        .btn-submit { width: 100%; padding: 18px; background: var(--main-deep-blue); color: #fff; border: none; border-radius: 10px; font-size: 17px; font-weight: 800; cursor: pointer; margin-top: 30px; }
-
-        @media (max-width: 1024px) {
-            .main-content { grid-template-columns: 1fr; }
-            .form-grid { grid-template-columns: 1fr; }
-        }
+        .product-item-card { border: 1px solid #eee; border-radius: 12px; padding: 20px; margin-bottom: 20px; background: #fff; position: relative; transition: 0.3s; }
+        .item-count-label { position: absolute; left: -10px; top: -10px; background: var(--main-deep-blue); color: #fff; padding: 2px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .btn-add-product { width: 100%; padding: 15px; border: 2px dashed #ddd; background: #fafafa; color: var(--main-royal-blue); font-weight: 800; border-radius: 10px; cursor: pointer; }
     </style>
 </head>
-<body>
+<body id="mainBody">
 
-<div class="top-util">
-    <span><b>고시 환율:</b> 100￥ = 994원</span>
-    <div><b>홍길동</b>님 반갑습니다! | <a href="#">로그아웃</a></div>
-</div>
-
-<header><a href="index.html" class="logo">Bid4U</a></header>
-
-<nav class="main-nav">
-    <ul>
-        <li><a href="auctions2.html">야후옥션</a></li>
-        <li><a href="mercari.html">메루카리</a></li>
-        <li><a href="rakuten.html">라쿠텐</a></li>
-        <li><a href="offer.html">구매대행신청</a></li>
-        <li><a href="mypage.html" style="background: rgba(255,255,255,0.1); border-radius: 4px;">마이페이지</a></li>
-    </ul>
-</nav>
+<div id="header-load"></div>
 
 <main class="main-content">
-    <aside class="side-menu-box">
-        <div class="user-profile">
+    <aside class="side-menu-box" style="display: flex; flex-direction: column; gap: 20px;">
+        <div class="user-profile" style="background: #fff; border: 1px solid var(--border-light); border-radius: 12px; padding: 20px; text-align: center;">
             <div style="font-weight: 900; font-size: 18px;">홍길동 님</div>
-            <div class="user-grade">BRONZE 등급</div>
+            <div class="user-grade" style="display: inline-block; background: var(--point-orange); color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 10px; margin-top: 5px;">BRONZE 등급</div>
         </div>
-        <ul class="side-nav">
-            <li><a href="mypage.html">나의 지갑</a></li>
-            <li><a href="#">대행신청 현황</a></li>
-            <li class="active"><a href="#">개인구매대행 신청</a></li>
-            <li><a href="#">회원정보 수정</a></li>
+        <ul class="side-nav" style="background: #fff; border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden;">
+            <li><a href="mypage.html" style="display: block; padding: 15px 20px; font-size: 14px; border-bottom: 1px solid #f1f1f1;">나의 지갑</a></li>
+            <li><a href="#" style="display: block; padding: 15px 20px; font-size: 14px; border-bottom: 1px solid #f1f1f1;">대행신청 현황</a></li>
+            <li class="active"><a href="offer.html" style="display: block; padding: 15px 20px; font-size: 14px; border-bottom: 1px solid #f1f1f1;">개인구매대행 신청</a></li>
+            <li><a href="#" style="display: block; padding: 15px 20px; font-size: 14px;">회원정보 수정</a></li>
         </ul>
     </aside>
 
     <div class="content-section">
-        <section class="content-card">
-            <h2 class="section-title">📦 개인구매대행 멀티 신청</h2>
-            <div class="guide-box">
-                <b>주의사항:</b> 야후옥션/eBay 상품은 전용 메뉴를 이용해 주세요. 옵션이 다른 상품은 각각 추가하여 신청해 주세요. <br>
-                가격은 반드시 <b>세금 포함 가격</b>으로 입력해 주시기 바랍니다.
-            </div>
-
-            <div style="background:#f9f9f9; padding:15px; border-radius:8px; margin-bottom:25px; display:flex; gap:20px; align-items:center;">
-                <span class="form-label" style="margin:0;">구매 국가:</span>
-                <label><input type="radio" name="nation" checked> 🇯🇵 일본</label>
-                <label><input type="radio" name="nation" disabled> 일본 결제대행</label>
-            </div>
-
+        <section class="content-card" style="background: #fff; border: 1px solid var(--border-light); border-radius: 15px; padding: 25px;">
+            <h2 class="section-title" style="font-size: 18px; font-weight: 800; color: var(--main-deep-blue); margin-bottom: 20px; border-bottom: 2px solid #f1f1f1; padding-bottom: 10px;">📦 개인구매대행 멀티 신청</h2>
             <div id="product-list">
                 <div class="product-item-card" id="item-1">
                     <span class="item-count-label">상품 1</span>
-                    <div class="form-group">
-                        <label class="form-label">상품 상세 URL</label>
-                        <input type="url" class="form-input" placeholder="상세페이지 주소를 정확히 입력하세요">
                     </div>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label class="form-label">상품명</label>
-                            <input type="text" class="form-input" placeholder="일문 또는 영문 명칭">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">옵션 (색상, 사이즈 등)</label>
-                            <input type="text" class="form-input" placeholder="예: 블랙 / L">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">가격 (세금포함 엔화 ￥)</label>
-                            <input type="number" class="form-input" placeholder="0">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">수량</label>
-                            <input type="number" class="form-input" value="1" min="1">
-                        </div>
-                    </div>
-                </div>
             </div>
-
-            <button type="button" class="btn-add-product" onclick="addProduct()">
-                <span>➕ 다른 상품 추가하기</span>
-            </button>
-
-            <button type="submit" class="btn-submit">총 <span id="item-total">1</span>건 신청하기</button>
+            <button type="button" class="btn-add-product" onclick="addProduct()">➕ 다른 상품 추가하기</button>
+            <button type="submit" class="btn-submit" style="width: 100%; padding: 18px; background: var(--main-deep-blue); color: #fff; border: none; border-radius: 10px; font-size: 17px; font-weight: 800; cursor: pointer; margin-top: 30px;">총 <span id="item-total">1</span>건 신청하기</button>
         </section>
     </div>
 </main>
 
-<script>
-    let itemCount = 1;
+<div id="footer-load"></div>
 
+<script>
+    // 공통 컴포넌트 로드 및 메뉴 강조 스크립트
+    async function loadConfig() {
+        const headerRes = await fetch('header.html');
+        document.getElementById('header-load').innerHTML = await headerRes.text();
+
+        const footerRes = await fetch('footer.html');
+        document.getElementById('footer-load').innerHTML = await footerRes.text();
+
+        // 현재 페이지 메뉴 강조 (Active)
+        const filename = window.location.pathname.split("/").pop() || 'index.html';
+        const menuId = 'menu-' + filename.replace('.html', '');
+        const activeMenu = document.getElementById(menuId);
+        if(activeMenu) activeMenu.classList.add('active');
+    }
+
+    loadConfig();
+
+    // 구매대행 신청 페이지 전용 동적 폼 스크립트
+    let itemCount = 1;
     function addProduct() {
         itemCount++;
         const list = document.getElementById('product-list');
         const newItem = document.createElement('div');
         newItem.className = 'product-item-card';
         newItem.id = 'item-' + itemCount;
-        
         newItem.innerHTML = `
             <span class="item-count-label">상품 ${itemCount}</span>
-            <button type="button" class="btn-remove-item" onclick="removeItem(${itemCount})">삭제</button>
-            <div class="form-group">
-                <label class="form-label">상품 상세 URL</label>
-                <input type="url" class="form-input" placeholder="상세페이지 주소">
-            </div>
-            <div class="form-grid">
-                <div class="form-group"><label class="form-label">상품명</label><input type="text" class="form-input"></div>
-                <div class="form-group"><label class="form-label">옵션</label><input type="text" class="form-input"></div>
-                <div class="form-group"><label class="form-label">가격 (￥)</label><input type="number" class="form-input"></div>
-                <div class="form-group"><label class="form-label">수량</label><input type="number" class="form-input" value="1"></div>
-            </div>
-        `;
+            <button type="button" class="btn-remove-item" onclick="removeItem(${itemCount})" style="position: absolute; right: 15px; top: 15px; cursor: pointer;">삭제</button>
+            `;
         list.appendChild(newItem);
         updateTotal();
     }
-
-    function removeItem(id) {
-        const item = document.getElementById('item-' + id);
-        item.remove();
-        updateTotal();
-    }
-
-    function updateTotal() {
-        const total = document.querySelectorAll('.product-item-card').length;
-        document.getElementById('item-total').innerText = total;
-    }
+    function removeItem(id) { document.getElementById('item-' + id).remove(); updateTotal(); }
+    function updateTotal() { document.getElementById('item-total').innerText = document.querySelectorAll('.product-item-card').length; }
 </script>
 
 </body>
-
 </html>

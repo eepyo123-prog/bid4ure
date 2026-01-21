@@ -7,8 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-        
-        /* [1. 테마 및 초기화] */
         :root {
             --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
             --footer-bg: #05102a; --point-orange: #ff8c00; --bg-grey: #f4f6f9;
@@ -19,68 +17,41 @@
         a { text-decoration: none; color: inherit; transition: 0.2s; }
         * { box-sizing: border-box; }
 
-        /* [2. 등급별 프리미엄 컬러 & 쉬머 효과] */
-        .grade-BRONZE { background: linear-gradient(135deg, #CD7F32, #A76E4B); }
-        .grade-SILVER { background: linear-gradient(135deg, #A0A0A0, #C0C0C0); }
+        /* 등급 및 레이아웃 스타일 유지 */
         .grade-GOLD { background: linear-gradient(135deg, #FFD700, #D4AF37); color: #000 !important; }
-        .grade-PLATINUM { background: linear-gradient(135deg, #3D64AD, #6B8ED6); }
-        .grade-DIAMOND { background: linear-gradient(135deg, #45B3E0, #B0E0E6); }
-        .grade-B2B { background: var(--main-deep-blue); }
-
-        .user-grade { 
-            display: inline-block; color: #fff; border-radius: 12px; font-weight: 800;
-            position: relative; overflow: hidden; transition: all 0.4s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .user-grade::after {
-            content: ""; position: absolute; top: 0; left: -150%; width: 50%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
-            transform: skewX(-25deg); transition: 0.7s;
-        }
-        .user-grade:hover::after { left: 200%; }
-
-        /* [3. 상태 제어 및 레이아웃] */
+        .user-grade { display: inline-block; color: #fff; border-radius: 12px; font-weight: 800; position: relative; overflow: hidden; transition: all 0.4s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .is-logged-in .view-logout { display: none !important; }
         .is-logged-out .view-login { display: none !important; }
         .is-logged-out .status-container { display: none !important; }
+        
+        /* 네비게이션 강조 스타일 */
+        .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
 
+        /* 기존의 상세 CSS들 (top-util, main-nav, ticker 등)은 header.html을 불러와도 이 페이지의 style에 있어야 적용됩니다. */
         .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
         header { padding: 25px 5%; text-align: center; background: #fff; }
         .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
         .main-nav { background: var(--main-deep-blue); box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 2000; }
         .main-nav ul { display: flex; justify-content: center; }
         .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; }
-
         .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
         .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; }
         .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; white-space: nowrap; }
         @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
         .main-content { padding: 30px 5%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 35px; }
-
-        /* [4. 퀵 메뉴 & 모달] */
         .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 1000; background: #555; border-radius: 8px 0 0 8px; overflow: hidden; box-shadow: -2px 0 10px rgba(0,0,0,0.2); }
         .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s; }
-        .side-btn:hover { background: #444; }
-        .side-btn i { font-style: normal; font-size: 18px; margin-bottom: 4px; }
-
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,31,77,0.8); z-index: 5000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
         .modal-content { background: #fff; width: 95%; max-width: 950px; height: 85vh; border-radius: 20px; overflow: hidden; position: relative; }
-
-        /* [5. 하단 배너 및 그리드] */
         .section-title { font-size: 19px; font-weight: 800; color: var(--main-deep-blue); margin-bottom: 18px; padding-bottom: 8px; border-bottom: 2px solid var(--main-deep-blue); }
         .kakao-full-banner { background: var(--kakao-yellow); border-radius: 15px; padding: 30px 40px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; margin-top: 20px; }
-        
         .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; max-width: 1200px; margin: 0 auto; text-align: left; }
-        .footer-column h3 { font-size: 14px; margin-bottom: 15px; color: #fff; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px; }
-
-        @media (max-width: 768px) {
-            .footer-grid { grid-template-columns: 1fr; text-align: center; }
-            .kakao-full-banner { flex-direction: column; text-align: center; gap: 20px; }
-        }
     </style>
 </head>
 <body class="is-logged-out" id="mainBody">
+
+<div id="header-load"></div>
 
 <div class="modal-overlay" id="calcModal">
     <div class="modal-content">
@@ -94,30 +65,6 @@
     <div class="side-btn"><i>💬</i>문의</div>
     <div onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="background:#333; color:#fff; text-align:center; padding:10px; font-size:10px; cursor:pointer;">TOP</div>
 </div>
-
-<div class="top-util">
-    <span><b>고시 환율:</b> 100￥ = 994원</span>
-    <div class="view-logout">로그인 | 회원가입 | 고객센터</div>
-    <div class="view-login">
-        <a href="mypage.html"><b>홍길동</b>님 반갑습니다!</a> | 
-        <a href="mypage.html" style="color:var(--point-orange); font-weight:bold;">[마이페이지]</a> | 
-        <a href="javascript:toggleLogin(false)" style="color:#fff">로그아웃</a>
-    </div>
-</div>
-
-<header><a href="index.html" class="logo">Bid4U</a></header>
-
-<nav class="main-nav">
-    <ul>
-        <li><a href="auctions2.html">야후옥션</a></li>
-        <li><a href="mercari.html">메루카리</a></li>
-        <li><a href="rakuten.html">라쿠텐</a></li>
-        <li><a href="offer.html">구매대행신청</a></li>
-        <li><a href="mypage.html">마이페이지</a></li>
-    </ul>
-</nav>
-
-<div class="ticker"><div class="ticker-label">NOTICE</div><div class="ticker-text-wrapper"><div class="ticker-text">[이벤트] 수수료 200엔 혁명! &nbsp;&nbsp;&nbsp;&nbsp; [안내] 26년 1월 구정 연휴 오사카 물류센터 정상 운영</div></div></div>
 
 <main class="main-content">
     <div class="grid grid-cols-1 lg:grid-cols-[2.3fr_1fr] gap-5 h-auto lg:h-[280px]">
@@ -153,46 +100,6 @@
             </div>
         </div>
     </div>
-
-    <div class="status-container">
-        <h3 class="font-black text-lg mb-4">📊 대행신청 현황 (일본)</h3>
-        <div class="grid grid-cols-5 md:grid-cols-10 border border-gray-100 rounded-xl overflow-hidden shadow-sm">
-            <div class="text-center py-4 bg-white border-r border-gray-50"><span class="text-[10px] text-gray-500 block mb-1">실패</span>🗑️<div class="font-bold">34</div></div>
-            <div class="text-center py-4 bg-white border-r border-gray-50"><span class="text-[10px] text-gray-500 block mb-1">입찰요청</span>📝<div class="font-bold">0</div></div>
-            <div class="text-center py-4 bg-white border-r border-gray-50"><span class="text-[10px] text-gray-500 block mb-1">낙찰승인</span>🔨<div class="font-bold text-blue-600">16</div></div>
-            <div class="text-center py-4 bg-white border-r border-gray-50"><span class="text-[10px] text-gray-500 block mb-1">1차결제</span>💳<div class="font-bold">0</div></div>
-            <div class="text-center py-4 bg-white border-r border-gray-50"><span class="text-[10px] text-gray-500 block mb-1">현지배송</span>🚚<div class="font-bold">0</div></div>
-            <div class="text-center py-4 bg-white border-r border-gray-50"><span class="text-[10px] text-gray-500 block mb-1">통합진행</span>📦<div class="font-bold">0</div></div>
-            <div class="text-center py-4 bg-white border-r border-gray-50"><span class="text-[10px] text-gray-500 block mb-1">2차요청</span>📑<div class="font-bold">0</div></div>
-            <div class="text-center py-4 bg-white border-r border-gray-50"><span class="text-[10px] text-gray-500 block mb-1">2차완료</span>💳<div class="font-bold">0</div></div>
-            <div class="text-center py-4 bg-white border-r border-gray-50"><span class="text-[10px] text-gray-500 block mb-1">국제배송</span>✈️<div class="font-bold text-orange-500">1</div></div>
-            <div class="text-center py-4 bg-white"><span class="text-[10px] text-gray-500 block mb-1">배송완료</span>🎁<div class="font-bold text-orange-500">7</div></div>
-        </div>
-    </div>
-
-    <section>
-        <h2 class="section-title">생생한 이용 후기</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm"><div class="text-yellow-400 mb-2">★★★★★</div><p class="text-sm text-gray-600">"오사카 센터 검수가 정말 꼼꼼합니다!"</p></div>
-            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm"><div class="text-yellow-400 mb-2">★★★★★</div><p class="text-sm text-gray-600">"수수료 200엔이라 가성비 최고예요."</p></div>
-            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm"><div class="text-yellow-400 mb-2">★★★★★</div><p class="text-sm text-gray-600">"배송이 정말 빠르고 안전합니다."</p></div>
-        </div>
-    </section>
-
-    <section>
-        <h2 class="section-title">해외 인기 온라인 상점</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 bg-white border border-gray-100 rounded-xl overflow-hidden">
-            <div class="p-6 text-center border-r border-b border-gray-50 hover:bg-gray-50 cursor-pointer font-bold text-sm text-gray-700">메루카리</div>
-            <div class="p-6 text-center border-r border-b border-gray-50 hover:bg-gray-50 cursor-pointer font-bold text-sm text-gray-700">아미아미</div>
-            <div class="p-6 text-center border-r border-b border-gray-50 hover:bg-gray-50 cursor-pointer font-bold text-sm text-gray-700">애니메이트</div>
-            <div class="p-6 text-center border-b border-gray-50 hover:bg-gray-50 cursor-pointer font-bold text-sm text-gray-700">스루가야</div>
-            <div class="p-6 text-center border-r border-gray-50 hover:bg-gray-50 cursor-pointer font-bold text-sm text-gray-700">멜론북스</div>
-            <div class="p-6 text-center border-r border-gray-50 hover:bg-gray-50 cursor-pointer font-bold text-sm text-gray-700">P-반다이</div>
-            <div class="p-6 text-center border-r border-gray-50 hover:bg-gray-50 cursor-pointer font-bold text-sm text-gray-700">부스(BOOTH)</div>
-            <div class="p-6 text-center hover:bg-gray-50 cursor-pointer font-bold text-sm text-gray-700">토라노아나</div>
-        </div>
-    </section>
-
     <div class="kakao-full-banner">
         <div class="text-[#3c1e1e]">
             <h2 class="text-2xl font-black mb-1">비드포유 카카오톡 1:1 상담</h2>
@@ -202,24 +109,28 @@
     </div>
 </main>
 
-<footer class="bg-[#05102a] text-white py-16 px-[5%] mt-20">
-    <div class="footer-grid">
-        <div class="footer-column">
-            <h3>Support</h3>
-            <p class="text-sm opacity-50 mt-4 leading-loose">donacorporation8988@gmail.com <br> 고객센터 운영시간: 09:00 - 18:00</p>
-        </div>
-        <div class="footer-column">
-            <h3>Bank Info</h3>
-            <p class="text-sm opacity-50 mt-4 leading-loose">신한: 140-011-832950 <br> 국민: 750601-01-266837 <br> 예금주: (주)도나코퍼레이션</p>
-        </div>
-        <div class="footer-column">
-            <h3>Logistics Center</h3>
-            <p class="text-sm opacity-50 mt-4 leading-loose">〒546-0024 <br> 大阪府大阪市東住吉区公園南矢田 4-3-7 <br> Osaka, Japan</p>
-        </div>
-    </div>
-</footer>
+<div id="footer-load"></div>
 
 <script>
+    // 공통 컴포넌트 로드 함수
+    async function loadConfig() {
+        // 헤더 로드
+        const headerRes = await fetch('header.html');
+        document.getElementById('header-load').innerHTML = await headerRes.text();
+
+        // 푸터 로드
+        const footerRes = await fetch('footer.html');
+        document.getElementById('footer-load').innerHTML = await footerRes.text();
+
+        // [핵심] 현재 페이지 메뉴 강조 (Active)
+        const filename = window.location.pathname.split("/").pop() || 'index.html';
+        const menuId = 'menu-' + filename.replace('.html', '').replace('auctions2', 'auctions2');
+        const activeMenu = document.getElementById(menuId);
+        if(activeMenu) activeMenu.classList.add('active');
+    }
+
+    loadConfig();
+
     function toggleLogin(l){ 
         const b = document.getElementById('mainBody'); 
         if(l){ b.classList.remove('is-logged-out'); b.classList.add('is-logged-in'); } 

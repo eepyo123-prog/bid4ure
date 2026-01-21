@@ -3,116 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bid4U - 메루카리 상세정보</title>
+    <title>Bid4U - 메루카리 전문관</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         
-        /* [1. 공통 테마 및 초기화] */
         :root {
             --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
             --mercari-red: #ff0021; --point-orange: #ff8c00; 
-            --bg-grey: #f4f6f9; --border-light: #e1e5eb; --badge-grey: #767676;   
+            --bg-grey: #f4f6f9; --border-light: #e1e5eb;
         }
-        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; }
-        ul, p, h1, h2, h3 { margin: 0; padding: 0; list-style: none; }
-        a { text-decoration: none; color: inherit; }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; transition: background 0.3s; }
         * { box-sizing: border-box; }
 
-        /* [2. 공통 요소 CSS - header.html 로드 시 필요] */
+        /* [공통 요소 스타일 - Ticker 및 Nav 복구] */
         .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
         header { padding: 25px 5%; text-align: center; background: #fff; }
         .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
-        .main-nav { background: var(--main-deep-blue); position: sticky; top: 0; z-index: 2000; }
-        .main-nav ul { display: flex; justify-content: center; }
-        .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; }
+        .main-nav { background: var(--main-deep-blue); box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 2000; }
+        .main-nav ul { display: flex; justify-content: center; list-style: none; padding: 0; margin: 0; }
+        .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; text-decoration: none; }
         .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
-        
-        /* 띠 공지사항(Ticker) 스타일 유지 */
+
+        /* [Ticker 애니메이션 복구] */
         .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
         .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; }
-        .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; white-space: nowrap; }
+        .ticker-text-wrapper { overflow: hidden; white-space: nowrap; flex: 1; }
+        .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; }
         @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* [3. 상세페이지 전용 스타일] */
-        .status-step { flex: 1; height: 8px; border-radius: 4px; background: #e2e8f0; position: relative; }
-        .status-step.active { background: #10b981; }
-        .warning-box { border: 2px solid #cc0000; background: #fff5f5; padding: 20px; border-radius: 4px; font-size: 13px; margin-bottom: 20px; }
-        .help-btn { width: 1.25rem; height: 1.25rem; background-color: #e5e7eb; color: #6b7280; border-radius: 9999px; display: inline-flex; items-center; justify-content: center; font-size: 0.625rem; font-weight: 700; transition: all 0.2s; }
+        /* [모드 제어 스타일] */
+        .simple-only { display: block; }
+        .pro-only { display: none !important; }
+        body.pro-mode .simple-only { display: none !important; }
+        body.pro-mode .pro-only { display: block !important; }
+        body.pro-mode { background-color: #fff; }
+
+        .mode-switcher-bar { background: #fff; border-bottom: 1px solid #ddd; padding: 10px 5%; display: flex; justify-content: flex-end; align-items: center; position: sticky; top: 51px; z-index: 1900; }
+        .toggle-box { display: flex; background: #eee; border-radius: 20px; padding: 3px; }
+        .mode-btn { padding: 6px 15px; border-radius: 17px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .mode-btn.active { background: var(--mercari-red); color: #fff; }
+
+        /* [그리드 레이아웃 고정] */
+        .auction-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; max-width: 1350px; margin: 0 auto; }
+        body.pro-mode .auction-grid { grid-template-columns: repeat(5, 1fr); gap: 15px; }
+        .auction-item { background: #fff; border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; transition: 0.3s; }
     </style>
 </head>
-<body class="is-logged-out" id="mainBody">
+<body class="simple-mode" id="targetBody">
 
 <div id="header-load"></div>
 
-<div class="bg-white border-b border-gray-200 py-4 px-[5%] text-sm text-gray-500">
-    메루카리 전문관 > 패션 > 여성 > 바지 > 슬랙스
+<div class="mode-switcher-bar">
+    <div style="margin-right: 15px; font-size: 12px; font-weight: bold; color: #666;">화면 구성 선택</div>
+    <div class="toggle-box">
+        <div class="mode-btn active" id="simpleBtn" onclick="toggleMode('simple')">일반 모드</div>
+        <div class="mode-btn" id="proBtn" onclick="toggleMode('pro')">전문가 모드</div>
+    </div>
 </div>
 
-<main class="max-w-[1350px] mx-auto py-10 px-[5%]">
-    <div class="flex flex-col lg:flex-row gap-12 mb-16">
-        <div class="lg:w-1/2">
-            <div class="bg-white border border-gray-200 rounded-3xl p-4 sticky top-32 shadow-sm">
-                <img src="https://picsum.photos/600/700?random=20" class="w-full h-auto rounded-2xl mb-4">
-            </div>
-        </div>
-        <div class="lg:w-1/2">
-            <h1 class="text-3xl font-black text-gray-900 tracking-tight mb-6">올리브 그린 슬랙스 사이즈 36 (M)</h1>
-            <div class="bg-slate-900 rounded-3xl p-8 text-white shadow-xl mt-8">
-                <div class="flex justify-between items-end mb-8">
-                    <span class="text-4xl font-black text-emerald-400">약 8,730원</span>
-                </div>
-                <button onclick="handleOrder()" class="w-full bg-[--mercari-red] text-white py-5 rounded-2xl font-black text-xl hover:brightness-110 transition shadow-lg">
-                    이 상품 구매 신청하기
-                </button>
-            </div>
+<section class="simple-only">
+    <div class="mercari-hero" style="background: linear-gradient(rgba(10,31,77,0.85), rgba(10,31,77,0.85)), url('https://picsum.photos/1200/400?grayscale'); padding: 60px 5%; text-align: center; color: #fff;">
+        <h1 style="font-size:32px; font-weight: 900;">MERCARI JP</h1>
+        <p style="opacity: 0.9; margin-top: 10px;">가장 안전한 일본 중고장터 이용 경험</p>
+        <div style="max-width: 750px; margin: 25px auto 0; position: relative;">
+            <input type="text" placeholder="상품명 또는 번호 입력" style="width: 100%; padding: 18px 30px; border-radius: 40px; border: none; color:#333; outline:none;">
+            <button style="position: absolute; right: 8px; top: 7px; background: var(--mercari-red); color: #fff; border: none; padding: 11px 35px; border-radius: 30px; font-weight: bold;">검색</button>
         </div>
     </div>
-    </main>
+</section>
+
+<div class="mercari-info-bar" style="background: #fff; border-bottom: 1px solid #eee; padding: 18px 5%; display: flex; justify-content: center; gap: 45px; align-items: center;">
+    <div style="font-size: 15px; font-weight: 700; color: #444;">📦 오사카 <b>직영물류</b> 검수</div>
+    <div style="font-size: 15px; font-weight: 700; color: #444;">💰 수수료 <b>200엔</b> 혁명</div>
+</div>
+
+<main style="padding: 40px 5%;">
+    <div class="auction-grid">
+        <div class="auction-item">
+            <a href="mercariinfo.html">
+                <div style="width: 100%; aspect-ratio: 1/1; background-image: url('https://picsum.photos/400/400?random=62'); background-size: cover;"></div>
+                <div style="padding: 18px;">
+                    <div style="font-size: 14px; font-weight: 500;">올리브 그린 슬랙스 M</div>
+                    <div style="font-size: 19px; font-weight: 800; margin-top: 10px;">900엔 <span style="font-size: 12px; color: #888; font-weight: normal;">(약 8,730원)</span></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</main>
 
 <div id="footer-load"></div>
 
-<div id="statusModal" class="fixed inset-0 bg-black/60 hidden z-[5000] flex items-center justify-center p-6 backdrop-blur-sm">...</div>
-<div id="shippingHelpModal" class="fixed inset-0 bg-black/60 hidden z-[5000] flex items-center justify-center p-6 backdrop-blur-sm">...</div>
-
 <script>
-    // 공통 컴포넌트 로드 및 메뉴 강조 스크립트
     async function loadConfig() {
         const headerRes = await fetch('header.html');
         document.getElementById('header-load').innerHTML = await headerRes.text();
-
         const footerRes = await fetch('footer.html');
         document.getElementById('footer-load').innerHTML = await footerRes.text();
 
-        // [상세페이지 특화] 메루카리 상세정보 페이지이므로 '메루카리' 메뉴를 강조함
-        const activeMenu = document.getElementById('menu-mercari');
+        const filename = window.location.pathname.split("/").pop() || 'index.html';
+        const menuId = 'menu-' + filename.replace('.html', '');
+        const activeMenu = document.getElementById(menuId);
         if(activeMenu) activeMenu.classList.add('active');
     }
-
     loadConfig();
 
-    // 모달 및 주문 처리 함수 유지
-    function toggleModal(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) modal.classList.toggle('hidden');
-    }
-
-    function handleOrder() {
-        const isAgreed = document.getElementById('agree')?.checked;
-        if(isAgreed === false) {
-            alert('이용 규정에 동의하셔야 구매 신청이 가능합니다.');
+    function toggleMode(mode) {
+        const body = document.getElementById('targetBody');
+        const simpleBtn = document.getElementById('simpleBtn');
+        const proBtn = document.getElementById('proBtn');
+        if (mode === 'pro') {
+            body.classList.add('pro-mode');
+            proBtn.classList.add('active');
+            simpleBtn.classList.remove('active');
         } else {
-            alert('구매 신청이 정상적으로 접수되었습니다!');
+            body.classList.remove('pro-mode');
+            simpleBtn.classList.add('active');
+            proBtn.classList.remove('active');
         }
     }
-
-    // 로그인 상태 토글 함수 (헤더 로드 후 연동)
-    function toggleLogin(l){ 
-        const b = document.getElementById('mainBody'); 
-        if(l){ b.classList.remove('is-logged-out'); b.classList.add('is-logged-in'); } 
-        else { b.classList.remove('is-logged-in'); b.classList.add('is-logged-out'); } 
-    }
 </script>
-
 </body>
 </html>

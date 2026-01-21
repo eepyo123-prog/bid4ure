@@ -10,73 +10,40 @@
         
         /* [1. 공통 테마 및 초기화] */
         :root {
-            --main-deep-blue: #0a1f4d; 
-            --main-royal-blue: #1e3a8a; 
-            --mercari-red: #ff0021; 
-            --point-orange: #ff8c00; 
-            --bg-grey: #f4f6f9;
-            --border-light: #e1e5eb;
-            --badge-grey: #767676;   
+            --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
+            --mercari-red: #ff0021; --point-orange: #ff8c00; 
+            --bg-grey: #f4f6f9; --border-light: #e1e5eb; --badge-grey: #767676;   
         }
         body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; }
         ul, p, h1, h2, h3 { margin: 0; padding: 0; list-style: none; }
         a { text-decoration: none; color: inherit; }
         * { box-sizing: border-box; }
 
-        /* [2. 기존 레이아웃 스타일] */
+        /* [2. 공통 요소 CSS - header.html 로드 시 필요] */
         .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
         header { padding: 25px 5%; text-align: center; background: #fff; }
         .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
         .main-nav { background: var(--main-deep-blue); position: sticky; top: 0; z-index: 2000; }
         .main-nav ul { display: flex; justify-content: center; }
         .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; }
-        .mode-switcher-bar { background: #fff; border-bottom: 1px solid #ddd; padding: 10px 5%; display: flex; justify-content: flex-end; align-items: center; position: sticky; top: 51px; z-index: 1900; }
-        .toggle-box { display: flex; background: #eee; border-radius: 20px; padding: 3px; }
-        .mode-btn { padding: 6px 15px; border-radius: 17px; font-size: 12px; font-weight: bold; cursor: pointer; }
-        .mode-btn.active { background: var(--mercari-red); color: #fff; }
+        .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        
+        /* 띠 공지사항(Ticker) 스타일 유지 */
+        .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
+        .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; }
+        .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; white-space: nowrap; }
+        @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* [3. 상태바 전용 스타일] */
+        /* [3. 상세페이지 전용 스타일] */
         .status-step { flex: 1; height: 8px; border-radius: 4px; background: #e2e8f0; position: relative; }
         .status-step.active { background: #10b981; }
-        .tooltip-arrow {
-            content: ''; position: absolute; bottom: -5px; left: 50%;
-            transform: translateX(-50%); border-width: 5px 5px 0;
-            border-style: solid; border-color: #1e293b transparent transparent;
-        }
-
-        /* [4. 주의사항 박스] */
         .warning-box { border: 2px solid #cc0000; background: #fff5f5; padding: 20px; border-radius: 4px; font-size: 13px; margin-bottom: 20px; }
-        
-        /* [5. 도움말 버튼 공통 스타일] */
         .help-btn { width: 1.25rem; height: 1.25rem; background-color: #e5e7eb; color: #6b7280; border-radius: 9999px; display: inline-flex; items-center; justify-content: center; font-size: 0.625rem; font-weight: 700; transition: all 0.2s; }
-        .help-btn:hover { background-color: #dbeafe; color: #2563eb; }
     </style>
 </head>
-<body>
+<body class="is-logged-out" id="mainBody">
 
-<div class="top-util">
-    <span><b>고시 환율:</b> 100￥ = 994원</span>
-    <div>로그인 | 회원가입 | 고객센터</div>
-</div>
-<header><a href="#" class="logo">Bid4U</a></header>
-
-<nav class="main-nav">
-    <ul>
-        <li><a href="#">야후옥션</a></li>
-        <li><a href="#">메루카리</a></li>
-        <li><a href="#">라쿠텐</a></li>
-        <li><a href="#">구매대행신청</a></li>
-        <li><a href="#">마이페이지</a></li>
-    </ul>
-</nav>
-
-<div class="mode-switcher-bar">
-    <div style="margin-right: 15px; font-size: 12px; font-weight: bold; color: #666;">화면 구성 선택</div>
-    <div class="toggle-box">
-        <div class="mode-btn active">일반 모드</div>
-        <div class="mode-btn">전문가 모드</div>
-    </div>
-</div>
+<div id="header-load"></div>
 
 <div class="bg-white border-b border-gray-200 py-4 px-[5%] text-sm text-gray-500">
     메루카리 전문관 > 패션 > 여성 > 바지 > 슬랙스
@@ -84,222 +51,66 @@
 
 <main class="max-w-[1350px] mx-auto py-10 px-[5%]">
     <div class="flex flex-col lg:flex-row gap-12 mb-16">
-        
         <div class="lg:w-1/2">
             <div class="bg-white border border-gray-200 rounded-3xl p-4 sticky top-32 shadow-sm">
                 <img src="https://picsum.photos/600/700?random=20" class="w-full h-auto rounded-2xl mb-4">
-                <div class="flex gap-2">
-                    <img src="https://picsum.photos/100/100?random=21" class="w-20 h-20 rounded-lg border-2 border-blue-500">
-                    <img src="https://picsum.photos/100/100?random=22" class="w-20 h-20 rounded-lg opacity-50">
-                </div>
             </div>
         </div>
-
         <div class="lg:w-1/2">
-            <div class="flex justify-between items-start mb-6">
-                <h1 class="text-3xl font-black text-gray-900 tracking-tight">올리브 그린 슬랙스 사이즈 36 (M)</h1>
-                <button class="text-xs bg-gray-100 px-3 py-1.5 rounded-lg font-bold text-gray-500">★ 관심등록</button>
-            </div>
-
-            <div class="flex items-center gap-3 mb-8 p-4 bg-gray-50 rounded-2xl">
-                <div class="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center text-rose-500 font-bold text-xl">あ</div>
-                <div>
-                    <div class="text-sm font-bold">판매자: あか <span class="font-normal text-gray-400 ml-2">본인확인 완료</span></div>
-                    <div class="text-orange-400 text-xs font-bold">★★★★★ <span class="text-gray-400 font-normal">(187) [리뷰]</span></div>
+            <h1 class="text-3xl font-black text-gray-900 tracking-tight mb-6">올리브 그린 슬랙스 사이즈 36 (M)</h1>
+            <div class="bg-slate-900 rounded-3xl p-8 text-white shadow-xl mt-8">
+                <div class="flex justify-between items-end mb-8">
+                    <span class="text-4xl font-black text-emerald-400">약 8,730원</span>
                 </div>
-            </div>
-
-            <div class="space-y-8">
-                <div class="border-b border-gray-100 pb-8">
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">Item Condition</span>
-                        <button onclick="toggleModal('statusModal')" class="help-btn">?</button>
-                    </div>
-                    
-                    <div class="bg-emerald-50 border border-emerald-100 p-5 rounded-2xl flex items-center justify-between mb-4">
-                        <div class="text-emerald-700">
-                            <span class="text-xs font-bold block opacity-70">현재 상품의 상태</span>
-                            <span class="text-xl font-black">신품 · 미사용</span>
-                        </div>
-                        <div class="bg-emerald-500 text-white px-4 py-1.5 rounded-full text-xs font-black shadow-sm">S-GRADE</div>
-                    </div>
-
-                    <div class="px-2">
-                        <div class="flex gap-1.5 mb-2">
-                            <div class="status-step active relative">
-                                <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap font-bold">
-                                    상품 상태 <div class="tooltip-arrow"></div>
-                                </div>
-                            </div>
-                            <div class="status-step active"></div>
-                            <div class="status-step"></div>
-                            <div class="status-step"></div>
-                            <div class="status-step"></div>
-                        </div>
-                        <div class="flex justify-between text-[10px] font-bold text-gray-400 uppercase tracking-tighter">
-                            <span>미개봉 새상품</span><span>단순 개봉 / 전시급</span><span>중고 상품</span><span>중고 사용감 많음</span><span>정크/작동확인불가</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="border-b border-gray-100 pb-8 space-y-4 text-sm">
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-400 font-bold flex items-center gap-2">
-                            배송 방법
-                            <button onclick="toggleModal('shippingHelpModal')" class="help-btn">?</button>
-                        </span>
-                        <span class="font-bold text-gray-800 bg-gray-100 px-3 py-1 rounded-md">라쿠라쿠 메루카리 편 (추적가능)</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-400 font-bold">배송비 부담</span>
-                        <span class="font-bold text-green-600 underline">무료 배송 (출품자 부담)</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-400 font-bold flex items-center gap-2">
-                            발송 지역
-                            <button onclick="toggleModal('regionHelpModal')" class="help-btn">?</button>
-                        </span>
-                        <span class="font-bold text-gray-800">홋카이도 (1~2일 내 발송)</span>
-                    </div>
-                </div>
-
-                <div class="bg-slate-900 rounded-3xl p-8 text-white shadow-xl">
-                    <div class="flex justify-between items-end mb-8">
-                        <div>
-                            <span class="text-xs opacity-50 block mb-1">Estimated Total</span>
-                            <span class="text-2xl font-medium font-mono">900 JPY</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-4xl font-black text-emerald-400">약 8,730원</span>
-                        </div>
-                    </div>
-
-                    <label class="flex items-center gap-3 mb-8 cursor-pointer bg-white/10 p-4 rounded-xl hover:bg-white/20 transition">
-                        <input type="radio" id="agree" name="policy" class="w-5 h-5 accent-emerald-400">
-                        <span class="text-sm font-bold">입찰 및 즉시구매 이용 규정에 동의합니다.</span>
-                    </label>
-
-                    <button onclick="handleOrder()" class="w-full bg-[--mercari-red] text-white py-5 rounded-2xl font-black text-xl hover:brightness-110 active:scale-[0.98] transition shadow-lg">
-                        이 상품 구매 신청하기
-                    </button>
-                </div>
+                <button onclick="handleOrder()" class="w-full bg-[--mercari-red] text-white py-5 rounded-2xl font-black text-xl hover:brightness-110 transition shadow-lg">
+                    이 상품 구매 신청하기
+                </button>
             </div>
         </div>
     </div>
+    </main>
 
-    <div class="border-t-4 border-gray-900 pt-16">
-        <h2 class="text-2xl font-black mb-8">ITEM DESCRIPTION</h2>
-        
-        <div class="warning-box">
-            <p class="text-center font-bold mb-2 text-red-700">※ 주의사항</p>
-            <p class="text-center leading-relaxed">
-                번역은 서비스로 제공해드리는 기능으로 오번역으로 인한 피해는 책임지지 않으니 주의하시기 바랍니다.<br>
-                기본적으로 국제 배송은 냉장, 냉동 배송이 되지 않으므로 식품류 구매 시 유의 부탁드립니다.
-            </p>
-        </div>
+<div id="footer-load"></div>
 
-        <div class="bg-white border border-gray-100 p-10 rounded-3xl leading-9 text-gray-700 shadow-sm relative">
-            <button class="absolute top-8 right-8 bg-red-600 text-white px-4 py-1.5 rounded-full text-xs font-bold">번역보기</button>
-            <p>
-                태그가 잘렸습니다.<br>
-                통기성 ◎ 봄 여름 가을 겨울 연중 착용 가능.<br>
-                오피스 캐주얼◎비즈니스◎<br><br>
-                <strong class="text-gray-900 border-l-4 border-blue-500 pl-4 bg-gray-50 py-2 block mt-4">밑아래 55 / 허리 35</strong>
-            </p>
-        </div>
-    </div>
-</main>
-
-<footer style="background:var(--main-deep-blue); color:white; padding:50px 5%; font-size:13px; text-align:center;">
-    비드포유 메루카리 대행 서비스 | donacorporation8988@gmail.com <br>
-    〒546-0024 大阪府大阪市東住吉区公園남야다 4-3-7
-</footer>
-
-<div id="statusModal" class="fixed inset-0 bg-black/60 hidden z-[5000] flex items-center justify-center p-6 backdrop-blur-sm">
-    <div class="bg-white rounded-[2.5rem] w-full max-w-md overflow-hidden shadow-2xl">
-        <div class="bg-slate-900 p-6 text-white font-bold flex justify-between items-center">
-            상태 가이드 <button onclick="toggleModal('statusModal')" class="text-2xl opacity-50">&times;</button>
-        </div>
-        <div class="p-8 space-y-4">
-            <div class="p-4 border-2 border-emerald-500 bg-emerald-50 rounded-2xl flex justify-between items-center">
-                <span class="font-black text-emerald-700">신품 · 미사용 (S)</span>
-                <span class="text-[10px] bg-emerald-500 text-white px-2 py-1 rounded font-bold">현재 등급</span>
-            </div>
-            <div class="p-4 border border-gray-100 bg-gray-50 rounded-xl flex justify-between items-center opacity-50">
-                <span class="font-bold text-gray-700">미사용에 가까움 (A)</span>
-            </div>
-            <div class="p-4 border border-gray-100 bg-gray-50 rounded-xl flex justify-between items-center opacity-50">
-                <span class="font-bold text-gray-700">눈에 띄는 상처 없음 (B)</span>
-            </div>
-            <div class="p-4 border border-gray-100 bg-gray-50 rounded-xl flex justify-between items-center opacity-50 text-orange-600">
-                <span class="font-bold">상처나 더러움 있음 (C)</span>
-            </div>
-        </div>
-        <button onclick="toggleModal('statusModal')" class="w-full bg-gray-100 py-5 font-bold text-gray-500 hover:bg-gray-200">닫기</button>
-    </div>
-</div>
-
-<div id="shippingHelpModal" class="fixed inset-0 bg-black/60 hidden z-[5000] flex items-center justify-center p-6 backdrop-blur-sm">
-    <div class="bg-white rounded-[2.5rem] w-full max-w-md overflow-hidden shadow-2xl">
-        <div class="bg-slate-900 p-6 text-white font-bold flex justify-between items-center">
-            배송 방법 안내 <button onclick="toggleModal('shippingHelpModal')" class="text-2xl opacity-50">&times;</button>
-        </div>
-        <div class="p-8 space-y-4 text-sm leading-relaxed">
-            <div class="p-4 bg-blue-50 border border-blue-100 rounded-2xl">
-                <p class="font-bold text-blue-800 mb-1">라쿠라쿠 메루카리 편</p>
-                <p class="text-blue-600 font-medium text-xs">야마토 운수를 이용하는 배송으로, 전 과정 추적이 가능한 메루카리 특별 배송편입니다.</p>
-            </div>
-            <div class="p-4 bg-gray-50 border border-gray-100 rounded-2xl">
-                <p class="font-bold text-gray-800 mb-1">유우유우 메루카리 편</p>
-                <p class="text-gray-600 text-xs">일본 우체국을 이용하는 배송이며, 라쿠라쿠 편과 마찬가지로 추적이 가능하고 일본 우체국 배송이여서 안전합니다.</p>
-            </div>
-            <div class="p-4 bg-gray-50 border border-gray-100 rounded-2xl">
-                <p class="font-bold text-gray-800 mb-1">미정 / 정형외 우편</p>
-                <p class="text-gray-600 text-xs">판매자가 임의로 배송사를 결정합니다. 정형외 우편의 경우 종이봉투 + 우표 발송이시기 때문에 추적이 불가능하시며 도착 까지 시간이 걸리시며 상품 분실에 따른 대응이 불가합니다.</p>
-            </div>
-        </div>
-        <button onclick="toggleModal('shippingHelpModal')" class="w-full bg-gray-100 py-5 font-bold text-gray-500 hover:bg-gray-200">닫기</button>
-    </div>
-</div>
-
-<div id="regionHelpModal" class="fixed inset-0 bg-black/60 hidden z-[5000] flex items-center justify-center p-6 backdrop-blur-sm">
-    <div class="bg-white rounded-[2.5rem] w-full max-w-md overflow-hidden shadow-2xl">
-        <div class="bg-slate-900 p-6 text-white font-bold flex justify-between items-center">
-            발송 지역 안내 <button onclick="toggleModal('regionHelpModal')" class="text-2xl opacity-50">&times;</button>
-        </div>
-        <div class="p-8 space-y-4 text-sm leading-relaxed">
-            <div class="p-4 bg-gray-50 border border-gray-100 rounded-2xl">
-                <p class="font-bold text-gray-800 mb-1">간토/간사이 지역</p>
-                <p class="text-gray-600 text-xs">도쿄, 오사카 등 주요 도시권으로 현지 물류센터 입고까지 보통 1~3일이 소요됩니다.</p>
-            </div>
-            <div class="p-4 bg-blue-50 border border-blue-100 rounded-2xl">
-                <p class="font-bold text-blue-800 mb-1">홋카이도 / 오키나와 / 규슈</p>
-                <p class="text-blue-600 font-medium text-xs">원거리 지역으로 현지 물류센터까지 배송 기간이 평소보다 2~4일 더 소요될 수 있습니다. (현재 상품: 홋카이도)</p>
-            </div>
-            <div class="p-4 bg-gray-50 border border-gray-100 rounded-2xl text-xs text-gray-500 italic">
-                ※ 현지 기상 악화나 택배사 사정 일본 공휴일에 따라 배송일은 유동적일 수 있습니다.
-            </div>
-        </div>
-        <button onclick="toggleModal('regionHelpModal')" class="w-full bg-gray-100 py-5 font-bold text-gray-500 hover:bg-gray-200">닫기</button>
-    </div>
-</div>
+<div id="statusModal" class="fixed inset-0 bg-black/60 hidden z-[5000] flex items-center justify-center p-6 backdrop-blur-sm">...</div>
+<div id="shippingHelpModal" class="fixed inset-0 bg-black/60 hidden z-[5000] flex items-center justify-center p-6 backdrop-blur-sm">...</div>
 
 <script>
-    // 여러 모달을 지원하도록 수정된 함수
+    // 공통 컴포넌트 로드 및 메뉴 강조 스크립트
+    async function loadConfig() {
+        const headerRes = await fetch('header.html');
+        document.getElementById('header-load').innerHTML = await headerRes.text();
+
+        const footerRes = await fetch('footer.html');
+        document.getElementById('footer-load').innerHTML = await footerRes.text();
+
+        // [상세페이지 특화] 메루카리 상세정보 페이지이므로 '메루카리' 메뉴를 강조함
+        const activeMenu = document.getElementById('menu-mercari');
+        if(activeMenu) activeMenu.classList.add('active');
+    }
+
+    loadConfig();
+
+    // 모달 및 주문 처리 함수 유지
     function toggleModal(modalId) {
         const modal = document.getElementById(modalId);
-        if (modal) {
-            modal.classList.toggle('hidden');
-        }
+        if (modal) modal.classList.toggle('hidden');
     }
 
     function handleOrder() {
-        const isAgreed = document.getElementById('agree').checked;
-        if(!isAgreed) {
+        const isAgreed = document.getElementById('agree')?.checked;
+        if(isAgreed === false) {
             alert('이용 규정에 동의하셔야 구매 신청이 가능합니다.');
         } else {
             alert('구매 신청이 정상적으로 접수되었습니다!');
         }
+    }
+
+    // 로그인 상태 토글 함수 (헤더 로드 후 연동)
+    function toggleLogin(l){ 
+        const b = document.getElementById('mainBody'); 
+        if(l){ b.classList.remove('is-logged-out'); b.classList.add('is-logged-in'); } 
+        else { b.classList.remove('is-logged-in'); b.classList.add('is-logged-out'); } 
     }
 </script>
 

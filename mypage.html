@@ -12,12 +12,12 @@
             --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
             --point-orange: #ff8c00; --bg-grey: #f4f6f9; --border-light: #e1e5eb;
         }
-        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; overflow-x: hidden; }
         ul, p, h1, h2, h3 { margin: 0; padding: 0; list-style: none; }
-        a { text-decoration: none; color: inherit; }
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
         * { box-sizing: border-box; }
 
-        /* [1. 헤더/네비게이션 스타일 유지] */
+        /* [1. 헤더 로드 시 유지될 핵심 CSS] */
         .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
         header { padding: 25px 5%; text-align: center; background: #fff; border-bottom: 1px solid #f1f1f1; }
         .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
@@ -26,17 +26,16 @@
         .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; }
         .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
 
-        /* [2. 마이페이지 핵심 그리드 레이아웃] */
+        /* [2. 마이페이지 그리드 레이아웃] */
         .main-content { padding: 30px 5%; max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 260px 1fr; gap: 30px; align-items: start; }
 
         /* 사이드바 스타일 */
-        .side-menu-box { display: flex; flex-direction: column; gap: 20px; width: 260px; }
+        .side-menu-box { display: flex; flex-direction: column; gap: 20px; }
         .user-profile { background: #fff; border: 1px solid var(--border-light); border-radius: 15px; padding: 25px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         .grade-DIAMOND { background: linear-gradient(135deg, #45B3E0, #B0E0E6); color: #fff; }
         .user-grade { display: inline-block; font-size: 11px; padding: 4px 14px; border-radius: 20px; margin-top: 10px; font-weight: 800; }
-        
         .side-nav { background: #fff; border: 1px solid var(--border-light); border-radius: 15px; overflow: hidden; }
-        .side-nav li a { display: block; padding: 16px 20px; font-size: 14px; border-bottom: 1px solid #f8f9fa; color: #555; font-weight: 500; }
+        .side-nav li a { display: block; padding: 16px 20px; font-size: 14px; border-bottom: 1px solid #f8f9fa; color: #555; }
         .side-nav li.active a { background: var(--main-royal-blue); color: #fff; font-weight: 700; }
 
         /* 현황판 스타일 복구 */
@@ -44,7 +43,7 @@
         .status-grid { display: grid; grid-template-columns: repeat(10, 1fr); border: 1px solid #eee; border-radius: 12px; overflow: hidden; margin-top: 15px; }
         .grid-col { text-align: center; border-right: 1px solid #eee; padding: 15px 5px; cursor: pointer; transition: 0.2s; }
         .grid-col:last-child { border-right: none; }
-        .grid-label { display: block; font-size: 10px; color: #777; margin-bottom: 6px; font-weight: 600; }
+        .grid-label { display: block; font-size: 9px; color: #777; margin-bottom: 6px; font-weight: 600; line-height: 1.1; }
         .grid-count { font-size: 16px; font-weight: 800; color: #333; }
         .grid-col.active { background: #f0f7ff; }
         .grid-col.active .grid-count { color: var(--main-royal-blue); }
@@ -59,7 +58,7 @@
 <main class="main-content">
     <aside class="side-menu-box">
         <div class="user-profile">
-            <div style="font-weight: 900; font-size: 20px; color: #1a202c;">홍길동 님</div>
+            <div style="font-weight: 900; font-size: 20px;">홍길동 님</div>
             <div class="user-grade grade-DIAMOND">DIAMOND 등급</div>
             <div style="margin-top: 20px; font-size: 13px; color: #718096;">
                 사이버머니 <b style="color:var(--point-orange); font-size: 16px; margin-left: 5px;">15,200원</b>
@@ -81,8 +80,60 @@
             </h2>
             
             <div class="status-grid">
-                <div class="grid-col active">
-                    <span class="grid-label">1차결제완료</span>
-                    <div class="grid-count">1</div>
+                <div class="grid-col active"><span class="grid-label">1차결제완료</span><div class="grid-count">1</div></div>
+                <div class="grid-col"><span class="grid-label">현지배송</span><div class="grid-count">0</div></div>
+                <div class="grid-col"><span class="grid-label">통합진행</span><div class="grid-count">0</div></div>
+                <div class="grid-col"><span class="grid-label">2차요청</span><div class="grid-count">0</div></div>
+                <div class="grid-col"><span class="grid-label">2차완료</span><div class="grid-count">0</div></div>
+                <div class="grid-col"><span class="grid-label">국제배송</span><div class="grid-count">1</div></div>
+                <div class="grid-col"><span class="grid-label">배송완료</span><div class="grid-count">7</div></div>
+                <div class="grid-col"><span class="grid-label">실패</span><div class="grid-count">34</div></div>
+                <div class="grid-col"><span class="grid-label">입찰요청</span><div class="grid-count">0</div></div>
+                <div class="grid-col"><span class="grid-label">낙찰승인</span><div class="grid-count">15</div></div>
+            </div>
+
+            <div class="status-guide-box">
+                <div style="font-size: 24px;">💡</div>
+                <div>
+                    <strong style="display:block; font-size:15px; color:var(--main-deep-blue); margin-bottom:5px;">1차결제완료</strong>
+                    <p style="font-size:14px; color:#666; margin:0;">대금 지불이 완료되었습니다. 현지 센터로 배송 중입니다.</p>
                 </div>
-                <div class="grid-col"><span class="grid-label">현지배송</span><div class="grid
+            </div>
+        </section>
+    </div>
+</main>
+
+<div id="footer-load"></div>
+
+<script>
+    async function loadConfig() {
+        try {
+            // 헤더 로드
+            const headerRes = await fetch('header.html');
+            const headerData = await headerRes.text();
+            document.getElementById('header-load').innerHTML = headerData;
+
+            // 푸터 로드
+            const footerRes = await fetch('footer.html');
+            const footerData = await footerRes.text();
+            document.getElementById('footer-load').innerHTML = footerData;
+
+            // [핵심] 현재 페이지 메뉴 활성화 (Active)
+            const filename = window.location.pathname.split("/").pop() || 'index.html';
+            const menuId = 'menu-' + filename.replace('.html', '');
+            const activeMenu = document.getElementById(menuId);
+            if(activeMenu) activeMenu.classList.add('active');
+            
+        } catch (error) {
+            console.error('공통 컴포넌트 로드 실패:', error);
+        }
+    }
+    
+    // 페이지 로드 시 실행
+    loadConfig();
+
+    function openCalc(){ document.getElementById('calcModal').style.display = 'flex'; }
+    function closeCalc(){ document.getElementById('calcModal').style.display = 'none'; }
+</script>
+</body>
+</html>

@@ -23,7 +23,10 @@
         .is-logged-in .view-logout { display: none !important; }
         .is-logged-out .view-login { display: none !important; }
 
-        /* [1. 공통 헤더 스타일 - PC 레이아웃 고정] */
+        /* [핵심] 헤더 로딩 전 영역 확보 */
+        #header-load { min-height: 200px; }
+
+        /* 외부 파일을 불러와도 스타일이 즉시 적용되도록 CSS는 여기에 유지합니다 */
         .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
         header { padding: 25px 5%; text-align: center; background: #fff; border-bottom: 1px solid #f1f1f1; }
         .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
@@ -32,7 +35,6 @@
         .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; }
         .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
 
-        /* [2. 공지사항 Ticker] */
         .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
         .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; }
         .ticker-text-wrapper { overflow: hidden; white-space: nowrap; flex: 1; }
@@ -60,39 +62,11 @@
         /* 퀵 메뉴 */
         .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 1000; background: #555; border-radius: 8px 0 0 8px; }
         .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
-        
-        footer { background: var(--footer-bg); color: #fff; padding: 50px 5%; font-size: 13px; text-align: center; }
     </style>
 </head>
 <body class="is-logged-out simple-mode" id="targetBody">
 
-<div class="top-util">
-    <span><b>고시 환율:</b> 100￥ = 994원</span>
-    <div class="view-logout">로그인 | 회원가입 | 고객센터</div>
-    <div class="view-login">
-        <a href="mypage.html"><b>홍길동</b>님 반갑습니다!</a> | 
-        <a href="javascript:toggleLogin(false)" style="color:#fff">로그아웃</a>
-    </div>
-</div>
-
-<header><a href="index.html" class="logo">Bid4U</a></header>
-
-<nav class="main-nav">
-    <ul>
-        <li><a href="auctions2.html">야후옥션</a></li>
-        <li class="active"><a href="mercari.html">메루카리</a></li>
-        <li><a href="rakuten.html">라쿠텐</a></li>
-        <li><a href="offer.html">구매대행신청</a></li>
-        <li><a href="mypage.html">마이페이지</a></li>
-    </ul>
-</nav>
-
-<div class="ticker">
-    <div class="ticker-label">NOTICE</div>
-    <div class="ticker-text-wrapper">
-        <div class="ticker-text">[이벤트] 수수료 200엔 혁명! &nbsp;&nbsp;&nbsp;&nbsp; [안내] 26년 1월 구정 연휴 오사카 물류센터 정상 운영</div>
-    </div>
-</div>
+<div id="header-load"></div>
 
 <div class="mode-switcher-bar">
     <div style="margin-right: 15px; font-size: 12px; font-weight: bold; color: #666;">화면 구성 선택</div>
@@ -133,20 +107,43 @@
 </main>
 
 <div class="side-quick">
-    <div class="side-btn"><i>🧮</i>계산기</div>
+    <div class="side-btn" onclick="openCalc()"><i>🧮</i>계산기</div>
     <div class="side-btn"><i>💬</i>문의</div>
     <div onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="background:#333; color:#fff; text-align:center; padding:10px; font-size:10px; cursor:pointer;">TOP</div>
 </div>
 
-<footer>
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1200px; margin: 0 auto; text-align: left;">
-        <div><h3>Support</h3><p>donacorporation8988@gmail.com</p></div>
-        <div><h3>Bank</h3><p>신한: 140-011-832950 / 국민: 750601-01-266837</p></div>
-        <div><h3>Warehouse</h3><p>〒546-0024 大阪府大阪市東住吉区公園남야다 4-3-7</p></div>
+<div class="modal-overlay" id="calcModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,31,77,0.8); z-index: 3000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+    <div class="modal-content" style="background: #fff; width: 95%; max-width: 950px; height: 80vh; border-radius: 20px; position: relative; overflow: hidden;">
+        <span style="position:absolute; right:20px; top:15px; font-size:30px; cursor:pointer; z-index: 9999; color: #333;" onclick="closeCalc()">&times;</span>
+        <iframe src="final_no.html" style="width:100%; height:100%; border:none;"></iframe>
     </div>
-</footer>
+</div>
+
+<div id="footer-load"></div>
 
 <script>
+    // [핵심] 외부 레이아웃 파일 로드 함수
+    async function initLayout() {
+        try {
+            const [hRes, fRes] = await Promise.all([
+                fetch('header.html'),
+                fetch('footer.html')
+            ]);
+            
+            document.getElementById('header-load').innerHTML = await hRes.text();
+            document.getElementById('footer-load').innerHTML = await fRes.text();
+
+            // 현재 페이지 활성화 처리 (mercari.html 인식)
+            const activeMenu = document.getElementById('menu-mercari');
+            if(activeMenu) activeMenu.parentElement.classList.add('active');
+            
+        } catch (e) {
+            console.error("레이아웃 로드 중 오류 발생:", e);
+        }
+    }
+
+    initLayout();
+
     function toggleMode(mode) {
         const body = document.getElementById('targetBody');
         const simpleBtn = document.getElementById('simpleBtn');
@@ -167,6 +164,9 @@
         if(l){ b.classList.remove('is-logged-out'); b.classList.add('is-logged-in'); } 
         else { b.classList.remove('is-logged-in'); b.classList.add('is-logged-out'); } 
     }
+    function openCalc(){ document.getElementById('calcModal').style.display = 'flex'; }
+    function closeCalc(){ document.getElementById('calcModal').style.display = 'none'; }
 </script>
 </body>
 </html>
+

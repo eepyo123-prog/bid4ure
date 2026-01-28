@@ -10,47 +10,77 @@
         :root {
             --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
             --footer-bg: #05102a; --point-orange: #ff8c00; --bg-grey: #f4f6f9;
-            --border-light: #e1e5eb;
+            --kakao-yellow: #fee500; --border-light: #e1e5eb;
         }
         body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; visibility: hidden; overflow-x: hidden; }
         
-        /* [핵심] 공지사항 흐르는 효과 CSS 복구 */
+        /* [1. 공통 애니메이션 및 상태 제어] */
         .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
         .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; z-index: 10; }
-        .ticker-text-wrapper { overflow: hidden; white-space: nowrap; flex: 1; }
-        .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; }
+        .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; white-space: nowrap; }
         @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* 상태 제어 클래스 */
         .is-logged-in .view-logout { display: none !important; }
         .is-logged-out .view-login { display: none !important; }
         .is-logged-out .status-container { display: none !important; }
 
-        /* 레이아웃 스타일 고정 */
-        .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; min-height: 40px; }
-        header { padding: 25px 5%; text-align: center; background: #fff; border-bottom: 1px solid #f1f1f1; }
-        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; text-decoration: none; }
-        .main-nav { background: var(--main-deep-blue); position: sticky; top: 0; z-index: 2000; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .main-nav ul { display: flex; justify-content: center; list-style: none; margin: 0; padding: 0; }
-        .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; text-decoration: none; }
-        .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
-
-        /* 본문 디자인 보존 */
+        /* [2. 레이아웃 디자인 복구] */
         .main-content { padding: 30px 5%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 35px; }
         .hero-section { display: grid; grid-template-columns: 2.3fr 1fr; gap: 20px; height: 280px; }
         .hero-banner { background: linear-gradient(135deg, var(--main-deep-blue), var(--main-royal-blue)); border-radius: 15px; padding: 40px; color: white; height: 100%; display: flex; flex-direction: column; justify-content: center; position: relative; }
         .side-auth-box { background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border-light); height: 100%; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+
+        /* 섹션 타이틀 공통 스타일 */
+        .section-title { font-size: 19px; font-weight: 800; color: var(--main-deep-blue); margin-bottom: 18px; padding-bottom: 8px; border-bottom: 2px solid var(--main-deep-blue); }
+
+        /* 그리드 시스템 복구 */
         .status-container { background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border-light); }
         .status-grid { display: grid; grid-template-columns: repeat(10, 1fr); border: 1px solid #eee; border-radius: 10px; overflow: hidden; }
         .grid-col { text-align: center; border-right: 1px solid #eee; padding: 15px 2px; background: #fff; }
-        
-        footer { background: var(--footer-bg); color: #fff; padding: 50px 5%; margin-top: 50px; }
-        .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1200px; margin: 0 auto; text-align: left; }
+        .grid-col:last-child { border-right: none; }
+        .grid-count { font-size: 14px; font-weight: 800; color: #333; }
+        .grid-count.active { color: var(--point-orange); }
+
+        .shop-grid { display: grid; grid-template-columns: repeat(4, 1fr); background: #fff; border: 1px solid #eee; border-radius: 12px; overflow: hidden; }
+        .shop-item { padding: 20px; text-align: center; border-right: 1px solid #eee; border-bottom: 1px solid #eee; cursor: pointer; transition: 0.2s; }
+        .shop-item:hover { background: #f8faff; }
+
+        .review-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .review-card { background: #fff; padding: 20px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+
+        .kakao-full-banner { background: var(--kakao-yellow); border-radius: 15px; padding: 30px 40px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; margin-top: 10px; }
+
+        /* 모달 및 사이드 퀵메뉴 */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,31,77,0.8); z-index: 3000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .modal-content { background: #fff; width: 95%; max-width: 950px; border-radius: 20px; position: relative; overflow: hidden; height: 80vh; }
+        .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 1000; background: #555; border-radius: 8px 0 0 8px; }
+        .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
+
+        @media (max-width: 768px) {
+            .hero-section { grid-template-columns: 1fr; height: auto; }
+            .status-grid { grid-template-columns: repeat(5, 1fr); }
+            .shop-grid { grid-template-columns: repeat(2, 1fr); }
+            .review-grid { grid-template-columns: 1fr; }
+            .kakao-full-banner { flex-direction: column; text-align: center; gap: 15px; }
+        }
     </style>
 </head>
 <body class="is-logged-out" id="mainBody">
 
 <div id="header-load"></div>
+
+<div class="modal-overlay" id="calcModal">
+    <div class="modal-content">
+        <span style="position:absolute; right:20px; top:15px; font-size:30px; cursor:pointer; z-index: 9999;" onclick="closeCalc()">&times;</span>
+        <iframe src="final_no.html" style="width:100%; height:100%; border:none;"></iframe>
+    </div>
+</div>
+
+<div class="side-quick">
+    <div class="side-btn" onclick="openCalc()"><i>🧮</i>계산기</div>
+    <div class="side-btn"><i>💬</i>문의</div>
+    <div onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="background:#333; color:#fff; text-align:center; padding:10px; font-size:10px; cursor:pointer;">TOP</div>
+</div>
 
 <main class="main-content">
     <div class="hero-section">
@@ -59,8 +89,7 @@
             <p style="opacity: 0.9;">오사카 직영 물류센터 운영으로 더 빠르게</p>
             <div style="position: absolute; bottom: 20px; right: 20px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 10px 15px; border-radius: 8px; font-size: 11px;">오늘의 면세 한도 ($150)<br><b>약 202,500원 미만</b> 구매 시 면세</div>
         </div>
-        
-        <div class="side-auth-box" id="authBox">
+        <div class="side-auth-box">
             <div class="login-form view-logout">
                 <input type="text" placeholder="아이디" style="width:100%; padding:12px; border:1px solid #eee; border-radius:6px; margin-bottom:8px;">
                 <input type="password" placeholder="비밀번호" style="width:100%; padding:12px; border:1px solid #eee; border-radius:6px; margin-bottom:8px;">
@@ -77,20 +106,46 @@
         </div>
     </div>
 
-    <div class="status-container">
-        <h3 style="font-size: 19px; font-weight: 800; color: var(--main-deep-blue); margin-bottom: 15px;">📊 대행신청 현황 (일본)</h3>
-        <div class="status-grid">
-            <div class="grid-col"><span style="font-size:9px; display:block;">실패</span>🗑️<div style="font-size:14px; font-weight:800;">34</div></div>
-            <div class="grid-col"><span style="font-size:9px; display:block;">입찰요청</span>📝<div style="font-size:14px; font-weight:800;">0</div></div>
-            <div class="grid-col"><span style="font-size:9px; display:block;">낙찰승인</span>🔨<div style="font-size:14px; font-weight:800; color:var(--point-orange);">16</div></div>
-            <div class="grid-col"><span style="font-size:9px; display:block;">1차결제</span>💳<div style="font-size:14px; font-weight:800;">0</div></div>
-            <div class="grid-col"><span style="font-size:9px; display:block;">현지배송</span>🚚<div style="font-size:14px; font-weight:800;">0</div></div>
-            <div class="grid-col"><span style="font-size:9px; display:block;">통합진행</span>📦<div style="font-size:14px; font-weight:800;">0</div></div>
-            <div class="grid-col"><span style="font-size:9px; display:block;">2차요청</span>📑<div style="font-size:14px; font-weight:800;">0</div></div>
-            <div class="grid-col"><span style="font-size:9px; display:block;">2차완료</span>💳<div style="font-size:14px; font-weight:800;">0</div></div>
-            <div class="grid-col"><span style="font-size:9px; display:block;">국제배송</span>✈️<div style="font-size:14px; font-weight:800; color:var(--point-orange);">1</div></div>
-            <div class="grid-col" style="border-right:none;"><span style="font-size:9px; display:block;">배송완료</span>🎁<div style="font-size:14px; font-weight:800; color:var(--point-orange);">7</div></div>
+    <div id="dynamic-area" style="display: flex; flex-direction: column; gap: 35px;">
+        <div class="status-container" style="order: 1;">
+            <h3 class="section-title" style="border:none; margin-bottom:10px;">📊 대행신청 현황 (일본)</h3>
+            <div class="status-grid">
+                <div class="grid-col"><span>실패</span>🗑️<div class="grid-count">34</div></div>
+                <div class="grid-col"><span>입찰요청</span>📝<div class="grid-count">0</div></div>
+                <div class="grid-col"><span>낙찰승인</span>🔨<div class="grid-count active">16</div></div>
+                <div class="grid-col"><span>1차결제</span>💳<div class="grid-count">0</div></div>
+                <div class="grid-col"><span>현지배송</span>🚚<div class="grid-count">0</div></div>
+                <div class="grid-col"><span>통합진행</span>📦<div class="grid-count">0</div></div>
+                <div class="grid-col"><span>2차요청</span>📑<div class="grid-count">0</div></div>
+                <div class="grid-col"><span>2차완료</span>💳<div class="grid-count">0</div></div>
+                <div class="grid-col"><span>국제배송</span>✈️<div class="grid-count active">1</div></div>
+                <div class="grid-col" style="border-right:none;"><span>배송완료</span>🎁<div class="grid-count active">7</div></div>
+            </div>
         </div>
+
+        <section id="review-section" style="order: 2;">
+            <h2 class="section-title">생생한 이용 후기</h2>
+            <div class="review-grid">
+                <div class="review-card"><div style="color:#ffcc00;">★★★★★</div><p style="font-size:13px; color:#666; margin-top:10px;">"오사카 센터 검수가 정말 꼼꼼합니다!"</p></div>
+                <div class="review-card"><div style="color:#ffcc00;">★★★★★</div><p style="font-size:13px; color:#666; margin-top:10px;">"수수료 200엔이라 가성비 최고예요."</p></div>
+                <div class="review-card"><div style="color:#ffcc00;">★★★★★</div><p style="font-size:13px; color:#666; margin-top:10px;">"배송이 정말 빠르고 안전합니다."</p></div>
+            </div>
+        </section>
+
+        <section style="order: 3;">
+            <h2 class="section-title">해외 인기 온라인 상점</h2>
+            <div class="shop-grid">
+                <div class="shop-item"><div class="shop-name">메루카리</div></div><div class="shop-item"><div class="shop-name">아미아미</div></div>
+                <div class="shop-item"><div class="shop-name">애니메이트</div></div><div class="shop-item" style="border-right:none;"><div class="shop-name">스루가야</div></div>
+                <div class="shop-item"><div class="shop-name">멜론북스</div></div><div class="shop-item"><div class="shop-name">P-반다이</div></div>
+                <div class="shop-item"><div class="shop-name">부스(BOOTH)</div></div><div class="shop-item" style="border-right:none;"><div class="shop-name">토라노아나</div></div>
+            </div>
+        </section>
+    </div>
+
+    <div class="kakao-full-banner">
+        <div style="color:#3c1e1e;"><h2 style="font-size:22px; margin-bottom:5px; font-weight:900;">비드포유 카카오톡 1:1 상담</h2><p style="font-size:14px; opacity:0.8;">평일 09~02시 / 주말 09~24시 실시간 상담</p></div>
+        <div style="background:#3c1e1e; color:#fff; padding:12px 30px; border-radius:30px; font-weight:bold;">상담 바로가기 ></div>
     </div>
 </main>
 
@@ -99,30 +154,23 @@
 <script>
     async function initLayout() {
         try {
-            // [1] 헤더와 푸터 병렬 로드
             const [hRes, fRes] = await Promise.all([
                 fetch('header.html'),
                 fetch('footer.html')
             ]);
-            
             document.getElementById('header-load').innerHTML = await hRes.text();
             document.getElementById('footer-load').innerHTML = await fRes.text();
-
-            // [2] 메뉴 활성화 처리
+            
             const path = window.location.pathname.split("/").pop() || 'index.html';
             const menuId = 'menu-' + path.replace('.html', '');
             const targetMenu = document.getElementById(menuId);
             if(targetMenu) targetMenu.parentElement.classList.add('active');
 
-            // [3] 로그인 상태 동기화 (헤더가 로드된 후에 실행되어야 함)
-            if(document.body.classList.contains('is-logged-in')) {
-                toggleLogin(true);
-            }
+            if(document.body.classList.contains('is-logged-in')) toggleLogin(true);
 
         } catch (e) {
             console.error("Layout Load Error:", e);
         } finally {
-            // [4] 모든 로드가 끝나면 화면 표시
             document.body.style.visibility = 'visible';
         }
     }
@@ -131,12 +179,18 @@
 
     function toggleLogin(isLogin){
         const body = document.getElementById('mainBody');
+        const rs = document.getElementById('review-section');
         if(isLogin){
             body.classList.replace('is-logged-out', 'is-logged-in');
+            if(rs) rs.style.order = "2"; // 로그인 시 현황판 아래로
         } else {
             body.classList.replace('is-logged-in', 'is-logged-out');
+            if(rs) rs.style.order = "0"; // 로그아웃 시 최상단으로
         }
     }
+
+    function openCalc(){ document.getElementById('calcModal').style.display = 'flex'; }
+    function closeCalc(){ document.getElementById('calcModal').style.display = 'none'; }
 </script>
 </body>
 </html>

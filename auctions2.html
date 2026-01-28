@@ -6,16 +6,23 @@
     <title>Bid4U - 야후옥션 피규어 전문관</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* [1. 테마 및 초기화] */
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-        
-        /* [1. 공통 테마 및 초기화] */
         :root {
             --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
             --yahoo-purple: #6001d2; --bid-red: #e60012;      
-            --point-orange: #ff8c00; --bg-grey: #f4f6f9;
-            --border-light: #e1e5eb;
+            --point-orange: #ff8c00; --bg-grey: #f4f6f9; --border-light: #e1e5eb;
         }
-        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; transition: background 0.3s; overflow-x: hidden; }
+
+        /* [핵심] 레이아웃 깨짐 방지: 로드 전까지 화면 숨김 */
+        body { 
+            font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; 
+            transition: background 0.3s; overflow-x: hidden; visibility: hidden; 
+        }
+        
+        /* 헤더 공간 미리 확보하여 덜덜거림 방지 */
+        #header-load { min-height: 200px; } 
+
         ul, p, h1, h2, h3 { margin: 0; padding: 0; list-style: none; }
         a { text-decoration: none; color: inherit; transition: 0.2s; }
         * { box-sizing: border-box; }
@@ -27,34 +34,44 @@
         body.pro-mode .pro-only { display: block !important; }
         body.pro-mode { background-color: #fff; }
 
-        /* [3. 공통 요소 CSS - header.html 로드 후 필요] */
-        .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
-        header { padding: 25px 5%; text-align: center; background: #fff; }
+        /* [3. 공통 스타일 고정 - 헤더 파일 로드 전 디자인 유지] */
+        .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; min-height: 40px; }
+        header { padding: 25px 5%; text-align: center; background: #fff; border-bottom: 1px solid #f1f1f1; }
         .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
-        .main-nav { background: var(--main-deep-blue); box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 2000; }
-        .main-nav ul { display: flex; justify-content: center; overflow-x: auto; white-space: nowrap; }
+        .main-nav { background: var(--main-deep-blue); position: sticky; top: 0; z-index: 2000; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .main-nav ul { display: flex; justify-content: center; }
         .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; }
         .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
 
-        /* 모드 스위처 */
+        /* 모드 스위처 바 */
         .mode-switcher-bar { background: #fff; border-bottom: 1px solid #ddd; padding: 10px 5%; display: flex; justify-content: flex-end; align-items: center; position: sticky; top: 51px; z-index: 1900; }
         .toggle-box { display: flex; background: #eee; border-radius: 20px; padding: 3px; }
         .mode-btn { padding: 6px 15px; border-radius: 17px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; }
         .mode-btn.active { background: var(--yahoo-purple); color: #fff; }
 
-        /* 야후옥션 전용 히어로 및 검색창 */
+        /* [4. 야후옥션 히어로 & 상품 디자인] */
         .yahoo-hero { background: #0f172a; padding: 60px 5% 40px; text-align: center; color: #fff; }
-        .yahoo-hero h1 { font-size: 32px; font-weight: 900; margin-bottom: 10px; }
         .search-capsule { max-width: 900px; margin: 0 auto; background: #fff; border-radius: 50px; display: flex; align-items: center; padding: 5px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .search-capsule input { flex: 1; border: none; padding: 15px 30px; font-size: 16px; border-radius: 50px; outline: none; color: #333; }
         .search-capsule button { background: var(--yahoo-purple); color: #fff; border: none; padding: 15px 45px; border-radius: 40px; font-size: 16px; font-weight: bold; cursor: pointer; }
 
-        /* 기타 상품 정보 및 그리드 스타일 유지... */
         .yahoo-info-bar { background: #fff; border-bottom: 1px solid #eee; padding: 15px 5%; display: flex; justify-content: center; gap: 40px; align-items: center; }
+        .info-item { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: #444; }
+
+        /* 전문가용 필터 */
+        .pro-filter-container { background: #f9f9f9; border-bottom: 1px solid #ddd; padding: 25px 5%; }
+        .pro-filter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; font-size: 12px; }
+        .filter-card { background: #fff; border: 1px solid #ddd; padding: 15px; border-radius: 6px; }
+
+        .section-container { max-width: 1300px; margin: 40px auto; padding: 0 5%; }
         .auction-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
         body.pro-mode .auction-grid { grid-template-columns: repeat(5, 1fr); gap: 12px; }
-        .section-container { max-width: 1300px; margin: 40px auto; padding: 0 5%; }
-        /* 생략: 나머지 auction-item 스타일들 (기존과 동일) */
+
+        .auction-item { background: #fff; border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; transition: 0.3s; }
+        .img-box { width: 100%; aspect-ratio: 1/1; background-size: cover; background-position: center; border-bottom: 1px solid #f0f0f0; }
+        .info-box { padding: 15px; flex-grow: 1; }
+
+        footer { background: var(--main-deep-blue); color: white; padding: 50px 5%; font-size: 13px; text-align: center; }
     </style>
 </head>
 <body class="simple-mode" id="targetBody">
@@ -70,7 +87,7 @@
 </div>
 
 <section class="yahoo-hero">
-    <h1>YAHOO AUCTION </h1>
+    <h1>YAHOO AUCTION</h1>
     <p>일본 최대 경매 사이트의 희귀 매물을 실시간으로 입찰하세요</p>
     <div class="search-capsule">
         <input type="text" placeholder="모델명, 시리즈, 혹은 경매 ID를 입력하세요">
@@ -79,49 +96,66 @@
 </section>
 
 <div class="yahoo-info-bar">
-    <div class="info-item"><i>🔨</i> 입찰수수료 <b>200엔</b></div>
-    <div class="info-item"><i>📦</i> 오사카 <b>직영물류</b> 검수</div>
-    <div class="info-item"><i>⚡</i> 실시간 <b>자동입찰</b> 지원</div>
-    <div class="info-item"><i>💹</i> 고시환율 <b>9.94원</b></div>
+    <div class="info-item">🔨 입찰수수료 <b style="color:var(--yahoo-purple);">200엔</b></div>
+    <div class="info-item">📦 오사카 <b>직영물류</b> 검수</div>
+    <div class="info-item">⚡ 실시간 <b>자동입찰</b> 지원</div>
+    <div class="info-item">💹 고시환율 <b>9.94원</b></div>
 </div>
 
 <section class="pro-only">
     <div class="pro-filter-container">
         <div class="pro-filter-grid">
-            <div class="filter-card"><h4>상세 옵션</h4><label><input type="checkbox" checked> 스토어포함</label></div>
-            </div>
+            <div class="filter-card"><h4 style="color:var(--yahoo-purple); border-bottom:1px solid #eee; margin-bottom:10px;">상세 옵션</h4><label><input type="checkbox" checked> 스토어포함</label><br><label><input type="checkbox"> 무료배송만</label></div>
+            <div class="filter-card"><h4 style="color:var(--yahoo-purple); border-bottom:1px solid #eee; margin-bottom:10px;">상품 상태</h4><label><input type="radio" name="c" checked> 전체</label><br><label><input type="radio" name="c"> 미개봉</label></div>
+            <div class="filter-card"><h4 style="color:var(--yahoo-purple); border-bottom:1px solid #eee; margin-bottom:10px;">가격 설정</h4><input type="number" placeholder="최소" style="width:45%; border:1px solid #ddd;"> ~ <input type="number" placeholder="최대" style="width:45%; border:1px solid #ddd;"></div>
+            <div class="filter-card"><h4 style="color:var(--yahoo-purple); border-bottom:1px solid #eee; margin-bottom:10px;">정렬 방식</h4><select style="width:100%; border:1px solid #ddd;"><option>추천순</option><option>종료임박순</option></select></div>
+        </div>
     </div>
 </section>
 
 <main class="section-container">
-    <h2 style="font-size: 22px; margin-bottom: 25px;">🔎 야후옥션 검색 결과</h2>
+    <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 25px;">🔎 야후옥션 실시간 경매</h2>
     <div class="auction-grid">
+        <div class="auction-item">
+            <div class="img-box" style="background-image: url('https://picsum.photos/400/400?random=51')"></div>
+            <div class="info-box">
+                <div style="margin-bottom:10px;"><span style="background:var(--bid-red); color:#fff; font-size:10px; padding:3px 6px; border-radius:3px; font-weight:bold;">즉시결제</span></div>
+                <div class="prod-name">로젠 메이든 넨도로이드 진홍 장미 처녀 세트</div>
+                <div class="price-main">13,200엔 <span style="font-size:11px; color:#888;">(131,208원)</span></div>
+                <div style="border-top:1px solid #f5f5f5; padding-top:12px; font-size:12.5px; color:#666; margin-top:10px;">입찰수 : <span style="font-weight:700;">12</span> | 즉결가 : <span style="font-weight:700;">13,200￥</span></div>
+            </div>
         </div>
+    </div>
 </main>
 
 <div id="footer-load"></div>
 
 <script>
-    // 공통 컴포넌트 로드 및 메뉴 강조 스크립트
-    async function loadConfig() {
-        // 헤더 로드
-        const headerRes = await fetch('header.html');
-        document.getElementById('header-load').innerHTML = await headerRes.text();
+    // [핵심] 레이아웃 통합 로드 및 깨짐 방지
+    async function initLayout() {
+        try {
+            const [hRes, fRes] = await Promise.all([
+                fetch('header.html'),
+                fetch('footer.html')
+            ]);
+            document.getElementById('header-load').innerHTML = await hRes.text();
+            document.getElementById('footer-load').innerHTML = await fRes.text();
+            
+            // [메뉴 강조] 야후옥션 메뉴 활성화
+            const activeMenu = document.getElementById('menu-auctions2');
+            if(activeMenu) activeMenu.parentElement.classList.add('active');
 
-        // 푸터 로드
-        const footerRes = await fetch('footer.html');
-        document.getElementById('footer-load').innerHTML = await footerRes.text();
-
-        // [핵심] 현재 페이지 메뉴 강조 (Active) - auctions2.html 대응
-        const filename = window.location.pathname.split("/").pop() || 'index.html';
-        const menuId = 'menu-' + filename.replace('.html', '');
-        const activeMenu = document.getElementById(menuId);
-        if(activeMenu) activeMenu.classList.add('active');
+        } catch (e) {
+            console.error("Layout Load Error:", e);
+        } finally {
+            // 모든 로드 완료 후 화면 표시
+            document.body.style.visibility = 'visible';
+        }
     }
 
-    loadConfig();
+    initLayout();
 
-    // 야후옥션 전용 모드 전환 함수
+    // 모드 전환 함수 (targetBody에 pro-mode 클래스 추가)
     function toggleMode(mode) {
         const body = document.getElementById('targetBody');
         const simpleBtn = document.getElementById('simpleBtn');
@@ -137,6 +171,5 @@
         }
     }
 </script>
-
 </body>
 </html>

@@ -11,44 +11,68 @@
         :root {
             --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
             --mercari-red: #ff0021; --point-orange: #ff8c00; 
-            --bg-grey: #f4f6f9; --border-light: #e1e5eb;
+            --bg-grey: #f4f6f9; --border-light: #e1e5eb; --footer-bg: #05102a;
         }
-        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; }
-        * { box-sizing: border-box; }
 
-        /* [상태 제어] */
-        .is-logged-in .view-logout { display: none !important; }
-        .is-logged-out .view-login { display: none !important; }
+        /* [1. 레이아웃 안정화] 로딩 전 숨김 처리 */
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; visibility: hidden; overflow-x: hidden; }
 
-        /* [헤더/푸터 로딩 전 레이아웃 확보] */
-        #header-load { min-height: 200px; }
+        /* [2. 헤더 스타일 고정 - 로고 중앙 정렬] */
+        .top-util { height: 40px; background: var(--main-deep-blue); color: #fff; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; font-size: 12px; }
+        header { height: 90px; background: #fff; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #eee; text-align: center; }
+        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); text-decoration: none; display: block; margin: 0 auto; }
         
-        /* 공통 헤더/푸터용 핵심 CSS (외부 로드 시 디자인 유지용) */
-        .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
-        header { padding: 25px 5%; text-align: center; background: #fff; border-bottom: 1px solid #f1f1f1; }
-        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
-        .main-nav { background: var(--main-deep-blue); box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 2000; }
-        .main-nav ul { display: flex; justify-content: center; list-style: none; padding: 0; margin: 0; }
-        .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; text-decoration: none; }
-        .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
-        .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
+        .main-nav { background: var(--main-deep-blue); position: sticky; top: 0; z-index: 2000; height: 51px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .main-nav ul { display: flex; justify-content: center; list-style: none; margin: 0; padding: 0; width: 100%; }
+        .main-nav li a { display: block; padding: 15px 25px; color: #fff; font-weight: 600; text-decoration: none; font-size: 15px; }
 
-        /* [상태바 전용 스타일] */
+        /* [3. 모드 전환 바] */
+        .mode-switcher-bar { 
+            background: #fff; border-bottom: 1px solid #ddd; padding: 10px 5%; 
+            display: flex; justify-content: flex-end; align-items: center; 
+            position: sticky; top: 51px; z-index: 1900; height: 50px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .toggle-box { display: flex; background: #eee; border-radius: 20px; padding: 3px; }
+        .mode-btn { padding: 6px 15px; border-radius: 17px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .mode-btn.active { background: var(--mercari-red); color: #fff; }
+
+        /* [4. 공지사항 스타일] */
+        .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; border-bottom: 1px solid #222; }
+        .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; }
+        .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; white-space: nowrap; }
+        @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+        /* [5. 상세페이지 특화 스타일] */
         .status-step { flex: 1; height: 8px; border-radius: 4px; background: #e2e8f0; position: relative; }
         .status-step.active { background: #10b981; }
-        .tooltip-arrow { content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); border-width: 5px 5px 0; border-style: solid; border-color: #1e293b transparent transparent; }
-        .help-btn { width: 1.25rem; height: 1.25rem; background-color: #e5e7eb; color: #6b7280; border-radius: 9999px; display: inline-flex; items-center; justify-content: center; font-size: 0.625rem; font-weight: 700; cursor: pointer; }
+        .help-btn { width: 20px; height: 20px; background: #e5e7eb; color: #6b7280; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; cursor: pointer; }
         .warning-box { border: 2px solid #cc0000; background: #fff5f5; padding: 20px; border-radius: 8px; font-size: 13px; margin-bottom: 20px; }
 
-        /* 퀵 메뉴 및 푸터 스타일 */
-        .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 1000; background: #555; border-radius: 8px 0 0 8px; }
+        /* 우측 퀵 메뉴 */
+        .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 3000; background: #555; border-radius: 8px 0 0 8px; }
         .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
-        footer { background: #05102a; color: #fff; padding: 50px 5%; font-size: 13px; text-align: center; }
+
+        footer { background: var(--footer-bg); color: #fff; padding: 50px 5%; margin-top: 50px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; max-width: 1200px; margin: 0 auto; text-align: left; }
     </style>
 </head>
-<body class="is-logged-out" id="mainBody">
+<body class="simple-mode">
 
 <div id="header-load"></div>
+
+<div class="side-quick">
+    <div class="side-btn" onclick="openCalc()"><i>🧮</i>계산기</div>
+    <div class="side-btn"><i>💬</i>문의</div>
+    <div onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="background:#333; color:#fff; text-align:center; padding:10px; font-size:10px; cursor:pointer; border-radius: 0 0 0 8px;">TOP</div>
+</div>
+
+<div class="mode-switcher-bar">
+    <div style="margin-right: 15px; font-size: 12px; font-weight: bold; color: #666;">화면 구성 선택</div>
+    <div class="toggle-box">
+        <div class="mode-btn active">일반 모드</div>
+        <div class="mode-btn">전문가 모드</div>
+    </div>
+</div>
 
 <div class="bg-white border-b border-gray-200 py-4 px-[5%] text-sm text-gray-500">
     메루카리 전문관 > 패션 > 여성 > 바지 > 슬랙스
@@ -95,70 +119,112 @@
                     </div>
                     <div class="px-2">
                         <div class="flex gap-1.5 mb-2">
-                            <div class="status-step active relative"><div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap font-bold">상품 상태 <div class="tooltip-arrow"></div></div></div>
+                            <div class="status-step active"></div>
                             <div class="status-step active"></div>
                             <div class="status-step"></div>
                             <div class="status-step"></div>
                             <div class="status-step"></div>
                         </div>
                         <div class="flex justify-between text-[10px] font-bold text-gray-400 uppercase tracking-tighter">
-                            <span>미개봉 새상품</span><span>단순 개봉</span><span>중고 상품</span><span>사용감 많음</span><span>정크</span>
+                            <span>미개봉</span><span>전시급</span><span>중고</span><span>사용감있음</span><span>정크</span>
                         </div>
                     </div>
                 </div>
 
-                <button class="w-full bg-[--mercari-red] text-white py-5 rounded-2xl font-black text-xl hover:brightness-110 active:scale-[0.98] transition shadow-lg">이 상품 구매 신청하기</button>
+                <div class="border-b border-gray-100 pb-8 space-y-4 text-sm">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400 font-bold flex items-center gap-2">배송 방법 <button onclick="toggleModal('shippingHelpModal')" class="help-btn">?</button></span>
+                        <span class="font-bold text-gray-800 bg-gray-100 px-3 py-1 rounded-md">라쿠라쿠 메루카리 편 (추적가능)</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400 font-bold">배송비 부담</span>
+                        <span class="font-bold text-green-600 underline">무료 배송 (출품자 부담)</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400 font-bold flex items-center gap-2">발송 지역 <button onclick="toggleModal('regionHelpModal')" class="help-btn">?</button></span>
+                        <span class="font-bold text-gray-800">홋카이도 (1~2일 내 발송)</span>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 rounded-3xl p-8 text-white shadow-xl">
+                    <div class="flex justify-between items-end mb-8">
+                        <div><span class="text-xs opacity-50 block mb-1">Estimated Total</span><span class="text-2xl font-medium font-mono">900 JPY</span></div>
+                        <div class="text-right"><span class="text-4xl font-black text-emerald-400">약 8,730원</span></div>
+                    </div>
+                    <label class="flex items-center gap-3 mb-8 cursor-pointer bg-white/10 p-4 rounded-xl hover:bg-white/20 transition">
+                        <input type="radio" id="agree" name="policy" class="w-5 h-5 accent-emerald-400">
+                        <span class="text-sm font-bold">이용 규정에 동의합니다.</span>
+                    </label>
+                    <button onclick="handleOrder()" class="w-full bg-[--mercari-red] text-white py-5 rounded-2xl font-black text-xl hover:brightness-110 active:scale-[0.98] transition shadow-lg">구매 신청하기</button>
+                </div>
             </div>
+        </div>
+    </div>
+
+    <div class="border-t-4 border-gray-900 pt-16">
+        <h2 class="text-2xl font-black mb-8">ITEM DESCRIPTION</h2>
+        <div class="warning-box text-center">
+            <p class="font-bold mb-2 text-red-700">※ 주의사항</p>
+            <p class="leading-relaxed">오번역으로 인한 피해는 책임지지 않으며, 신선식품 구매 시 유의 부탁드립니다.</p>
+        </div>
+        <div class="bg-white border border-gray-100 p-10 rounded-3xl leading-9 text-gray-700 shadow-sm relative">
+            <button class="absolute top-8 right-8 bg-red-600 text-white px-4 py-1.5 rounded-full text-xs font-bold">번역보기</button>
+            <p>밑아래 55 / 허리 35. 통기성이 좋아 연중 착용 가능합니다. 오피스 캐주얼로 추천드립니다.</p>
         </div>
     </div>
 </main>
 
 <div id="statusModal" class="fixed inset-0 bg-black/60 hidden z-[5000] flex items-center justify-center p-6 backdrop-blur-sm">
-    <div class="bg-white rounded-[2.5rem] w-full max-w-md overflow-hidden">
-        <div class="bg-slate-900 p-6 text-white font-bold flex justify-between">상태 가이드 <button onclick="toggleModal('statusModal')">×</button></div>
-        <div class="p-8 space-y-4">
-            <div class="p-4 border-2 border-emerald-500 bg-emerald-50 rounded-2xl text-emerald-700 font-black">신품 · 미사용 (S)</div>
-            <div class="p-4 bg-gray-50 rounded-xl text-gray-400">미사용에 가까움 (A)</div>
-        </div>
+    <div class="bg-white rounded-[2.5rem] w-full max-w-md overflow-hidden shadow-2xl">
+        <div class="bg-slate-900 p-6 text-white font-bold flex justify-between items-center">상태 가이드 <button onclick="toggleModal('statusModal')" class="text-2xl opacity-50">&times;</button></div>
+        <div class="p-8 space-y-4"><div class="p-4 border-2 border-emerald-500 bg-emerald-50 rounded-2xl font-black text-emerald-700">신품 · 미사용 (S)</div></div>
+        <button onclick="toggleModal('statusModal')" class="w-full bg-gray-100 py-5 font-bold text-gray-500">닫기</button>
     </div>
 </div>
 
-<div class="side-quick">
-    <div class="side-btn" onclick="openCalc()"><i>🧮</i>계산기</div>
-    <div class="side-btn"><i>💬</i>문의</div>
-    <div onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="background:#333; color:#fff; text-align:center; padding:10px; font-size:10px; cursor:pointer;">TOP</div>
+<div id="shippingHelpModal" class="fixed inset-0 bg-black/60 hidden z-[5000] flex items-center justify-center p-6 backdrop-blur-sm">
+    <div class="bg-white rounded-[2.5rem] w-full max-w-md overflow-hidden shadow-2xl">
+        <div class="bg-slate-900 p-6 text-white font-bold flex justify-between items-center">배송 안내 <button onclick="toggleModal('shippingHelpModal')" class="text-2xl opacity-50">&times;</button></div>
+        <div class="p-8 space-y-4 text-sm font-medium text-gray-600">추적 가능한 메루카리 전용 배송편입니다.</div>
+        <button onclick="toggleModal('shippingHelpModal')" class="w-full bg-gray-100 py-5 font-bold text-gray-500">닫기</button>
+    </div>
+</div>
+
+<div id="regionHelpModal" class="fixed inset-0 bg-black/60 hidden z-[5000] flex items-center justify-center p-6 backdrop-blur-sm">
+    <div class="bg-white rounded-[2.5rem] w-full max-w-md overflow-hidden shadow-2xl">
+        <div class="bg-slate-900 p-6 text-white font-bold flex justify-between items-center">지역 안내 <button onclick="toggleModal('regionHelpModal')" class="text-2xl opacity-50">&times;</button></div>
+        <div class="p-8 space-y-4 text-sm font-medium text-gray-600">홋카이도 등 원거리는 입고까지 2~4일 더 소요될 수 있습니다.</div>
+        <button onclick="toggleModal('regionHelpModal')" class="w-full bg-gray-100 py-5 font-bold text-gray-500">닫기</button>
+    </div>
+</div>
+
+<div class="fixed inset-0 bg-black/80 hidden z-[6000] items-center justify-center backdrop-blur-md" id="calcModal">
+    <div class="bg-white w-[95%] max-w-[950px] h-[85vh] rounded-[2.5rem] relative overflow-hidden">
+        <span class="absolute right-6 top-4 text-4xl cursor-pointer z-[7000] text-gray-400" onclick="closeCalc()">&times;</span>
+        <iframe src="final_no.html" class="w-full h-full border-none"></iframe>
+    </div>
 </div>
 
 <div id="footer-load"></div>
 
 <script>
-    // 공통 레이아웃 로드 및 메뉴 활성화 스크립트
     async function initLayout() {
         try {
-            const [hRes, fRes] = await Promise.all([
-                fetch('header.html'),
-                fetch('footer.html')
-            ]);
-            
+            const [hRes, fRes] = await Promise.all([ fetch('header.html'), fetch('footer.html') ]);
             document.getElementById('header-load').innerHTML = await hRes.text();
             document.getElementById('footer-load').innerHTML = await fRes.text();
-
-            // [핵심] 상세페이지지만 '메루카리' 메뉴를 강조함
             const activeMenu = document.getElementById('menu-mercari');
             if(activeMenu) activeMenu.parentElement.classList.add('active');
-            
-        } catch (e) {
-            console.error("Layout Load Error:", e);
-        }
+        } catch (e) { console.error(e); } finally { document.body.style.visibility = 'visible'; }
     }
-
     initLayout();
 
-    function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
-    function toggleLogin(l){ 
-        const b = document.getElementById('mainBody'); 
-        if(l){ b.classList.remove('is-logged-out'); b.classList.add('is-logged-in'); } 
-        else { b.classList.remove('is-logged-in'); b.classList.add('is-logged-out'); } 
+    function toggleModal(mId) { const m = document.getElementById(mId); if(m) m.classList.toggle('hidden'); }
+    function openCalc() { document.getElementById('calcModal').style.display = 'flex'; }
+    function closeCalc() { document.getElementById('calcModal').style.display = 'none'; }
+    function handleOrder() { 
+        if(!document.getElementById('agree').checked) alert('규정에 동의해주세요.');
+        else alert('구매 신청이 완료되었습니다!');
     }
 </script>
 </body>

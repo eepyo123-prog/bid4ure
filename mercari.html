@@ -10,40 +10,40 @@
         :root {
             --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
             --mercari-red: #ff0021; --point-orange: #ff8c00; 
-            --bg-grey: #f4f6f9; --border-light: #e1e5eb;
+            --bg-grey: #f4f6f9; --border-light: #e1e5eb; --footer-bg: #05102a;
         }
-        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); visibility: hidden; overflow-x: hidden; }
 
-        /* [기존 헤더/네비 고정 스타일] */
+        /* [1. 레이아웃 안정화] 로딩 전 숨김 및 상단바 고정 */
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); visibility: hidden; overflow-x: hidden; }
+        
+        /* 헤더/네비 스타일 강제 고정 (깨짐 방지) */
         .top-util { height: 40px; background: var(--main-deep-blue); color: #fff; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; font-size: 12px; }
         header { height: 90px; background: #fff; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #eee; }
+        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); text-decoration: none; }
         .main-nav { background: var(--main-deep-blue); position: sticky; top: 0; z-index: 2000; height: 51px; }
         .main-nav ul { display: flex; justify-content: center; list-style: none; margin: 0; padding: 0; }
-        .main-nav li a { display: block; padding: 15px 25px; color: #fff; font-weight: 600; font-size: 15px; }
-        .main-nav li.active { background: rgba(255,255,255,0.1); }
+        .main-nav li a { display: block; padding: 15px 25px; color: #fff; font-weight: 600; font-size: 15px; text-decoration: none; }
+        .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
 
+        /* [2. 모드 전환 바] */
         .mode-switcher-bar { background: #fff; border-bottom: 1px solid #ddd; padding: 10px 5%; display: flex; justify-content: flex-end; align-items: center; position: sticky; top: 51px; z-index: 1900; height: 50px; }
-        .mode-btn { padding: 6px 15px; border-radius: 17px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .mode-btn { padding: 6px 15px; border-radius: 17px; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.2s; }
         .mode-btn.active { background: var(--mercari-red); color: #fff; }
 
-        /* [전문가 전용 필터 스타일 - image_dcd30d 반영] */
+        /* [3. 전문가 필터 레이아웃 - image_dcd30d 스타일] */
         .pro-filter-container { background: #fff; border-bottom: 1px solid #ddd; padding: 20px 5%; font-size: 13px; }
         .pro-warning { color: #e60012; font-size: 12px; margin-bottom: 15px; line-height: 1.5; }
         
-        .filter-row { display: flex; border: 1px solid #e1e5eb; border-bottom: none; }
-        .filter-row:last-child { border-bottom: 1px solid #e1e5eb; }
-        .filter-label { width: 120px; background: #f8fafc; padding: 12px 15px; font-weight: bold; color: #475569; border-right: 1px solid #e1e5eb; display: flex; align-items: center; }
-        .filter-content { flex: 1; padding: 10px 20px; display: flex; align-items: center; gap: 20px; background: #fff; }
+        .filter-table { border-top: 1px solid #e1e5eb; margin-bottom: 20px; }
+        .filter-row { display: flex; border-bottom: 1px solid #e1e5eb; border-left: 1px solid #e1e5eb; border-right: 1px solid #e1e5eb; }
+        .filter-label { width: 140px; background: #f8fafc; padding: 12px 15px; font-weight: bold; color: #475569; border-right: 1px solid #e1e5eb; display: flex; align-items: center; }
+        .filter-content { flex: 1; padding: 10px 20px; display: flex; align-items: center; gap: 20px; background: #fff; flex-wrap: wrap; }
         
-        .pro-input { border: 1px solid #ddd; padding: 6px 12px; border-radius: 4px; outline: none; }
-        .btn-pro-search { background: var(--mercari-red); color: #fff; padding: 10px 30px; border-radius: 4px; font-weight: bold; border: none; cursor: pointer; margin-top: 15px; }
+        .pro-input { border: 1px solid #ddd; padding: 6px 12px; border-radius: 4px; outline: none; font-size: 13px; }
+        .btn-pro-search { background: var(--mercari-red); color: #fff; padding: 10px 30px; border-radius: 4px; font-weight: bold; border: none; cursor: pointer; margin-top: 15px; transition: 0.2s; }
+        .btn-pro-search:hover { background: #d0001a; }
 
-        /* 정렬 탭 */
-        .sort-tabs { display: flex; gap: 15px; margin-top: 15px; font-size: 12px; color: #666; border-top: 1px solid #eee; padding-top: 15px; }
-        .sort-tabs span { cursor: pointer; }
-        .sort-tabs span.active { color: var(--mercari-red); font-weight: bold; }
-
-        /* 모드 제어 */
+        /* [4. 모드 제어 및 그리드] */
         .simple-only { display: block; }
         .pro-only { display: none !important; }
         body.pro-mode .simple-only { display: none !important; }
@@ -51,7 +51,10 @@
 
         .auction-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 1300px; margin: 30px auto; padding: 0 5%; }
         body.pro-mode .auction-grid { grid-template-columns: repeat(5, 1fr); }
+        
+        /* 푸터 스타일 고정 */
         footer { background: var(--footer-bg); color: #fff; padding: 50px 5%; margin-top: 50px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1200px; margin: 0 auto; text-align: left; }
     </style>
 </head>
 <body class="is-logged-out simple-mode" id="targetBody">
@@ -59,7 +62,7 @@
 <div id="header-load"></div>
 
 <div class="mode-switcher-bar">
-    <div class="toggle-box" style="display:flex; background:#eee; border-radius:20px; padding:3px;">
+    <div style="display:flex; background:#eee; border-radius:20px; padding:3px;">
         <div class="mode-btn active" id="simpleBtn" onclick="toggleMode('simple')">일반 모드</div>
         <div class="mode-btn" id="proBtn" onclick="toggleMode('pro')">전문가 모드</div>
     </div>
@@ -79,9 +82,9 @@
     </div>
 
     <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-        <div style="border: 1px solid #ddd; padding: 10px 20px; background: #f8fafc; font-weight: bold;">원문 URL</div>
-        <input type="text" placeholder="https://jp.mercari.com/search?..." style="flex: 1; border: 1px solid #ddd; padding: 10px;">
-        <button style="background: #64748b; color: white; padding: 0 25px; font-weight: bold;">이동</button>
+        <div style="border: 1px solid #ddd; padding: 10px 20px; background: #f8fafc; font-weight: bold; font-size: 13px;">원문 URL</div>
+        <input type="text" placeholder="https://jp.mercari.com/search?..." style="flex: 1; border: 1px solid #ddd; padding: 10px; outline: none;">
+        <button style="background: #64748b; color: white; padding: 0 25px; font-weight: bold; border-radius: 4px;">이동</button>
     </div>
 
     <div class="filter-table">
@@ -90,10 +93,18 @@
             <div class="filter-content">
                 <label><input type="checkbox"> 배송비 포함(무료배송)</label>
                 <label><input type="checkbox"> 판매 중인 상품만</label>
-                <span style="color:#ccc">|</span>
+                <span style="color:#eee">|</span>
                 <label><input type="radio" name="cond" checked> 전체</label>
                 <label><input type="radio" name="cond"> 새 상품</label>
                 <label><input type="radio" name="cond"> 중고</label>
+            </div>
+        </div>
+        <div class="filter-row">
+            <div class="filter-label">배송방법</div>
+            <div class="filter-content">
+                <label><input type="checkbox"> 정형외(우편)</label>
+                <label><input type="checkbox"> 미정</label>
+                <label><input type="checkbox"> 택배(메루카리 편 등)</label>
             </div>
         </div>
         <div class="filter-row">
@@ -107,17 +118,13 @@
         <div class="filter-row">
             <div class="filter-label">제외어 설정</div>
             <div class="filter-content">
-                <input type="text" class="pro-input" style="width: 400px;" placeholder="검색 결과에서 제외할 단어를 입력하세요">
+                <input type="text" class="pro-input" style="width: 100%; max-width: 500px;" placeholder="검색 결과에서 제외할 단어를 입력하세요">
             </div>
         </div>
     </div>
 
     <div style="text-align: right;">
         <button class="btn-pro-search">🔍 위의 조건으로 검색</button>
-    </div>
-
-    <div class="sort-tabs">
-        <span class="active">인기상품순</span> <span>신상품순</span> <span>가격높은순</span> <span>가격낮은순</span>
     </div>
 </section>
 
@@ -139,8 +146,11 @@
             const [hRes, fRes] = await Promise.all([ fetch('header.html'), fetch('footer.html') ]);
             document.getElementById('header-load').innerHTML = await hRes.text();
             document.getElementById('footer-load').innerHTML = await fRes.text();
+            
             const activeMenu = document.getElementById('menu-mercari');
             if(activeMenu) activeMenu.parentElement.classList.add('active');
+            
+            // 로그인 상태 동기화
             if(document.body.classList.contains('is-logged-in')) toggleLogin(true);
         } catch (e) { console.error(e); } finally { document.body.style.visibility = 'visible'; }
     }

@@ -13,10 +13,10 @@
             --bg-grey: #f4f6f9; --border-light: #e1e5eb; --footer-bg: #05102a;
         }
 
-        /* [1. 레이아웃 안정화] 로딩 전 숨김 처리 */
+        /* [1. 레이아웃 안정화] 로딩 전 숨김 및 필수 높이 확보 */
         body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); visibility: hidden; overflow-x: hidden; }
         
-        /* 헤더/네비 스타일 강제 고정 */
+        /* 헤더/푸터 디자인 강제 고정 (깨짐 방지) */
         .top-util { height: 40px; background: var(--main-deep-blue); color: #fff; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; font-size: 12px; }
         header { height: 90px; background: #fff; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #eee; }
         .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); text-decoration: none; }
@@ -25,58 +25,46 @@
         .main-nav li a { display: block; padding: 15px 25px; color: #fff; font-weight: 600; font-size: 15px; text-decoration: none; }
         .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
 
-        /* [2. 공지사항(Ticker) 복구 - 중복 문제 해결] */
-        .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; border-bottom: 1px solid #222; }
-        .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; z-index: 10; }
-        .ticker-text-wrapper { overflow: hidden; white-space: nowrap; flex: 1; position: relative; }
+        /* [2. 공지사항 스타일 - 불러온 헤더의 공지사항이 깨지지 않게 유지] */
+        .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
+        .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; }
+        .ticker-text-wrapper { overflow: hidden; white-space: nowrap; flex: 1; }
         .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; }
         @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* [3. 우측 계산기 퀵 메뉴 복구] */
-        .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 3000; background: #555; border-radius: 8px 0 0 8px; box-shadow: -2px 0 10px rgba(0,0,0,0.1); }
-        .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s; }
-        .side-btn:hover { background: #444; }
-        .side-btn i { font-style: normal; font-size: 18px; margin-bottom: 5px; }
+        /* [3. 우측 퀵 메뉴] */
+        .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 3000; background: #555; border-radius: 8px 0 0 8px; }
+        .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
 
-        /* 전문가 필터 레이아웃 */
-        .pro-filter-container { background: #fff; border-bottom: 1px solid #ddd; padding: 20px 5%; font-size: 13px; }
-        .filter-table { border-top: 1px solid #e1e5eb; margin-bottom: 20px; }
-        .filter-row { display: flex; border-bottom: 1px solid #e1e5eb; border-left: 1px solid #e1e5eb; border-right: 1px solid #e1e5eb; }
-        .filter-label { width: 140px; background: #f8fafc; padding: 12px 15px; font-weight: bold; color: #475569; border-right: 1px solid #e1e5eb; display: flex; align-items: center; }
-        .filter-content { flex: 1; padding: 10px 20px; display: flex; align-items: center; gap: 20px; background: #fff; flex-wrap: wrap; }
-        
         .mode-switcher-bar { background: #fff; border-bottom: 1px solid #ddd; padding: 10px 5%; display: flex; justify-content: flex-end; align-items: center; position: sticky; top: 51px; z-index: 1900; height: 50px; }
         .mode-btn { padding: 6px 15px; border-radius: 17px; font-size: 11px; font-weight: bold; cursor: pointer; }
         .mode-btn.active { background: var(--mercari-red); color: #fff; }
 
-        /* 모드 제어 및 그리드 */
+        /* 전문가 필터 및 모드 제어 */
+        .pro-filter-container { background: #fff; border-bottom: 1px solid #ddd; padding: 20px 5%; font-size: 13px; }
+        .filter-table { border-top: 1px solid #e1e5eb; margin-bottom: 20px; }
+        .filter-row { display: flex; border-bottom: 1px solid #e1e5eb; border-left: 1px solid #e1e5eb; border-right: 1px solid #e1e5eb; }
+        .filter-label { width: 140px; background: #f8fafc; padding: 12px 15px; font-weight: bold; color: #475569; border-right: 1px solid #e1e5eb; display: flex; align-items: center; }
+        .filter-content { flex: 1; padding: 10px 20px; display: flex; align-items: center; gap: 20px; background: #fff; }
+        
         .simple-only { display: block; }
         .pro-only { display: none !important; }
         body.pro-mode .simple-only { display: none !important; }
         body.pro-mode .pro-only { display: block !important; }
+        body.pro-mode { background-color: #fff; }
 
         .auction-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 1300px; margin: 30px auto; padding: 0 5%; }
         body.pro-mode .auction-grid { grid-template-columns: repeat(5, 1fr); }
 
-        /* [4. 깨진 푸터 복구] */
+        /* 푸터 디자인 복구 */
         footer { background: var(--footer-bg); color: #fff; padding: 50px 5%; margin-top: 50px; }
         .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; max-width: 1200px; margin: 0 auto; text-align: left; }
-        .footer-title { font-size: 16px; font-weight: 800; margin-bottom: 20px; color: #fff; }
-        .footer-text { font-size: 13px; color: #94a3b8; line-height: 1.8; }
-
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,31,77,0.8); z-index: 4000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
     </style>
 </head>
 <body class="is-logged-out simple-mode" id="targetBody">
 
 <div id="header-load"></div>
-
-<div class="ticker" id="ticker-area">
-    <div class="ticker-label">NOTICE</div>
-    <div class="ticker-text-wrapper">
-        <div class="ticker-text">[이벤트] 수수료 200엔 혁명! &nbsp;&nbsp;&nbsp;&nbsp; [안내] 26년 1월 구정 연휴 오사카 물류센터 정상 운영 &nbsp;&nbsp;&nbsp;&nbsp; [공지] 야후옥션 자동입찰 시스템 점검 안내</div>
-    </div>
-</div>
 
 <div class="side-quick">
     <div class="side-btn" onclick="openCalc()"><i>🧮</i>계산기</div>
@@ -96,11 +84,8 @@
         <div class="filter-row">
             <div class="filter-label">검색조건</div>
             <div class="filter-content">
-                <label><input type="checkbox"> 배송비 포함(무료배송)</label>
-                <label><input type="checkbox"> 판매 중인 상품만</label>
-                <span style="color:#eee">|</span>
-                <label><input type="radio" name="cond" checked> 전체</label>
-                <label><input type="radio" name="cond"> 새 상품</label>
+                <label><input type="checkbox"> 배송비 포함</label>
+                <label><input type="checkbox"> 판매 중</label>
             </div>
         </div>
         <div class="filter-row">
@@ -108,7 +93,7 @@
             <div class="filter-content">
                 <label><input type="checkbox"> 정형외(우편)</label>
                 <label><input type="checkbox"> 미정</label>
-                <label><input type="checkbox"> 택배(메루카리 편 등)</label>
+                <label><input type="checkbox"> 택배</label>
             </div>
         </div>
     </div>
@@ -117,7 +102,7 @@
 <main class="auction-grid">
     <div style="background:#fff; border:1px solid var(--border-light); border-radius:8px; overflow:hidden;">
         <div style="width: 100%; aspect-ratio: 1/1; background-image: url('https://picsum.photos/400/400?random=62'); background-size: cover;"></div>
-        <div style="padding: 15px;"><div style="font-size: 14px;">올리브 그린 슬랙스 M</div><div style="font-size: 18px; font-weight: 800; margin-top: 10px; color: var(--mercari-red);">900엔</div></div>
+        <div style="padding: 15px;"><div style="font-size: 14px;">상품 샘플</div><div style="font-size: 18px; font-weight: 800; margin-top: 10px; color: var(--mercari-red);">900엔</div></div>
     </div>
 </main>
 
@@ -128,28 +113,14 @@
     </div>
 </div>
 
-<footer>
-    <div class="footer-grid">
-        <div>
-            <div class="footer-title">Support</div>
-            <div class="footer-text">donacorporation8988@gmail.com</div>
-        </div>
-        <div>
-            <div class="footer-title">Bank</div>
-            <div class="footer-text">신한: 140-011-832950<br>국민: 750601-01-266837</div>
-        </div>
-        <div>
-            <div class="footer-title">Warehouse</div>
-            <div class="footer-text">〒546-0024 大阪府大阪市東住吉区公園南矢田 4-3-7</div>
-        </div>
-    </div>
-</footer>
+<div id="footer-load"></div>
 
 <script>
     async function initLayout() {
         try {
-            const [hRes] = await Promise.all([ fetch('header.html') ]);
+            const [hRes, fRes] = await Promise.all([ fetch('header.html'), fetch('footer.html') ]);
             document.getElementById('header-load').innerHTML = await hRes.text();
+            document.getElementById('footer-load').innerHTML = await fRes.text();
             const activeMenu = document.getElementById('menu-mercari');
             if(activeMenu) activeMenu.parentElement.classList.add('active');
         } catch (e) { console.error(e); } finally { document.body.style.visibility = 'visible'; }
@@ -173,5 +144,4 @@
 </script>
 </body>
 </html>
-
 

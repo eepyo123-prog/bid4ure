@@ -9,68 +9,106 @@
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         
         :root {
-            --main-deep-blue: #0a1f4d; --mercari-red: #ff0021; --point-orange: #ff8c00; 
+            --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
+            --mercari-red: #ff0021; --point-orange: #ff8c00; 
             --bg-grey: #f4f6f9; --border-light: #e1e5eb;
         }
-        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; }
         * { box-sizing: border-box; }
 
-        /* [상태바 전용 스타일 복구] */
+        /* [상태 제어] */
+        .is-logged-in .view-logout { display: none !important; }
+        .is-logged-out .view-login { display: none !important; }
+
+        /* [헤더/푸터 로딩 전 레이아웃 확보] */
+        #header-load { min-height: 200px; }
+        
+        /* 공통 헤더/푸터용 핵심 CSS (외부 로드 시 디자인 유지용) */
+        .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
+        header { padding: 25px 5%; text-align: center; background: #fff; border-bottom: 1px solid #f1f1f1; }
+        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
+        .main-nav { background: var(--main-deep-blue); box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 2000; }
+        .main-nav ul { display: flex; justify-content: center; list-style: none; padding: 0; margin: 0; }
+        .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; text-decoration: none; }
+        .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
+
+        /* [상태바 전용 스타일] */
         .status-step { flex: 1; height: 8px; border-radius: 4px; background: #e2e8f0; position: relative; }
         .status-step.active { background: #10b981; }
-        .tooltip-arrow {
-            content: ''; position: absolute; bottom: -5px; left: 50%;
-            transform: translateX(-50%); border-width: 5px 5px 0;
-            border-style: solid; border-color: #1e293b transparent transparent;
-        }
+        .tooltip-arrow { content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); border-width: 5px 5px 0; border-style: solid; border-color: #1e293b transparent transparent; }
         .help-btn { width: 1.25rem; height: 1.25rem; background-color: #e5e7eb; color: #6b7280; border-radius: 9999px; display: inline-flex; items-center; justify-content: center; font-size: 0.625rem; font-weight: 700; cursor: pointer; }
+        .warning-box { border: 2px solid #cc0000; background: #fff5f5; padding: 20px; border-radius: 8px; font-size: 13px; margin-bottom: 20px; }
+
+        /* 퀵 메뉴 및 푸터 스타일 */
+        .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 1000; background: #555; border-radius: 8px 0 0 8px; }
+        .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
+        footer { background: #05102a; color: #fff; padding: 50px 5%; font-size: 13px; text-align: center; }
     </style>
 </head>
-<body>
+<body class="is-logged-out" id="mainBody">
 
 <div id="header-load"></div>
 
+<div class="bg-white border-b border-gray-200 py-4 px-[5%] text-sm text-gray-500">
+    메루카리 전문관 > 패션 > 여성 > 바지 > 슬랙스
+</div>
+
 <main class="max-w-[1350px] mx-auto py-10 px-[5%]">
-    <div class="flex flex-col lg:flex-row gap-12">
+    <div class="flex flex-col lg:flex-row gap-12 mb-16">
         <div class="lg:w-1/2">
-            <img src="https://picsum.photos/600/700?random=20" class="w-full rounded-3xl shadow-sm">
+            <div class="bg-white border border-gray-200 rounded-3xl p-4 sticky top-32 shadow-sm">
+                <img src="https://picsum.photos/600/700?random=20" class="w-full h-auto rounded-2xl mb-4">
+                <div class="flex gap-2">
+                    <img src="https://picsum.photos/100/100?random=21" class="w-20 h-20 rounded-lg border-2 border-blue-500">
+                    <img src="https://picsum.photos/100/100?random=22" class="w-20 h-20 rounded-lg opacity-50">
+                </div>
+            </div>
         </div>
+
         <div class="lg:w-1/2">
-            <h1 class="text-3xl font-black text-gray-900 mb-8">올리브 그린 슬랙스 사이즈 36 (M)</h1>
+            <div class="flex justify-between items-start mb-6">
+                <h1 class="text-3xl font-black text-gray-900 tracking-tight">올리브 그린 슬랙스 사이즈 36 (M)</h1>
+                <button class="text-xs bg-gray-100 px-3 py-1.5 rounded-lg font-bold text-gray-500">★ 관심등록</button>
+            </div>
 
-            <div class="border-b border-gray-100 pb-8 mb-8">
-                <div class="flex items-center gap-2 mb-4">
-                    <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">Item Condition</span>
-                    <button onclick="toggleModal('statusModal')" class="help-btn">?</button>
-                </div>
-                
-                <div class="bg-emerald-50 border border-emerald-100 p-5 rounded-2xl flex items-center justify-between mb-6">
-                    <div class="text-emerald-700">
-                        <span class="text-xs font-bold block opacity-70">현재 상품의 상태</span>
-                        <span class="text-xl font-black">신품 · 미사용</span>
-                    </div>
-                    <div class="bg-emerald-500 text-white px-4 py-1.5 rounded-full text-xs font-black shadow-sm">S-GRADE</div>
-                </div>
-
-                <div class="px-2">
-                    <div class="flex gap-1.5 mb-2">
-                        <div class="status-step active relative">
-                            <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap font-bold">
-                                상품 상태 <div class="tooltip-arrow"></div>
-                            </div>
-                        </div>
-                        <div class="status-step active"></div>
-                        <div class="status-step"></div>
-                        <div class="status-step"></div>
-                        <div class="status-step"></div>
-                    </div>
-                    <div class="flex justify-between text-[10px] font-bold text-gray-400 uppercase tracking-tighter">
-                        <span>미개봉 새상품</span><span>단순 개봉</span><span>중고 상품</span><span>사용감 많음</span><span>정크</span>
-                    </div>
+            <div class="flex items-center gap-3 mb-8 p-4 bg-gray-50 rounded-2xl">
+                <div class="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center text-rose-500 font-bold text-xl">あ</div>
+                <div>
+                    <div class="text-sm font-bold">판매자: あか <span class="font-normal text-gray-400 ml-2">본인확인 완료</span></div>
+                    <div class="text-orange-400 text-xs font-bold">★★★★★ <span class="text-gray-400 font-normal">(187) [리뷰]</span></div>
                 </div>
             </div>
 
-            <button class="w-full bg-[--mercari-red] text-white py-5 rounded-2xl font-black text-xl shadow-lg">이 상품 구매 신청하기</button>
+            <div class="space-y-8">
+                <div class="border-b border-gray-100 pb-8">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">Item Condition</span>
+                        <button onclick="toggleModal('statusModal')" class="help-btn">?</button>
+                    </div>
+                    <div class="bg-emerald-50 border border-emerald-100 p-5 rounded-2xl flex items-center justify-between mb-4">
+                        <div class="text-emerald-700">
+                            <span class="text-xs font-bold block opacity-70">현재 상품의 상태</span>
+                            <span class="text-xl font-black">신품 · 미사용</span>
+                        </div>
+                        <div class="bg-emerald-500 text-white px-4 py-1.5 rounded-full text-xs font-black shadow-sm">S-GRADE</div>
+                    </div>
+                    <div class="px-2">
+                        <div class="flex gap-1.5 mb-2">
+                            <div class="status-step active relative"><div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap font-bold">상품 상태 <div class="tooltip-arrow"></div></div></div>
+                            <div class="status-step active"></div>
+                            <div class="status-step"></div>
+                            <div class="status-step"></div>
+                            <div class="status-step"></div>
+                        </div>
+                        <div class="flex justify-between text-[10px] font-bold text-gray-400 uppercase tracking-tighter">
+                            <span>미개봉 새상품</span><span>단순 개봉</span><span>중고 상품</span><span>사용감 많음</span><span>정크</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="w-full bg-[--mercari-red] text-white py-5 rounded-2xl font-black text-xl hover:brightness-110 active:scale-[0.98] transition shadow-lg">이 상품 구매 신청하기</button>
+            </div>
         </div>
     </div>
 </main>
@@ -85,19 +123,43 @@
     </div>
 </div>
 
+<div class="side-quick">
+    <div class="side-btn" onclick="openCalc()"><i>🧮</i>계산기</div>
+    <div class="side-btn"><i>💬</i>문의</div>
+    <div onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="background:#333; color:#fff; text-align:center; padding:10px; font-size:10px; cursor:pointer;">TOP</div>
+</div>
+
 <div id="footer-load"></div>
 
 <script>
-    async function loadConfig() {
-        const headerRes = await fetch('header.html');
-        document.getElementById('header-load').innerHTML = await headerRes.text();
-        const footerRes = await fetch('footer.html');
-        document.getElementById('footer-load').innerHTML = await footerRes.text();
-        document.getElementById('menu-mercari').classList.add('active');
+    // 공통 레이아웃 로드 및 메뉴 활성화 스크립트
+    async function initLayout() {
+        try {
+            const [hRes, fRes] = await Promise.all([
+                fetch('header.html'),
+                fetch('footer.html')
+            ]);
+            
+            document.getElementById('header-load').innerHTML = await hRes.text();
+            document.getElementById('footer-load').innerHTML = await fRes.text();
+
+            // [핵심] 상세페이지지만 '메루카리' 메뉴를 강조함
+            const activeMenu = document.getElementById('menu-mercari');
+            if(activeMenu) activeMenu.parentElement.classList.add('active');
+            
+        } catch (e) {
+            console.error("Layout Load Error:", e);
+        }
     }
-    loadConfig();
+
+    initLayout();
 
     function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
+    function toggleLogin(l){ 
+        const b = document.getElementById('mainBody'); 
+        if(l){ b.classList.remove('is-logged-out'); b.classList.add('is-logged-in'); } 
+        else { b.classList.remove('is-logged-in'); b.classList.add('is-logged-out'); } 
+    }
 </script>
 </body>
 </html>

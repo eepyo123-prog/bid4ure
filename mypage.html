@@ -11,61 +11,75 @@
         :root {
             --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
             --point-orange: #ff8c00; --bg-grey: #f4f6f9; --border-light: #e1e5eb;
+            --footer-bg: #05102a;
         }
-        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; overflow-x: hidden; }
-        ul, p, h1, h2, h3 { margin: 0; padding: 0; list-style: none; }
-        a { text-decoration: none; color: inherit; transition: 0.2s; }
-        * { box-sizing: border-box; }
 
-        /* [상태 제어] */
-        .is-logged-in .view-logout { display: none !important; }
-        .is-logged-out .view-login { display: none !important; }
+        /* [1. 레이아웃 안정화] 로드 전 숨김 및 배경 고정 */
+        body { 
+            font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; 
+            visibility: hidden; overflow-x: hidden; 
+        }
 
-        /* [핵심] 헤더 로딩 지연 시 레이아웃 깨짐 방지 */
-        #header-load { min-height: 200px; }
-
-        /* [1. 헤더/네비게이션 핵심 CSS - 디자인 유지용] */
-        .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
-        header { padding: 25px 5%; text-align: center; background: #fff; border-bottom: 1px solid #f1f1f1; }
-        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
-        .main-nav { background: var(--main-deep-blue); box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 2000; }
-        .main-nav ul { display: flex; justify-content: center; }
-        .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; }
+        /* [2. 헤더 스타일 고정 - 로고 중앙 정렬 및 공간 확보] */
+        .top-util { height: 40px; background: var(--main-deep-blue); color: #fff; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; font-size: 12px; }
+        header { height: 90px; background: #fff; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #eee; text-align: center; }
+        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); text-decoration: none; display: block; }
+        
+        /* 네비게이션 바 높이 51px 고정 및 중앙 정렬 */
+        .main-nav { background: var(--main-deep-blue); position: sticky; top: 0; z-index: 2000; height: 51px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .main-nav ul { display: flex; justify-content: center; list-style: none; margin: 0; padding: 0; width: 100%; }
+        .main-nav li a { display: block; padding: 15px 25px; color: #fff; font-weight: 600; text-decoration: none; font-size: 15px; }
         .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
-        .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
 
-        /* [2. 마이페이지 전용 그리드 레이아웃] */
+        /* [3. 공지사항 스타일 - 불러온 헤더의 공지사항이 깨지지 않게 유지] */
+        .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; border-bottom: 1px solid #222; }
+        .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; }
+        .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; white-space: nowrap; }
+        @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+        /* [4. 우측 퀵 메뉴] */
+        .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 3000; background: #555; border-radius: 8px 0 0 8px; box-shadow: -2px 0 10px rgba(0,0,0,0.1); }
+        .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s; }
+
+        /* [5. 마이페이지 전용 레이아웃] */
         .main-content { padding: 30px 5%; max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 260px 1fr; gap: 30px; align-items: start; }
-
         .side-menu-box { display: flex; flex-direction: column; gap: 20px; }
         .user-profile { background: #fff; border: 1px solid var(--border-light); border-radius: 15px; padding: 25px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         .grade-DIAMOND { background: linear-gradient(135deg, #45B3E0, #B0E0E6); color: #fff; }
         .user-grade { display: inline-block; font-size: 11px; padding: 4px 14px; border-radius: 20px; margin-top: 10px; font-weight: 800; }
-        .side-nav { background: #fff; border: 1px solid var(--border-light); border-radius: 15px; overflow: hidden; }
-        .side-nav li a { display: block; padding: 16px 20px; font-size: 14px; border-bottom: 1px solid #f8f9fa; color: #555; }
-        .side-nav li.active a { background: var(--main-royal-blue); color: #fff; font-weight: 700; }
+        .side-nav-card { background: #fff; border: 1px solid var(--border-light); border-radius: 15px; overflow: hidden; }
+        .side-nav-card li a { display: block; padding: 16px 20px; font-size: 14px; border-bottom: 1px solid #f8f9fa; color: #555; text-decoration: none; }
+        .side-nav-card li.active a { background: var(--main-royal-blue); color: #fff; font-weight: 700; }
 
         .content-card { background: #fff; border: 1px solid var(--border-light); border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
         .status-grid { display: grid; grid-template-columns: repeat(10, 1fr); border: 1px solid #eee; border-radius: 12px; overflow: hidden; margin-top: 15px; }
-        .grid-col { text-align: center; border-right: 1px solid #eee; padding: 15px 5px; cursor: pointer; transition: 0.2s; }
-        .grid-col:last-child { border-right: none; }
+        .grid-col { text-align: center; border-right: 1px solid #eee; padding: 15px 2px; cursor: pointer; transition: 0.2s; }
         .grid-label { display: block; font-size: 9px; color: #777; margin-bottom: 6px; font-weight: 600; line-height: 1.1; }
-        .grid-count { font-size: 16px; font-weight: 800; color: #333; }
+        .grid-count { font-size: 14px; font-weight: 800; color: #333; }
         .grid-col.active { background: #f0f7ff; }
         .grid-col.active .grid-count { color: var(--main-royal-blue); }
 
-        .status-guide-box { margin-top: 25px; background: #f8fbff; border-left: 5px solid var(--main-royal-blue); padding: 20px; border-radius: 0 12px 12px 0; display: flex; gap: 15px; }
-
-        /* 모달 및 퀵메뉴 */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,31,77,0.8); z-index: 3000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-        .modal-content { background: #fff; width: 95%; max-width: 950px; border-radius: 20px; position: relative; overflow: hidden; }
-        .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 1000; background: #555; border-radius: 8px 0 0 8px; }
-        .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
+        /* [6. 푸터 디자인 복구 - 3열 그리드 고정] */
+        footer { background: var(--footer-bg); color: #fff; padding: 50px 5%; margin-top: 50px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; max-width: 1200px; margin: 0 auto; text-align: left; }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,31,77,0.8); z-index: 4000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        
+        @media (max-width: 1024px) {
+            .main-content { grid-template-columns: 1fr; }
+            .status-grid { grid-template-columns: repeat(5, 1fr); }
+        }
     </style>
 </head>
 <body class="is-logged-in" id="mainBody">
 
 <div id="header-load"></div>
+
+<div class="side-quick">
+    <div class="side-btn" onclick="openCalc()"><i>🧮</i>계산기</div>
+    <div class="side-btn"><i>💬</i>문의</div>
+    <div onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="background:#333; color:#fff; text-align:center; padding:10px; font-size:10px; cursor:pointer; border-radius: 0 0 0 8px;">TOP</div>
+</div>
 
 <main class="main-content">
     <aside class="side-menu-box">
@@ -76,7 +90,7 @@
                 사이버머니 <b style="color:var(--point-orange); font-size: 16px; margin-left: 5px;">15,200원</b>
             </div>
         </div>
-        <ul class="side-nav">
+        <ul class="side-nav-card">
             <li><a href="#">나의 지갑</a></li>
             <li class="active"><a href="#">대행신청 현황</a></li>
             <li><a href="#">사이버머니 충전/환불</a></li>
@@ -100,9 +114,9 @@
                 <div class="grid-col"><span class="grid-label">배송완료</span><div class="grid-count">7</div></div>
                 <div class="grid-col"><span class="grid-label">실패</span><div class="grid-count">34</div></div>
                 <div class="grid-col"><span class="grid-label">입찰요청</span><div class="grid-count">0</div></div>
-                <div class="grid-col"><span class="grid-label">낙찰승인</span><div class="grid-count">15</div></div>
+                <div class="grid-col" style="border-right:none;"><span class="grid-label">낙찰승인</span><div class="grid-count">15</div></div>
             </div>
-            <div class="status-guide-box">
+            <div style="margin-top: 25px; background: #f8fbff; border-left: 5px solid var(--main-royal-blue); padding: 20px; border-radius: 0 12px 12px 0; display: flex; gap: 15px;">
                 <div style="font-size: 24px;">💡</div>
                 <div>
                     <strong style="display:block; font-size:15px; color:var(--main-deep-blue); margin-bottom:5px;">1차결제완료</strong>
@@ -113,14 +127,8 @@
     </div>
 </main>
 
-<div class="side-quick">
-    <div class="side-btn" onclick="openCalc()"><i>🧮</i>계산기</div>
-    <div class="side-btn"><i>💬</i>문의</div>
-    <div onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="background:#333; color:#fff; text-align:center; padding:10px; font-size:10px; cursor:pointer;">TOP</div>
-</div>
-
 <div class="modal-overlay" id="calcModal">
-    <div class="modal-content" style="height: 80vh; padding: 0;">
+    <div style="background: #fff; width: 95%; max-width: 950px; height: 80vh; border-radius: 20px; position: relative; overflow: hidden;">
         <span style="position:absolute; right:20px; top:15px; font-size:30px; cursor:pointer; z-index: 9999; color:#333;" onclick="closeCalc()">&times;</span>
         <iframe src="final_no.html" style="width:100%; height:100%; border:none;"></iframe>
     </div>
@@ -135,26 +143,21 @@
                 fetch('header.html'),
                 fetch('footer.html')
             ]);
-            
             document.getElementById('header-load').innerHTML = await hRes.text();
             document.getElementById('footer-load').innerHTML = await fRes.text();
 
-            // 현재 페이지 활성화 처리 (mypage.html 인식)
+            // 현재 페이지 활성화 처리
             const activeMenu = document.getElementById('menu-mypage');
             if(activeMenu) activeMenu.parentElement.classList.add('active');
             
         } catch (e) {
             console.error("Layout Load Error:", e);
+        } finally {
+            document.body.style.visibility = 'visible';
         }
     }
-
     initLayout();
 
-    function toggleLogin(l){ 
-        const b = document.getElementById('mainBody'); 
-        if(l){ b.classList.remove('is-logged-out'); b.classList.add('is-logged-in'); } 
-        else { b.classList.remove('is-logged-in'); b.classList.add('is-logged-out'); } 
-    }
     function openCalc(){ document.getElementById('calcModal').style.display = 'flex'; }
     function closeCalc(){ document.getElementById('calcModal').style.display = 'none'; }
 </script>

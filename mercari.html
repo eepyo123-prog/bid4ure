@@ -15,50 +15,43 @@
             --footer-bg: #05102a;
         }
 
-        /* [1. 레이아웃 안정화] 로딩 전까지 숨김 처리 및 필수 높이 확보 */
-        body { 
-            font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; 
-            transition: background 0.3s; overflow-x: hidden; visibility: hidden; 
-        }
-        #header-load { min-height: 200px; } /* 헤더 영역 미리 확보 */
+        /* [1. 레이아웃 안정화] 로딩 전 숨김 및 배경색 고정 */
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; visibility: hidden; overflow-x: hidden; }
 
-        ul, p, h1, h2, h3 { margin: 0; padding: 0; list-style: none; }
-        a { text-decoration: none; color: inherit; transition: 0.2s; }
-        * { box-sizing: border-box; }
-
-        /* [상태 제어] */
-        .is-logged-in .view-logout { display: none !important; }
-        .is-logged-out .view-login { display: none !important; }
-
-        /* [2. 공통 컴포넌트 CSS 고정 - 파일 로드 전 디자인 유지용] */
+        /* [2. 헤더/푸터 핵심 스타일 - 여기에 있어야 불러온 직후 안 깨집니다] */
         .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; min-height: 40px; }
         header { padding: 25px 5%; text-align: center; background: #fff; border-bottom: 1px solid #f1f1f1; }
-        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
+        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; text-decoration: none; }
         .main-nav { background: var(--main-deep-blue); box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 2000; }
-        .main-nav ul { display: flex; justify-content: center; }
-        .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; }
+        .main-nav ul { display: flex; justify-content: center; list-style: none; margin: 0; padding: 0; }
+        .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; text-decoration: none; }
         .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        
         .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
         .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; }
         .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; white-space: nowrap; }
         @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* [3. 메루카리 전용 스타일] */
+        footer { background: var(--footer-bg); color: #fff; padding: 50px 5%; margin-top: 50px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1200px; margin: 0 auto; text-align: left; }
+
+        /* [3. 메루카리 본문 스타일 유지] */
         .simple-only { display: block; }
         .pro-only { display: none !important; }
         body.pro-mode .simple-only { display: none !important; }
         body.pro-mode .pro-only { display: block !important; }
         body.pro-mode { background-color: #fff; }
-
         .mode-switcher-bar { background: #fff; border-bottom: 1px solid #ddd; padding: 10px 5%; display: flex; justify-content: flex-end; align-items: center; position: sticky; top: 51px; z-index: 1900; }
         .toggle-box { display: flex; background: #eee; border-radius: 20px; padding: 3px; }
         .mode-btn { padding: 6px 15px; border-radius: 17px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; }
         .mode-btn.active { background: var(--mercari-red); color: #fff; }
-
-        .auction-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; max-width: 1350px; margin: 0 auto; padding: 40px 5%; }
+        .auction-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; max-width: 1350px; margin: 40px auto; padding: 0 5%; }
         body.pro-mode .auction-grid { grid-template-columns: repeat(5, 1fr); gap: 15px; }
         .auction-item { background: #fff; border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; transition: 0.3s; }
-        .auction-item:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        
+        /* 상태 제어 */
+        .is-logged-in .view-logout { display: none !important; }
+        .is-logged-out .view-login { display: none !important; }
 
         /* 모달 및 퀵메뉴 */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,31,77,0.8); z-index: 3000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
@@ -124,35 +117,31 @@
 <div id="footer-load"></div>
 
 <script>
-    // [핵심] 레이아웃 통합 로드 및 깨짐 방지
     async function initLayout() {
         try {
             const [hRes, fRes] = await Promise.all([
                 fetch('header.html'),
                 fetch('footer.html')
             ]);
-            
             document.getElementById('header-load').innerHTML = await hRes.text();
             document.getElementById('footer-load').innerHTML = await fRes.text();
-
-            // [메뉴 강조] 현재 '메루카리' 탭 활성화
+            
+            // 메뉴 활성화
             const activeMenu = document.getElementById('menu-mercari');
             if(activeMenu) activeMenu.parentElement.classList.add('active');
 
-            // 로그인 상태 동기화
+            // 로그인 상태 체크
             if(document.body.classList.contains('is-logged-in')) toggleLogin(true);
 
         } catch (e) {
             console.error("Layout Load Error:", e);
         } finally {
-            // 모든 로드 완료 후 화면 표시
             document.body.style.visibility = 'visible';
         }
     }
 
     initLayout();
 
-    // 메루카리 전용 모드 전환 함수
     function toggleMode(mode) {
         const body = document.getElementById('targetBody');
         const simpleBtn = document.getElementById('simpleBtn');
@@ -168,16 +157,16 @@
         }
     }
 
-    // 공통 유틸리티 함수
     function toggleLogin(l){ 
         const b = document.getElementById('targetBody'); 
-        if(l){ b.classList.remove('is-logged-out'); b.classList.add('is-logged-in'); } 
-        else { b.classList.remove('is-logged-in'); b.classList.add('is-logged-out'); } 
+        if(l){ b.classList.replace('is-logged-out', 'is-logged-in'); } 
+        else { b.classList.replace('is-logged-in', 'is-logged-out'); } 
     }
     function openCalc(){ document.getElementById('calcModal').style.display = 'flex'; }
     function closeCalc(){ document.getElementById('calcModal').style.display = 'none'; }
 </script>
 </body>
 </html>
+
 
 

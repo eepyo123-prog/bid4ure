@@ -5,125 +5,179 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bid4U - 프리미엄 통합 플랫폼</title>
     <style>
-        /* [1. 테마 및 초기화] */
+        /* [1. 테마 및 모든 디자인 스타일 유지] */
         :root {
             --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
             --footer-bg: #05102a; --point-orange: #ff8c00; --bg-grey: #f4f6f9;
             --kakao-yellow: #fee500; --border-light: #e1e5eb;
         }
-        
-        /* [핵심 1] 레이아웃 깨짐 방지: 로딩 완료 전까지 화면을 숨깁니다 */
-        body { 
-            font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; overflow-x: hidden; 
-            visibility: hidden; /* 로딩 전 숨김 처리 */
-        }
-        
+        /* 로드 전 깨짐 방지: visibility: hidden */
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; overflow-x: hidden; visibility: hidden; }
         ul, p, h1, h2, h3 { margin: 0; padding: 0; list-style: none; }
         a { text-decoration: none; color: inherit; transition: 0.2s; }
         * { box-sizing: border-box; }
 
-        /* [상태 제어] */
+        /* [상태 제어 및 헤더/푸터 디자인 CSS 고정] */
         .is-logged-in .view-logout { display: none !important; }
         .is-logged-out .view-login { display: none !important; }
         .is-logged-out .status-container { display: none !important; }
-
-        /* [핵심 2] CSS는 여기에 남겨두어야 헤더가 들어오는 순간 디자인이 즉시 입혀집니다 */
         .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
         header { padding: 25px 5%; text-align: center; background: #fff; }
         .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
-        .main-nav { background: var(--main-deep-blue); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .main-nav { background: var(--main-deep-blue); box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top:0; z-index: 1000; }
         .main-nav ul { display: flex; justify-content: center; }
         .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; }
-        .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
-
         .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
         .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; }
         .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; white-space: nowrap; }
         @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
+        /* [3. 본문 레이아웃 - 백업본과 동일] */
         .main-content { padding: 30px 5%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 35px; }
         .hero-section { display: grid; grid-template-columns: 2.3fr 1fr; gap: 20px; height: 280px; }
         .hero-banner { background: linear-gradient(135deg, var(--main-deep-blue), var(--main-royal-blue)); border-radius: 15px; padding: 40px; color: white; height: 100%; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        .customs-cut-box { position: absolute; bottom: 20px; right: 20px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 10px 15px; border-radius: 8px; backdrop-filter: blur(5px); font-size: 11px; }
         .side-auth-box { background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border-light); height: 100%; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .login-form input { width: 100%; padding: 12px; border: 1px solid #eee; border-radius: 6px; margin-bottom: 8px; font-size: 13px; }
+        .btn-login { width: 100%; background: var(--main-deep-blue); color: #fff; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border-top: 1px solid #f1f1f1; padding-top: 20px; margin-top: 15px; }
+        .stat-value { font-size: 14px; font-weight: 800; color: var(--point-orange); }
 
         .status-container { background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border-light); }
         .status-grid { display: grid; grid-template-columns: repeat(10, 1fr); border: 1px solid #eee; border-radius: 10px; overflow: hidden; }
         .grid-col { text-align: center; border-right: 1px solid #eee; padding: 15px 2px; background: #fff; }
-        .grid-col:last-child { border-right: none; }
         .grid-count { font-size: 14px; font-weight: 800; color: #333; }
-        
+        .grid-count.active { color: var(--point-orange); }
+
+        .section-title { font-size: 19px; font-weight: 800; color: var(--main-deep-blue); margin-bottom: 18px; padding-bottom: 8px; border-bottom: 2px solid var(--main-deep-blue); }
+        .shop-grid { display: grid; grid-template-columns: repeat(4, 1fr); background: #fff; border: 1px solid #eee; border-radius: 12px; overflow: hidden; }
+        .shop-item { padding: 20px; text-align: center; border-right: 1px solid #eee; border-bottom: 1px solid #eee; cursor: pointer; }
+        .grid-prod { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .prod-card { background: #fff; border: 1px solid #eee; border-radius: 12px; overflow: hidden; }
+        .prod-img { width: 100%; aspect-ratio: 1/1; background-size: cover; background-position: center; }
+
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,31,77,0.8); z-index: 3000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-        .modal-content { background: #fff; width: 95%; max-width: 950px; border-radius: 20px; position: relative; }
+        .modal-content { background: #fff; width: 95%; max-width: 800px; border-radius: 20px; padding: 30px; position: relative; }
+        .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 1000; background: #555; border-radius: 8px 0 0 8px; }
+        .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
+        footer { background: var(--footer-bg); color: #fff; padding: 50px 5%; font-size: 13px; margin-top: 50px; }
+
+        @media (max-width: 768px) {
+            .hero-section { grid-template-columns: 1fr; height: auto; gap: 15px; }
+            .status-grid { grid-template-columns: repeat(5, 1fr); }
+            .shop-grid, .grid-prod { grid-template-columns: repeat(2, 1fr); }
+        }
     </style>
 </head>
 <body class="is-logged-out" id="mainBody">
 
 <div id="header-load"></div>
 
+<div class="modal-overlay" id="calcModal">
+    <div class="modal-content" style="max-width: 950px; height: 80vh; padding: 0; overflow: hidden;">
+        <span style="position:absolute; right:20px; top:15px; font-size:30px; cursor:pointer; z-index: 9999;" onclick="closeCalc()">&times;</span>
+        <iframe src="final_no.html" style="width:100%; height:100%; border:none;"></iframe>
+    </div>
+</div>
+
+<div class="side-quick"><div class="side-btn" onclick="openCalc()"><i>🧮</i>계산기</div><div class="side-btn"><i>💬</i>문의</div><div style="background:#333; color:#fff; text-align:center; padding:10px; font-size:10px;">TOP</div></div>
+
 <main class="main-content">
     <div class="hero-section">
         <div class="hero-banner">
             <h1>수수료 200엔의 혁명</h1>
             <p>오사카 직영 물류센터 운영으로 더 빠르게</p>
+            <div class="customs-cut-box">오늘의 면세 한도 ($150)<br><b>약 202,500원 미만</b> 구매 시 면세</div>
         </div>
         <div class="side-auth-box">
-            <div class="login-form view-logout">
-                <input type="text" placeholder="아이디" style="width:100%; padding:12px; margin-bottom:8px; border:1px solid #eee; border-radius:6px;">
-                <button class="btn-login" onclick="toggleLogin(true)" style="width:100%; background:var(--main-deep-blue); color:#fff; padding:12px; border:none; border-radius:6px; font-weight:bold;">로그인</button>
-            </div>
+            <div class="login-form view-logout"><input type="text" placeholder="아이디"><input type="password" placeholder="비밀번호"><button class="btn-login" onclick="toggleLogin(true)">로그인</button></div>
             <div class="member-info view-login">
-                <div class="user-name" style="font-weight: 900; text-align:center;">홍길동 님</div>
+                <div class="user-name" style="font-weight: 900; text-align:center;">홍길동 님</div><div style="text-align:center;"><span style="background:var(--point-orange); color:#fff; font-size:10px; padding:2px 8px; border-radius:10px;">Bronze 등급</span></div>
+                <div class="stat-grid">
+                    <div class="stat-item"><span style="font-size:11px; color:#888;">사이버머니</span><div class="stat-value">15,200원</div></div>
+                    <div class="stat-item"><span style="font-size:11px; color:#888;">할인쿠폰</span><div class="stat-value" style="color:#333;">3장</div></div>
+                </div>
             </div>
         </div>
     </div>
-    
-    <div class="status-container">
-        <h3 style="font-size: 19px; font-weight: 800; color: var(--main-deep-blue); margin-bottom: 15px;">📊 대행신청 현황</h3>
-        <div class="status-grid">
-            <div class="grid-col"><span style="font-size:9px; display:block;">실패</span>🗑️<div class="grid-count">34</div></div>
-            <div class="grid-col"><span style="font-size:9px; display:block;">낙찰승인</span>🔨<div class="grid-count">16</div></div>
-            <div class="grid-col" style="border-right:none;"><span style="font-size:9px; display:block;">배송완료</span>🎁<div class="grid-count">7</div></div>
+
+    <div id="dynamic-area" style="display: flex; flex-direction: column; gap: 35px;">
+        <div class="status-container" style="order: 1;">
+            <h3 class="section-title" style="border:none; margin-bottom:10px;">📊 대행신청 현황 (일본)</h3>
+            <div class="status-grid">
+                <div class="grid-col"><span class="grid-label">실패</span>🗑️<div class="grid-count">34</div></div>
+                <div class="grid-col"><span class="grid-label">입찰요청</span>📝<div class="grid-count">0</div></div>
+                <div class="grid-col"><span class="grid-label">낙찰승인</span>🔨<div class="grid-count active">16</div></div>
+                <div class="grid-col"><span class="grid-label">1차결제</span>💳<div class="grid-count">0</div></div>
+                <div class="grid-col"><span class="grid-label">현지배송</span>🚚<div class="grid-count">0</div></div>
+                <div class="grid-col"><span class="grid-label">통합진행</span>📦<div class="grid-count">0</div></div>
+                <div class="grid-col"><span class="grid-label">2차요청</span>📑<div class="grid-count">0</div></div>
+                <div class="grid-col"><span class="grid-label">2차완료</span>💳<div class="grid-count">0</div></div>
+                <div class="grid-col"><span class="grid-label">국제배송</span>✈️<div class="grid-count active">1</div></div>
+                <div class="grid-col" style="border-right:none;"><span class="grid-label">배송완료</span>🎁<div class="grid-count active">7</div></div>
+            </div>
         </div>
+
+        <section id="review-section" style="order: 2;">
+            <h2 class="section-title">생생한 이용 후기</h2>
+            <div class="review-grid">
+                <div class="review-card"><div style="color:#ffcc00;">★★★★★</div><p style="font-size:13px; color:#666; margin-top:10px;">"오사카 센터 검수가 정말 꼼꼼합니다!"</p></div>
+                <div class="review-card"><div style="color:#ffcc00;">★★★★★</div><p style="font-size:13px; color:#666; margin-top:10px;">"수수료 200엔이라 가성비 최고예요."</p></div>
+                <div class="review-card"><div style="color:#ffcc00;">★★★★★</div><p style="font-size:13px; color:#666; margin-top:10px;">"배송이 정말 빠르고 안전합니다."</p></div>
+            </div>
+        </section>
+
+        <section style="order: 3;">
+            <h2 class="section-title">해외 인기 온라인 상점</h2>
+            <div class="shop-grid">
+                <div class="shop-item"><div class="shop-name">메루카리</div></div><div class="shop-item"><div class="shop-name">아미아미</div></div>
+                <div class="shop-item"><div class="shop-name">애니메이트</div></div><div class="shop-item" style="border-right:none;"><div class="shop-name">스루가야</div></div>
+                <div class="shop-item"><div class="shop-name">멜론북스</div></div><div class="shop-item"><div class="shop-name">P-반다이</div></div>
+                <div class="shop-item"><div class="shop-name">부스(BOOTH)</div></div><div class="shop-item" style="border-right:none;"><div class="shop-name">토라노아나</div></div>
+            </div>
+        </section>
+
+        <section style="order: 4;">
+            <h2 class="section-title">실시간 특가 상품</h2>
+            <div class="grid-prod">
+                <div class="prod-card"><div class="prod-img" style="background-image: url('https://picsum.photos/300/300?random=21');"></div><div class="prod-info"><div style="font-weight:bold; font-size:13px;">MG 사자비 Ver.Ka</div><div style="color:var(--main-deep-blue); font-weight:800;">7,500엔</div></div></div>
+                <div class="prod-card"><div class="prod-img" style="background-image: url('https://picsum.photos/300/300?random=22');"></div><div class="prod-info"><div style="font-weight:bold; font-size:13px;">시마노 22 스테라</div><div style="color:var(--main-deep-blue); font-weight:800;">68,000엔</div></div></div>
+                <div class="prod-card"><div class="prod-img" style="background-image: url('https://picsum.photos/300/300?random=23');"></div><div class="prod-info"><div style="font-weight:bold; font-size:13px;">닌텐도 스위치 OLED</div><div style="color:var(--main-deep-blue); font-weight:800;">32,000엔</div></div></div>
+                <div class="prod-card"><div class="prod-img" style="background-image: url('https://picsum.photos/300/300?random=24');"></div><div class="prod-info"><div style="font-weight:bold; font-size:13px;">포켓몬 카드 151</div><div style="color:var(--main-deep-blue); font-weight:800;">15,800엔</div></div></div>
+            </div>
+        </section>
+    </div>
+
+    <div class="kakao-full-banner">
+        <div style="color:#3c1e1e;"><h2 style="font-size:22px; margin-bottom:5px;">비드포유 카카오톡 1:1 상담</h2><p style="font-size:14px; opacity:0.8;">평일 09~02시 / 주말 09~24시 실시간 상담</p></div>
+        <div style="background:#3c1e1e; color:#fff; padding:12px 30px; border-radius:30px; font-weight:bold;">상담 바로가기 ></div>
     </div>
 </main>
-
-<div class="modal-overlay" id="calcModal">
-    <div class="modal-content" style="height: 80vh; padding: 0; overflow: hidden;">
-        <span style="position:absolute; right:20px; top:15px; font-size:30px; cursor:pointer; z-index: 9999; color: #333;" onclick="closeCalc()">&times;</span>
-        <iframe src="final_no.html" style="width:100%; height:100%; border:none;"></iframe>
-    </div>
-</div>
 
 <div id="footer-load"></div>
 
 <script>
-    // [핵심 3] 레이아웃 로드 및 깨짐 방지 통합 스크립트
     async function initLayout() {
         try {
-            // 헤더와 푸터를 병렬로 동시 로드
             const [hRes, fRes] = await Promise.all([
                 fetch('header.html'),
                 fetch('footer.html')
             ]);
-            
-            if(!hRes.ok || !fRes.ok) throw new Error("파일 로드 실패");
-
             document.getElementById('header-load').innerHTML = await hRes.text();
             document.getElementById('footer-load').innerHTML = await fRes.text();
-
-            // 현재 메뉴 활성화 (Active)
+            
+            // 헤더가 로드된 후 메뉴 강조 처리
             const path = window.location.pathname.split("/").pop() || 'index.html';
             const menuId = 'menu-' + path.replace('.html', '');
-            const activeMenu = document.getElementById(menuId);
-            if(activeMenu) activeMenu.parentElement.classList.add('active');
+            const target = document.getElementById(menuId);
+            if(target) target.parentElement.classList.add('active');
 
-            // 로그인 상태 동기화
+            // 로그인 상태 강제 동기화
             if(document.body.classList.contains('is-logged-in')) toggleLogin(true);
 
         } catch (e) {
-            console.error("Layout load error:", e);
+            console.error("Layout Fetch Error:", e);
         } finally {
-            // [핵심 4] 모든 로드가 끝나면 숨겼던 화면을 한꺼번에 보여줍니다
             document.body.style.visibility = 'visible';
         }
     }
@@ -131,12 +185,24 @@
     initLayout();
 
     function toggleLogin(l){ 
-        const b = document.getElementById('mainBody') || document.body; 
-        if(l){ b.classList.remove('is-logged-out'); b.classList.add('is-logged-in'); } 
-        else { b.classList.remove('is-logged-in'); b.classList.add('is-logged-out'); } 
+        const b = document.getElementById('mainBody'); 
+        const rs = document.getElementById('review-section');
+        if(l){ 
+            b.classList.remove('is-logged-out'); b.classList.add('is-logged-in');
+            rs.style.order = "2";
+        } else { 
+            b.classList.remove('is-logged-in'); b.classList.add('is-logged-out');
+            rs.style.order = "0";
+        } 
     }
     function openCalc(){ document.getElementById('calcModal').style.display = 'flex'; }
     function closeCalc(){ document.getElementById('calcModal').style.display = 'none'; }
+    function runCalc(){
+        const p = parseFloat(document.getElementById('c_price').value) || 0;
+        const total = Math.round((p * 9.94) + (200 * 9.94));
+        document.getElementById('c_res').innerHTML = `<b>Bronze 예상 합계:</b> ${total.toLocaleString()}원`;
+        document.getElementById('c_res').style.display = 'block';
+    }
 </script>
 </body>
 </html>

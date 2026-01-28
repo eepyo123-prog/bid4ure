@@ -15,18 +15,29 @@
             --footer-bg: #05102a;
         }
 
-        /* [1. 레이아웃 안정화] 로드 전 숨김 처리 */
-        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; visibility: hidden; overflow-x: hidden; }
+        /* [1. 레이아웃 안정화] 로딩 전까지 숨김 처리 및 필수 높이 확보 */
+        body { 
+            font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; 
+            transition: background 0.3s; overflow-x: hidden; visibility: hidden; 
+        }
+        #header-load { min-height: 200px; } 
 
-        /* [2. 헤더/푸터 고정 스타일 - 스크롤 꼬임 방지] */
+        ul, p, h1, h2, h3 { margin: 0; padding: 0; list-style: none; }
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        * { box-sizing: border-box; }
+
+        /* [2. 헤더/네비게이션 고정 - 스크롤 꼬임 방지] */
         .top-util { min-height: 40px; background: var(--main-deep-blue); }
-        header { min-height: 90px; background: #fff; }
-        .main-nav { background: var(--main-deep-blue); position: sticky; top: 0; z-index: 2000; height: 51px; }
-        .main-nav ul { display: flex; justify-content: center; list-style: none; padding: 0; margin: 0; }
-        .main-nav li a { display: block; padding: 15px 25px; color: #fff; font-weight: 600; text-decoration: none; }
-        .main-nav li.active { background: rgba(255,255,255,0.1); }
+        header { min-height: 90px; background: #fff; border-bottom: 1px solid #f1f1f1; }
+        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; text-decoration: none; }
+        
+        /* 네비게이션 높이 51px 고정 및 Sticky 설정 */
+        .main-nav { background: var(--main-deep-blue); position: sticky; top: 0; z-index: 2000; height: 51px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .main-nav ul { display: flex; justify-content: center; list-style: none; margin: 0; padding: 0; }
+        .main-nav li a { display: block; padding: 15px 25px; color: #fff; font-weight: 600; text-decoration: none; font-size: 15px; }
+        .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
 
-        /* [3. 모드 전환 바 - 헤더 네비와 밀착 고정] */
+        /* [3. 모드 전환 바 - 네비게이션 바로 아래 밀착 고정] */
         .mode-switcher-bar { 
             background: #fff; border-bottom: 1px solid #ddd; padding: 10px 5%; 
             display: flex; justify-content: flex-end; align-items: center; 
@@ -36,19 +47,24 @@
         .mode-btn { padding: 6px 15px; border-radius: 17px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; }
         .mode-btn.active { background: var(--mercari-red); color: #fff; }
 
-        /* [4. 전문가/일반 모드 제어] */
+        /* [4. 공지사항(Ticker) 애니메이션 복구] */
+        .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
+        .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; z-index: 10; }
+        .ticker-text-wrapper { overflow: hidden; white-space: nowrap; flex: 1; }
+        .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; }
+        @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+        /* [5. 전문가/일반 모드 제어] */
         .simple-only { display: block; }
         .pro-only { display: none !important; }
         body.pro-mode .simple-only { display: none !important; }
         body.pro-mode .pro-only { display: block !important; }
         body.pro-mode { background-color: #fff; }
 
-        /* 메루카리 상품 그리드 */
-        .auction-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; max-width: 1350px; margin: 30px auto; padding: 0 5%; }
+        .auction-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; max-width: 1350px; margin: 40px auto; padding: 0 5%; }
         body.pro-mode .auction-grid { grid-template-columns: repeat(5, 1fr); gap: 15px; }
         .auction-item { background: #fff; border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; transition: 0.3s; }
-
-        /* 상태 제어 및 기타 */
+        
         .is-logged-in .view-logout { display: none !important; }
         .is-logged-out .view-login { display: none !important; }
         footer { background: var(--footer-bg); color: #fff; padding: 50px 5%; margin-top: 50px; }
@@ -87,11 +103,6 @@
         </div>
     </div>
 </section>
-
-<div class="mercari-info-bar" style="background: #fff; border-bottom: 1px solid #eee; padding: 18px 5%; display: flex; justify-content: center; gap: 45px; align-items: center;">
-    <div style="font-size: 15px; font-weight: 700; color: #444;">📦 오사카 <b>직영물류</b> 검수</div>
-    <div style="font-size: 15px; font-weight: 700; color: #444;">💰 수수료 <b>200엔</b> 혁명</div>
-</div>
 
 <main>
     <div class="auction-grid">
@@ -151,6 +162,7 @@
 </script>
 </body>
 </html>
+
 
 
 

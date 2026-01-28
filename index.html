@@ -4,27 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bid4U - 프리미엄 통합 플랫폼</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* [1. 필수 디자인 - 외부 파일을 불러오기 전에도 미리 읽혀야 깨지지 않습니다] */
+        /* [1. 테마 및 초기화 - 디자인 보존을 위해 CSS는 여기에 남겨둡니다] */
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         :root {
             --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
             --footer-bg: #05102a; --point-orange: #ff8c00; --bg-grey: #f4f6f9;
             --border-light: #e1e5eb;
         }
-        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; visibility: hidden; overflow-x: hidden; }
+        /* 로딩 전 깜빡임 방지 */
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); visibility: hidden; overflow-x: hidden; }
         
-        /* 헤더 디자인 고정 (image_f6c756 깨짐 방지용) */
+        /* [핵심] 헤더/푸터 CSS를 여기에 두어야 불러온 직후 즉시 디자인이 입혀집니다 */
         .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; min-height: 40px; }
         header { padding: 25px 5%; text-align: center; background: #fff; min-height: 90px; }
         .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; text-decoration: none; }
-        .main-nav { background: var(--main-deep-blue); position: sticky; top: 0; z-index: 2000; min-height: 51px; }
-        .main-nav ul { display: flex; justify-content: center; list-style: none; margin: 0; padding: 0; }
-        .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; text-decoration: none; }
+        .main-nav { background: var(--main-deep-blue); box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 2000; }
+        .main-nav ul { display: flex; justify-content: center; }
+        .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; }
         .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
         .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
 
-        /* [2. 본문 레이아웃 - 원본 디자인 완벽 보존] */
+        /* [2. 본문 레이아웃 - 원본 디자인 그대로 유지] */
         .main-content { padding: 30px 5%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 35px; }
         .hero-section { display: grid; grid-template-columns: 2.3fr 1fr; gap: 20px; height: 280px; }
         .hero-banner { background: linear-gradient(135deg, var(--main-deep-blue), var(--main-royal-blue)); border-radius: 15px; padding: 40px; color: white; height: 100%; display: flex; flex-direction: column; justify-content: center; position: relative; }
@@ -32,14 +34,13 @@
         .status-container { background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border-light); }
         .status-grid { display: grid; grid-template-columns: repeat(10, 1fr); border: 1px solid #eee; border-radius: 10px; overflow: hidden; }
         .grid-col { text-align: center; border-right: 1px solid #eee; padding: 15px 2px; background: #fff; }
-        .grid-col:last-child { border-right: none; }
         
-        /* 상태 제어 */
         .is-logged-in .view-logout { display: none !important; }
         .is-logged-out .view-login { display: none !important; }
         .is-logged-out .status-container { display: none !important; }
-
+        
         footer { background: var(--footer-bg); color: #fff; padding: 50px 5%; margin-top: 50px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1200px; margin: 0 auto; text-align: left; }
     </style>
 </head>
 <body class="is-logged-out" id="mainBody">
@@ -50,38 +51,25 @@
     <div class="hero-section">
         <div class="hero-banner">
             <h1 style="font-size: 30px; font-weight: 900; margin-bottom: 10px;">수수료 200엔의 혁명</h1>
-            <p style="opacity: 0.9;">오사카 직영 물류센터 운영으로 한 차원 높은 속도를 경험하세요</p>
+            <p style="opacity: 0.9;">오사카 직영 물류센터 운영으로 더 빠르게</p>
         </div>
         <div class="side-auth-box">
             <div class="login-form view-logout">
-                <input type="text" placeholder="아이디" style="width:100%; padding:12px; margin-bottom:8px; border:1px solid #eee; border-radius:6px;">
-                <input type="password" placeholder="비밀번호" style="width:100%; padding:12px; margin-bottom:8px; border:1px solid #eee; border-radius:6px;">
+                <input type="text" placeholder="아이디" style="width:100%; padding:12px; border:1px solid #eee; border-radius:6px; margin-bottom:8px;">
+                <input type="password" placeholder="비밀번호" style="width:100%; padding:12px; border:1px solid #eee; border-radius:6px; margin-bottom:8px;">
                 <button onclick="toggleLogin(true)" style="width:100%; background:var(--main-deep-blue); color:#fff; padding:12px; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">로그인</button>
             </div>
             <div class="member-info view-login">
-                <div style="font-weight: 900; text-align:center; font-size: 18px;">홍길동 님</div>
-                <div style="text-align:center; margin-top:5px;"><span style="background:var(--point-orange); color:#fff; font-size:10px; padding:2px 8px; border-radius:10px; font-weight: bold;">Bronze 등급</span></div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border-top: 1px solid #f1f1f1; padding-top: 20px; margin-top: 15px; text-align: center;">
-                    <div><span style="font-size:11px; color:#888;">사이버머니</span><div style="font-size: 14px; font-weight: 800; color: var(--point-orange);">15,200원</div></div>
-                    <div><span style="font-size:11px; color:#888;">할인쿠폰</span><div style="font-size: 14px; font-weight: 800;">3장</div></div>
+                <div style="font-weight: 900; text-align:center;">홍길동 님</div>
                 </div>
-            </div>
         </div>
-    </div>
-
-    <div class="status-container">
-        <h3 style="font-size: 19px; font-weight: 800; color: var(--main-deep-blue); margin-bottom: 15px;">📊 대행신청 현황 (일본)</h3>
-        <div class="status-grid">
-            <div class="grid-col"><span style="font-size:9px; display:block;">실패</span>🗑️<div style="font-size:14px; font-weight:800;">34</div></div>
-            <div class="grid-col"><span style="font-size:9px; display:block;">낙찰승인</span>🔨<div style="font-size:14px; font-weight:800; color:var(--point-orange);">16</div></div>
-            <div class="grid-col" style="border-right:none;"><span style="font-size:9px; display:block;">배송완료</span>🎁<div style="font-size:14px; font-weight:800; color:var(--point-orange);">7</div></div>
-            </div>
     </div>
 </main>
 
 <div id="footer-load"></div>
 
 <script>
+    // [핵심] 레이아웃 로드 및 깨짐 방지 스크립트
     async function initLayout() {
         try {
             const [hRes, fRes] = await Promise.all([
@@ -98,13 +86,13 @@
             const target = document.getElementById(menuId);
             if(target) target.parentElement.classList.add('active');
 
-            // 로그인 UI 상태 동기화
+            // 로그인 상태 동기화
             if(document.body.classList.contains('is-logged-in')) toggleLogin(true);
 
         } catch (e) {
             console.error("Layout Fetch Error:", e);
         } finally {
-            // 모든 로드 완료 후 화면 공개
+            // 모든 로드 완료 후 화면 표시 (깜빡임 방지)
             document.body.style.visibility = 'visible';
         }
     }
@@ -119,4 +107,3 @@
 </script>
 </body>
 </html>
-

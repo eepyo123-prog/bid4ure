@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bid4U - 프리미엄 통합 플랫폼</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* [1. 테마 및 초기화] */
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
@@ -17,12 +18,15 @@
         a { text-decoration: none; color: inherit; transition: 0.2s; }
         * { box-sizing: border-box; }
 
-        /* [상태 제어 및 공통 스타일 유지] */
+        /* [상태 제어] */
         .is-logged-in .view-logout { display: none !important; }
         .is-logged-out .view-login { display: none !important; }
         .is-logged-out .status-container { display: none !important; }
 
-        /* 외부 파일을 불러와도 스타일이 즉시 적용되도록 CSS는 여기에 남겨둡니다 */
+        /* [핵심] 헤더 로딩 전 레이아웃 깨짐 방지용 최소 높이 */
+        #header-load { min-height: 200px; }
+
+        /* 외부 파일을 불러와도 스타일이 즉시 적용되도록 CSS는 각 파일에 유지합니다 */
         .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
         header { padding: 25px 5%; text-align: center; background: #fff; }
         .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
@@ -36,14 +40,12 @@
         .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; white-space: nowrap; }
         @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* [3. 메인 콘텐츠 및 모바일 대응 스타일 전체 유지] */
+        /* [3. 메인 콘텐츠 레이아웃 전체 유지] */
         .main-content { padding: 30px 5%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 35px; }
         .hero-section { display: grid; grid-template-columns: 2.3fr 1fr; gap: 20px; height: 280px; }
-        /* ... (중략: 기존의 모든 레이아웃 관련 CSS 유지) ... */
-        .status-grid { display: grid; grid-template-columns: repeat(10, 1fr); border: 1px solid #eee; border-radius: 10px; overflow: hidden; }
-        .grid-col { text-align: center; border-right: 1px solid #eee; padding: 15px 2px; background: #fff; }
+        .hero-banner { background: linear-gradient(135deg, var(--main-deep-blue), var(--main-royal-blue)); border-radius: 15px; padding: 40px; color: white; height: 100%; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        .side-auth-box { background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border-light); height: 100%; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
         
-        /* 모달 및 퀵메뉴 */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,31,77,0.8); z-index: 3000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
         .modal-content { background: #fff; width: 95%; max-width: 950px; border-radius: 20px; position: relative; }
         .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 1000; background: #555; border-radius: 8px 0 0 8px; }
@@ -51,7 +53,6 @@
         
         @media (max-width: 768px) {
             .hero-section { grid-template-columns: 1fr; height: auto; }
-            .status-grid { grid-template-columns: repeat(5, 1fr); }
         }
     </style>
 </head>
@@ -74,13 +75,17 @@
 
 <main class="main-content">
     <div class="hero-section">
-        <div class="hero-banner" style="background: linear-gradient(135deg, var(--main-deep-blue), var(--main-royal-blue)); border-radius: 15px; padding: 40px; color: white; height: 100%; display: flex; flex-direction: column; justify-content: center; position: relative;">
+        <div class="hero-banner">
             <h1 style="font-size: 30px; font-weight: 900; margin-bottom: 10px;">수수료 200엔의 혁명</h1>
             <p>오사카 직영 물류센터 운영으로 더 빠르게</p>
             <div class="customs-cut-box" style="position: absolute; bottom: 20px; right: 20px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 10px 15px; border-radius: 8px; font-size: 11px;">오늘의 면세 한도 ($150)<br><b>약 202,500원 미만</b> 구매 시 면세</div>
         </div>
-        <div class="side-auth-box" style="background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border-light); height: 100%; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
-            <div class="login-form view-logout"><input type="text" placeholder="아이디" style="width:100%; padding:12px; margin-bottom:8px; border:1px solid #eee; border-radius:6px;"><input type="password" placeholder="비밀번호" style="width:100%; padding:12px; margin-bottom:8px; border:1px solid #eee; border-radius:6px;"><button class="btn-login" onclick="toggleLogin(true)" style="width:100%; background:var(--main-deep-blue); color:#fff; padding:12px; border:none; border-radius:6px; font-weight:bold;">로그인</button></div>
+        <div class="side-auth-box">
+            <div class="login-form view-logout">
+                <input type="text" placeholder="아이디" style="width:100%; padding:12px; margin-bottom:8px; border:1px solid #eee; border-radius:6px;">
+                <input type="password" placeholder="비밀번호" style="width:100%; padding:12px; margin-bottom:8px; border:1px solid #eee; border-radius:6px;">
+                <button class="btn-login" onclick="toggleLogin(true)" style="width:100%; background:var(--main-deep-blue); color:#fff; padding:12px; border:none; border-radius:6px; font-weight:bold;">로그인</button>
+            </div>
             <div class="member-info view-login">
                 <div class="user-name" style="font-weight: 900; text-align:center;">홍길동 님</div>
                 <div style="text-align:center; margin-top:5px;"><span style="background:var(--point-orange); color:#fff; font-size:10px; padding:2px 8px; border-radius:10px;">Bronze 등급</span></div>
@@ -91,8 +96,7 @@
             </div>
         </div>
     </div>
-
-    </main>
+</main>
 
 <div id="footer-load"></div>
 
@@ -100,16 +104,20 @@
     // [핵심] 외부 레이아웃 파일 로드 함수
     async function initLayout() {
         try {
-            // 헤더 로드
-            const hRes = await fetch('header.html');
-            document.getElementById('header-load').innerHTML = await hRes.text();
+            // 헤더/푸터 병렬 로드
+            const [hRes, fRes] = await Promise.all([
+                fetch('header.html'),
+                fetch('footer.html')
+            ]);
             
-            // 푸터 로드
-            const fRes = await fetch('footer.html');
+            document.getElementById('header-load').innerHTML = await hRes.text();
             document.getElementById('footer-load').innerHTML = await fRes.text();
 
             // 현재 페이지 활성화 처리 (index.html 인식)
-            const activeMenu = document.getElementById('menu-index') || document.querySelector('.main-nav li:first-child');
+            const path = window.location.pathname.split("/").pop() || 'index.html';
+            // header.html에 각 메뉴 id가 'menu-파일명' 형태로 되어있어야 합니다.
+            const menuId = 'menu-' + path.replace('.html', '');
+            const activeMenu = document.getElementById(menuId);
             if(activeMenu) activeMenu.parentElement.classList.add('active');
             
         } catch (e) {
@@ -120,7 +128,7 @@
     // 페이지 로드 시 실행
     initLayout();
 
-    // 기존 기능 함수 유지
+    // 기존 로그인/계산기 기능 함수 유지
     function toggleLogin(l){ 
         const b = document.getElementById('mainBody'); 
         if(l){ b.classList.remove('is-logged-out'); b.classList.add('is-logged-in'); } 

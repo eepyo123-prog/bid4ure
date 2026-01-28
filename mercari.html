@@ -13,10 +13,10 @@
             --bg-grey: #f4f6f9; --border-light: #e1e5eb; --footer-bg: #05102a;
         }
 
-        /* [1. 레이아웃 안정화] 로딩 전 숨김 및 상단바 고정 */
+        /* [1. 레이아웃 안정화] */
         body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); visibility: hidden; overflow-x: hidden; }
         
-        /* 헤더/네비 스타일 강제 고정 (깨짐 방지) */
+        /* 헤더/네비 스타일 강제 고정 */
         .top-util { height: 40px; background: var(--main-deep-blue); color: #fff; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; font-size: 12px; }
         header { height: 90px; background: #fff; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #eee; }
         .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); text-decoration: none; }
@@ -25,41 +25,57 @@
         .main-nav li a { display: block; padding: 15px 25px; color: #fff; font-weight: 600; font-size: 15px; text-decoration: none; }
         .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
 
-        /* [2. 모드 전환 바] */
+        /* [2. 공지사항(Ticker) 복구 - 삐꾸 해결] */
+        .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; z-index: 1000; position: relative; }
+        .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; z-index: 1010; }
+        .ticker-text-wrapper { overflow: hidden; white-space: nowrap; flex: 1; position: relative; }
+        .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; }
+        @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+        /* [3. 우측 계산기 퀵 메뉴 복구] */
+        .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 3000; background: #555; border-radius: 8px 0 0 8px; box-shadow: -2px 0 10px rgba(0,0,0,0.1); }
+        .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s; }
+        .side-btn:hover { background: #444; }
+        .side-btn i { font-style: normal; font-size: 18px; margin-bottom: 5px; }
+
         .mode-switcher-bar { background: #fff; border-bottom: 1px solid #ddd; padding: 10px 5%; display: flex; justify-content: flex-end; align-items: center; position: sticky; top: 51px; z-index: 1900; height: 50px; }
-        .mode-btn { padding: 6px 15px; border-radius: 17px; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .mode-btn { padding: 6px 15px; border-radius: 17px; font-size: 11px; font-weight: bold; cursor: pointer; }
         .mode-btn.active { background: var(--mercari-red); color: #fff; }
 
-        /* [3. 전문가 필터 레이아웃 - image_dcd30d 스타일] */
+        /* 전문가 필터 레이아웃 */
         .pro-filter-container { background: #fff; border-bottom: 1px solid #ddd; padding: 20px 5%; font-size: 13px; }
-        .pro-warning { color: #e60012; font-size: 12px; margin-bottom: 15px; line-height: 1.5; }
-        
         .filter-table { border-top: 1px solid #e1e5eb; margin-bottom: 20px; }
         .filter-row { display: flex; border-bottom: 1px solid #e1e5eb; border-left: 1px solid #e1e5eb; border-right: 1px solid #e1e5eb; }
         .filter-label { width: 140px; background: #f8fafc; padding: 12px 15px; font-weight: bold; color: #475569; border-right: 1px solid #e1e5eb; display: flex; align-items: center; }
         .filter-content { flex: 1; padding: 10px 20px; display: flex; align-items: center; gap: 20px; background: #fff; flex-wrap: wrap; }
         
-        .pro-input { border: 1px solid #ddd; padding: 6px 12px; border-radius: 4px; outline: none; font-size: 13px; }
-        .btn-pro-search { background: var(--mercari-red); color: #fff; padding: 10px 30px; border-radius: 4px; font-weight: bold; border: none; cursor: pointer; margin-top: 15px; transition: 0.2s; }
-        .btn-pro-search:hover { background: #d0001a; }
-
-        /* [4. 모드 제어 및 그리드] */
         .simple-only { display: block; }
         .pro-only { display: none !important; }
         body.pro-mode .simple-only { display: none !important; }
         body.pro-mode .pro-only { display: block !important; }
+        body.pro-mode { background-color: #fff; }
 
         .auction-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 1300px; margin: 30px auto; padding: 0 5%; }
         body.pro-mode .auction-grid { grid-template-columns: repeat(5, 1fr); }
-        
-        /* 푸터 스타일 고정 */
-        footer { background: var(--footer-bg); color: #fff; padding: 50px 5%; margin-top: 50px; }
-        .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1200px; margin: 0 auto; text-align: left; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,31,77,0.8); z-index: 4000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
     </style>
 </head>
 <body class="is-logged-out simple-mode" id="targetBody">
 
 <div id="header-load"></div>
+
+<div class="ticker" id="ticker-area">
+    <div class="ticker-label">NOTICE</div>
+    <div class="ticker-text-wrapper">
+        <div class="ticker-text">[이벤트] 수수료 200엔 혁명! &nbsp;&nbsp;&nbsp;&nbsp; [안내] 26년 1월 구정 연휴 오사카 물류센터 정상 운영 &nbsp;&nbsp;&nbsp;&nbsp; [공지] 야후옥션 자동입찰 시스템 점검 안내</div>
+    </div>
+</div>
+
+<div class="side-quick">
+    <div class="side-btn" onclick="openCalc()"><i>🧮</i>계산기</div>
+    <div class="side-btn"><i>💬</i>문의</div>
+    <div onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="background:#333; color:#fff; text-align:center; padding:10px; font-size:10px; cursor:pointer; border-radius: 0 0 0 8px;">TOP</div>
+</div>
 
 <div class="mode-switcher-bar">
     <div style="display:flex; background:#eee; border-radius:20px; padding:3px;">
@@ -68,35 +84,13 @@
     </div>
 </div>
 
-<section class="simple-only">
-    <div class="mercari-hero" style="background: linear-gradient(rgba(10,31,77,0.85), rgba(10,31,77,0.85)), url('https://picsum.photos/1200/400?grayscale'); padding: 60px 5%; text-align: center; color: #fff;">
-        <h1 style="font-size:32px; font-weight: 900;">MERCARI JP</h1>
-        <p style="opacity: 0.9; margin-top: 10px;">가장 안전한 일본 중고장터 이용 경험</p>
-    </div>
-</section>
-
 <section class="pro-only pro-filter-container">
-    <div class="pro-warning">
-        - 메루카리 상품의 판매 상태 및 배송 옵션을 정밀하게 필터링할 수 있습니다.<br>
-        - 원문 URL을 직접 입력하여 해당 카테고리나 검색 결과로 즉시 이동이 가능합니다.
-    </div>
-
-    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-        <div style="border: 1px solid #ddd; padding: 10px 20px; background: #f8fafc; font-weight: bold; font-size: 13px;">원문 URL</div>
-        <input type="text" placeholder="https://jp.mercari.com/search?..." style="flex: 1; border: 1px solid #ddd; padding: 10px; outline: none;">
-        <button style="background: #64748b; color: white; padding: 0 25px; font-weight: bold; border-radius: 4px;">이동</button>
-    </div>
-
     <div class="filter-table">
         <div class="filter-row">
             <div class="filter-label">검색조건</div>
             <div class="filter-content">
                 <label><input type="checkbox"> 배송비 포함(무료배송)</label>
                 <label><input type="checkbox"> 판매 중인 상품만</label>
-                <span style="color:#eee">|</span>
-                <label><input type="radio" name="cond" checked> 전체</label>
-                <label><input type="radio" name="cond"> 새 상품</label>
-                <label><input type="radio" name="cond"> 중고</label>
             </div>
         </div>
         <div class="filter-row">
@@ -107,36 +101,22 @@
                 <label><input type="checkbox"> 택배(메루카리 편 등)</label>
             </div>
         </div>
-        <div class="filter-row">
-            <div class="filter-label">가격범위</div>
-            <div class="filter-content">
-                <input type="number" class="pro-input" placeholder="최소 가격"> ~ 
-                <input type="number" class="pro-input" placeholder="최대 가격">
-                <span style="font-size: 11px; color: #888;">(엔화 기준)</span>
-            </div>
-        </div>
-        <div class="filter-row">
-            <div class="filter-label">제외어 설정</div>
-            <div class="filter-content">
-                <input type="text" class="pro-input" style="width: 100%; max-width: 500px;" placeholder="검색 결과에서 제외할 단어를 입력하세요">
-            </div>
-        </div>
-    </div>
-
-    <div style="text-align: right;">
-        <button class="btn-pro-search">🔍 위의 조건으로 검색</button>
     </div>
 </section>
 
 <main class="auction-grid">
     <div style="background:#fff; border:1px solid var(--border-light); border-radius:8px; overflow:hidden;">
         <div style="width: 100%; aspect-ratio: 1/1; background-image: url('https://picsum.photos/400/400?random=62'); background-size: cover;"></div>
-        <div style="padding: 15px;">
-            <div style="font-size: 14px;">올리브 그린 슬랙스 M</div>
-            <div style="font-size: 18px; font-weight: 800; margin-top: 10px; color: var(--mercari-red);">900엔</div>
-        </div>
+        <div style="padding: 15px;"><div style="font-size: 14px;">올리브 그린 슬랙스 M</div><div style="font-size: 18px; font-weight: 800; margin-top: 10px; color: var(--mercari-red);">900엔</div></div>
     </div>
 </main>
+
+<div class="modal-overlay" id="calcModal">
+    <div style="background: #fff; width: 95%; max-width: 950px; height: 80vh; border-radius: 20px; position: relative; overflow: hidden;">
+        <span style="position:absolute; right:20px; top:15px; font-size:30px; cursor:pointer; z-index: 9999;" onclick="closeCalc()">&times;</span>
+        <iframe src="final_no.html" style="width:100%; height:100%; border:none;"></iframe>
+    </div>
+</div>
 
 <div id="footer-load"></div>
 
@@ -146,12 +126,8 @@
             const [hRes, fRes] = await Promise.all([ fetch('header.html'), fetch('footer.html') ]);
             document.getElementById('header-load').innerHTML = await hRes.text();
             document.getElementById('footer-load').innerHTML = await fRes.text();
-            
             const activeMenu = document.getElementById('menu-mercari');
             if(activeMenu) activeMenu.parentElement.classList.add('active');
-            
-            // 로그인 상태 동기화
-            if(document.body.classList.contains('is-logged-in')) toggleLogin(true);
         } catch (e) { console.error(e); } finally { document.body.style.visibility = 'visible'; }
     }
     initLayout();
@@ -168,7 +144,10 @@
             sBtn.classList.add('active'); pBtn.classList.remove('active');
         }
     }
+    function openCalc(){ document.getElementById('calcModal').style.display = 'flex'; }
+    function closeCalc(){ document.getElementById('calcModal').style.display = 'none'; }
 </script>
 </body>
 </html>
+
 

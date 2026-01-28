@@ -23,10 +23,10 @@
         .is-logged-out .view-login { display: none !important; }
         .is-logged-out .status-container { display: none !important; }
 
-        /* [핵심] 헤더 로딩 전 레이아웃 깨짐 방지용 최소 높이 */
+        /* [핵심] 헤더 로딩 전 레이아웃 깨짐 방지용 최소 높이 확보 */
         #header-load { min-height: 200px; }
 
-        /* 외부 파일을 불러와도 스타일이 즉시 적용되도록 CSS는 각 파일에 유지합니다 */
+        /* 공통 스타일 유지 (외부 파일 로드 시 디자인 튀는 현상 방지) */
         .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
         header { padding: 25px 5%; text-align: center; background: #fff; }
         .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
@@ -34,18 +34,25 @@
         .main-nav ul { display: flex; justify-content: center; }
         .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; }
         .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
-
         .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
         .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; }
         .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; white-space: nowrap; }
         @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* [3. 메인 콘텐츠 레이아웃 전체 유지] */
+        /* [3. 메인 콘텐츠 및 모바일 대응] */
         .main-content { padding: 30px 5%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 35px; }
         .hero-section { display: grid; grid-template-columns: 2.3fr 1fr; gap: 20px; height: 280px; }
         .hero-banner { background: linear-gradient(135deg, var(--main-deep-blue), var(--main-royal-blue)); border-radius: 15px; padding: 40px; color: white; height: 100%; display: flex; flex-direction: column; justify-content: center; position: relative; }
         .side-auth-box { background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border-light); height: 100%; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        
+
+        /* 현황판 10열 고정 */
+        .status-container { background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border-light); }
+        .status-grid { display: grid; grid-template-columns: repeat(10, 1fr); border: 1px solid #eee; border-radius: 10px; overflow: hidden; }
+        .grid-col { text-align: center; border-right: 1px solid #eee; padding: 15px 2px; background: #fff; }
+        .grid-col:last-child { border-right: none; }
+        .grid-count { font-size: 14px; font-weight: 800; color: #333; }
+        .grid-count.active { color: var(--point-orange); }
+
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,31,77,0.8); z-index: 3000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
         .modal-content { background: #fff; width: 95%; max-width: 950px; border-radius: 20px; position: relative; }
         .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 1000; background: #555; border-radius: 8px 0 0 8px; }
@@ -53,6 +60,7 @@
         
         @media (max-width: 768px) {
             .hero-section { grid-template-columns: 1fr; height: auto; }
+            .status-grid { grid-template-columns: repeat(5, 1fr); }
         }
     </style>
 </head>
@@ -62,7 +70,7 @@
 
 <div class="modal-overlay" id="calcModal">
     <div class="modal-content" style="height: 80vh; padding: 0; overflow: hidden;">
-        <span style="position:absolute; right:20px; top:15px; font-size:30px; cursor:pointer; z-index: 9999;" onclick="closeCalc()">&times;</span>
+        <span style="position:absolute; right:20px; top:15px; font-size:30px; cursor:pointer; z-index: 9999; color: #333;" onclick="closeCalc()">&times;</span>
         <iframe src="final_no.html" style="width:100%; height:100%; border:none;"></iframe>
     </div>
 </div>
@@ -96,46 +104,72 @@
             </div>
         </div>
     </div>
+
+    <div class="status-container">
+        <h3 style="font-size: 19px; font-weight: 800; color: var(--main-deep-blue); margin-bottom: 15px;">📊 대행신청 현황</h3>
+        <div class="status-grid">
+            <div class="grid-col"><span style="font-size:9px; display:block;">실패</span>🗑️<div class="grid-count">34</div></div>
+            <div class="grid-col"><span style="font-size:9px; display:block;">입찰요청</span>📝<div class="grid-count">0</div></div>
+            <div class="grid-col"><span style="font-size:9px; display:block;">낙찰승인</span>🔨<div class="grid-count active">16</div></div>
+            <div class="grid-col"><span style="font-size:9px; display:block;">1차결제</span>💳<div class="grid-count">0</div></div>
+            <div class="grid-col"><span style="font-size:9px; display:block;">현지배송</span>🚚<div class="grid-count">0</div></div>
+            <div class="grid-col"><span style="font-size:9px; display:block;">통합진행</span>📦<div class="grid-count">0</div></div>
+            <div class="grid-col"><span style="font-size:9px; display:block;">2차요청</span>📑<div class="grid-count">0</div></div>
+            <div class="grid-col"><span style="font-size:9px; display:block;">2차완료</span>💳<div class="grid-count">0</div></div>
+            <div class="grid-col"><span style="font-size:9px; display:block;">국제배송</span>✈️<div class="grid-count active">1</div></div>
+            <div class="grid-col" style="border-right:none;"><span style="font-size:9px; display:block;">배송완료</span>🎁<div class="grid-count active">7</div></div>
+        </div>
+    </div>
 </main>
 
 <div id="footer-load"></div>
 
 <script>
-    // [핵심] 외부 레이아웃 파일 로드 함수
+    /* [1. 레이아웃 안정화] 로드 전 본문 숨김 */
+    document.body.style.visibility = 'hidden';
+
     async function initLayout() {
         try {
-            // 헤더/푸터 병렬 로드
+            /* [2. 병렬 로드] 깃허브 서버에서 헤더/푸터 가져오기 */
             const [hRes, fRes] = await Promise.all([
                 fetch('header.html'),
                 fetch('footer.html')
             ]);
             
+            if (!hRes.ok || !fRes.ok) throw new Error("파일을 찾을 수 없습니다.");
+
             document.getElementById('header-load').innerHTML = await hRes.text();
             document.getElementById('footer-load').innerHTML = await fRes.text();
 
-            // 현재 페이지 활성화 처리 (index.html 인식)
+            // [3. 메뉴 활성화] 현재 페이지 강조
             const path = window.location.pathname.split("/").pop() || 'index.html';
-            // header.html에 각 메뉴 id가 'menu-파일명' 형태로 되어있어야 합니다.
             const menuId = 'menu-' + path.replace('.html', '');
             const activeMenu = document.getElementById(menuId);
             if(activeMenu) activeMenu.parentElement.classList.add('active');
+
+            // [4. 상태 동기화] 로그인 UI 연동
+            if(document.body.classList.contains('is-logged-in')) {
+                toggleLogin(true);
+            }
             
         } catch (e) {
-            console.error("레이아웃 로드 중 오류 발생:", e);
+            console.error("Layout load error:", e);
+        } finally {
+            /* [5. 최종 노출] 로딩 완료 시 화면 표시 */
+            document.body.style.visibility = 'visible';
         }
     }
 
-    // 페이지 로드 시 실행
     initLayout();
 
-    // 기존 로그인/계산기 기능 함수 유지
+    /* 공통 기능 함수 */
     function toggleLogin(l){ 
-        const b = document.getElementById('mainBody'); 
+        const b = document.getElementById('mainBody') || document.body; 
         if(l){ b.classList.remove('is-logged-out'); b.classList.add('is-logged-in'); } 
         else { b.classList.remove('is-logged-in'); b.classList.add('is-logged-out'); } 
     }
-    function openCalc(){ document.getElementById('calcModal').style.display = 'flex'; }
-    function closeCalc(){ document.getElementById('calcModal').style.display = 'none'; }
+    function openCalc(){ const m = document.getElementById('calcModal'); if(m) m.style.display = 'flex'; }
+    function closeCalc(){ const m = document.getElementById('calcModal'); if(m) m.style.display = 'none'; }
 </script>
 </body>
 </html>

@@ -17,7 +17,14 @@
         a { text-decoration: none; color: inherit; transition: 0.2s; }
         * { box-sizing: border-box; }
 
-        /* [1. 헤더 로드 시 유지될 핵심 CSS] */
+        /* [상태 제어] */
+        .is-logged-in .view-logout { display: none !important; }
+        .is-logged-out .view-login { display: none !important; }
+
+        /* [핵심] 헤더 로딩 지연 시 레이아웃 깨짐 방지 */
+        #header-load { min-height: 200px; }
+
+        /* [1. 헤더/네비게이션 핵심 CSS - 디자인 유지용] */
         .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
         header { padding: 25px 5%; text-align: center; background: #fff; border-bottom: 1px solid #f1f1f1; }
         .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
@@ -25,11 +32,11 @@
         .main-nav ul { display: flex; justify-content: center; }
         .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; }
         .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
 
-        /* [2. 마이페이지 그리드 레이아웃] */
+        /* [2. 마이페이지 전용 그리드 레이아웃] */
         .main-content { padding: 30px 5%; max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 260px 1fr; gap: 30px; align-items: start; }
 
-        /* 사이드바 스타일 */
         .side-menu-box { display: flex; flex-direction: column; gap: 20px; }
         .user-profile { background: #fff; border: 1px solid var(--border-light); border-radius: 15px; padding: 25px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         .grade-DIAMOND { background: linear-gradient(135deg, #45B3E0, #B0E0E6); color: #fff; }
@@ -38,7 +45,6 @@
         .side-nav li a { display: block; padding: 16px 20px; font-size: 14px; border-bottom: 1px solid #f8f9fa; color: #555; }
         .side-nav li.active a { background: var(--main-royal-blue); color: #fff; font-weight: 700; }
 
-        /* 현황판 스타일 복구 */
         .content-card { background: #fff; border: 1px solid var(--border-light); border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
         .status-grid { display: grid; grid-template-columns: repeat(10, 1fr); border: 1px solid #eee; border-radius: 12px; overflow: hidden; margin-top: 15px; }
         .grid-col { text-align: center; border-right: 1px solid #eee; padding: 15px 5px; cursor: pointer; transition: 0.2s; }
@@ -49,9 +55,15 @@
         .grid-col.active .grid-count { color: var(--main-royal-blue); }
 
         .status-guide-box { margin-top: 25px; background: #f8fbff; border-left: 5px solid var(--main-royal-blue); padding: 20px; border-radius: 0 12px 12px 0; display: flex; gap: 15px; }
+
+        /* 모달 및 퀵메뉴 */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,31,77,0.8); z-index: 3000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .modal-content { background: #fff; width: 95%; max-width: 950px; border-radius: 20px; position: relative; overflow: hidden; }
+        .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 1000; background: #555; border-radius: 8px 0 0 8px; }
+        .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
     </style>
 </head>
-<body id="mainBody">
+<body class="is-logged-in" id="mainBody">
 
 <div id="header-load"></div>
 
@@ -78,7 +90,6 @@
             <h2 style="font-size: 20px; font-weight: 800; color: var(--main-deep-blue); display: flex; align-items: center; gap: 10px;">
                 📊 나의 대행신청 현황
             </h2>
-            
             <div class="status-grid">
                 <div class="grid-col active"><span class="grid-label">1차결제완료</span><div class="grid-count">1</div></div>
                 <div class="grid-col"><span class="grid-label">현지배송</span><div class="grid-count">0</div></div>
@@ -91,7 +102,6 @@
                 <div class="grid-col"><span class="grid-label">입찰요청</span><div class="grid-count">0</div></div>
                 <div class="grid-col"><span class="grid-label">낙찰승인</span><div class="grid-count">15</div></div>
             </div>
-
             <div class="status-guide-box">
                 <div style="font-size: 24px;">💡</div>
                 <div>
@@ -103,35 +113,48 @@
     </div>
 </main>
 
+<div class="side-quick">
+    <div class="side-btn" onclick="openCalc()"><i>🧮</i>계산기</div>
+    <div class="side-btn"><i>💬</i>문의</div>
+    <div onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="background:#333; color:#fff; text-align:center; padding:10px; font-size:10px; cursor:pointer;">TOP</div>
+</div>
+
+<div class="modal-overlay" id="calcModal">
+    <div class="modal-content" style="height: 80vh; padding: 0;">
+        <span style="position:absolute; right:20px; top:15px; font-size:30px; cursor:pointer; z-index: 9999; color:#333;" onclick="closeCalc()">&times;</span>
+        <iframe src="final_no.html" style="width:100%; height:100%; border:none;"></iframe>
+    </div>
+</div>
+
 <div id="footer-load"></div>
 
 <script>
-    async function loadConfig() {
+    async function initLayout() {
         try {
-            // 헤더 로드
-            const headerRes = await fetch('header.html');
-            const headerData = await headerRes.text();
-            document.getElementById('header-load').innerHTML = headerData;
-
-            // 푸터 로드
-            const footerRes = await fetch('footer.html');
-            const footerData = await footerRes.text();
-            document.getElementById('footer-load').innerHTML = footerData;
-
-            // [핵심] 현재 페이지 메뉴 활성화 (Active)
-            const filename = window.location.pathname.split("/").pop() || 'index.html';
-            const menuId = 'menu-' + filename.replace('.html', '');
-            const activeMenu = document.getElementById(menuId);
-            if(activeMenu) activeMenu.classList.add('active');
+            const [hRes, fRes] = await Promise.all([
+                fetch('header.html'),
+                fetch('footer.html')
+            ]);
             
-        } catch (error) {
-            console.error('공통 컴포넌트 로드 실패:', error);
+            document.getElementById('header-load').innerHTML = await hRes.text();
+            document.getElementById('footer-load').innerHTML = await fRes.text();
+
+            // 현재 페이지 활성화 처리 (mypage.html 인식)
+            const activeMenu = document.getElementById('menu-mypage');
+            if(activeMenu) activeMenu.parentElement.classList.add('active');
+            
+        } catch (e) {
+            console.error("Layout Load Error:", e);
         }
     }
-    
-    // 페이지 로드 시 실행
-    loadConfig();
 
+    initLayout();
+
+    function toggleLogin(l){ 
+        const b = document.getElementById('mainBody'); 
+        if(l){ b.classList.remove('is-logged-out'); b.classList.add('is-logged-in'); } 
+        else { b.classList.remove('is-logged-in'); b.classList.add('is-logged-out'); } 
+    }
     function openCalc(){ document.getElementById('calcModal').style.display = 'flex'; }
     function closeCalc(){ document.getElementById('calcModal').style.display = 'none'; }
 </script>

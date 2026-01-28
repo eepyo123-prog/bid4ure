@@ -12,27 +12,34 @@
             --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
             --mercari-red: #ff0021; --point-orange: #ff8c00; 
             --bg-grey: #f4f6f9; --border-light: #e1e5eb;
+            --footer-bg: #05102a;
         }
-        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; transition: background 0.3s; }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; transition: background 0.3s; overflow-x: hidden; }
+        ul, p, h1, h2, h3 { margin: 0; padding: 0; list-style: none; }
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
         * { box-sizing: border-box; }
 
-        /* [공통 요소 스타일 - Ticker 및 Nav 복구] */
+        /* [상태 제어] */
+        .is-logged-in .view-logout { display: none !important; }
+        .is-logged-out .view-login { display: none !important; }
+
+        /* [1. 공통 헤더 스타일 - PC 레이아웃 고정] */
         .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
-        header { padding: 25px 5%; text-align: center; background: #fff; }
+        header { padding: 25px 5%; text-align: center; background: #fff; border-bottom: 1px solid #f1f1f1; }
         .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
         .main-nav { background: var(--main-deep-blue); box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 2000; }
-        .main-nav ul { display: flex; justify-content: center; list-style: none; padding: 0; margin: 0; }
-        .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; text-decoration: none; }
+        .main-nav ul { display: flex; justify-content: center; }
+        .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; }
         .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
 
-        /* [Ticker 애니메이션 복구] */
+        /* [2. 공지사항 Ticker] */
         .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
         .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; }
         .ticker-text-wrapper { overflow: hidden; white-space: nowrap; flex: 1; }
         .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; }
         @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* [모드 제어 스타일] */
+        /* [3. 메루카리 전용: 모드 제어 스타일] */
         .simple-only { display: block; }
         .pro-only { display: none !important; }
         body.pro-mode .simple-only { display: none !important; }
@@ -44,15 +51,48 @@
         .mode-btn { padding: 6px 15px; border-radius: 17px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; }
         .mode-btn.active { background: var(--mercari-red); color: #fff; }
 
-        /* [그리드 레이아웃 고정] */
-        .auction-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; max-width: 1350px; margin: 0 auto; }
+        /* [4. 메루카리 그리드 고정] */
+        .auction-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; max-width: 1350px; margin: 0 auto; padding: 40px 5%; }
         body.pro-mode .auction-grid { grid-template-columns: repeat(5, 1fr); gap: 15px; }
         .auction-item { background: #fff; border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; transition: 0.3s; }
+        .auction-item:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+
+        /* 퀵 메뉴 */
+        .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 1000; background: #555; border-radius: 8px 0 0 8px; }
+        .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
+        
+        footer { background: var(--footer-bg); color: #fff; padding: 50px 5%; font-size: 13px; text-align: center; }
     </style>
 </head>
-<body class="simple-mode" id="targetBody">
+<body class="is-logged-out simple-mode" id="targetBody">
 
-<div id="header-load"></div>
+<div class="top-util">
+    <span><b>고시 환율:</b> 100￥ = 994원</span>
+    <div class="view-logout">로그인 | 회원가입 | 고객센터</div>
+    <div class="view-login">
+        <a href="mypage.html"><b>홍길동</b>님 반갑습니다!</a> | 
+        <a href="javascript:toggleLogin(false)" style="color:#fff">로그아웃</a>
+    </div>
+</div>
+
+<header><a href="index.html" class="logo">Bid4U</a></header>
+
+<nav class="main-nav">
+    <ul>
+        <li><a href="auctions2.html">야후옥션</a></li>
+        <li class="active"><a href="mercari.html">메루카리</a></li>
+        <li><a href="rakuten.html">라쿠텐</a></li>
+        <li><a href="offer.html">구매대행신청</a></li>
+        <li><a href="mypage.html">마이페이지</a></li>
+    </ul>
+</nav>
+
+<div class="ticker">
+    <div class="ticker-label">NOTICE</div>
+    <div class="ticker-text-wrapper">
+        <div class="ticker-text">[이벤트] 수수료 200엔 혁명! &nbsp;&nbsp;&nbsp;&nbsp; [안내] 26년 1월 구정 연휴 오사카 물류센터 정상 운영</div>
+    </div>
+</div>
 
 <div class="mode-switcher-bar">
     <div style="margin-right: 15px; font-size: 12px; font-weight: bold; color: #666;">화면 구성 선택</div>
@@ -78,7 +118,7 @@
     <div style="font-size: 15px; font-weight: 700; color: #444;">💰 수수료 <b>200엔</b> 혁명</div>
 </div>
 
-<main style="padding: 40px 5%;">
+<main>
     <div class="auction-grid">
         <div class="auction-item">
             <a href="mercariinfo.html">
@@ -92,22 +132,21 @@
     </div>
 </main>
 
-<div id="footer-load"></div>
+<div class="side-quick">
+    <div class="side-btn"><i>🧮</i>계산기</div>
+    <div class="side-btn"><i>💬</i>문의</div>
+    <div onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="background:#333; color:#fff; text-align:center; padding:10px; font-size:10px; cursor:pointer;">TOP</div>
+</div>
+
+<footer>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1200px; margin: 0 auto; text-align: left;">
+        <div><h3>Support</h3><p>donacorporation8988@gmail.com</p></div>
+        <div><h3>Bank</h3><p>신한: 140-011-832950 / 국민: 750601-01-266837</p></div>
+        <div><h3>Warehouse</h3><p>〒546-0024 大阪府大阪市東住吉区公園남야다 4-3-7</p></div>
+    </div>
+</footer>
 
 <script>
-    async function loadConfig() {
-        const headerRes = await fetch('header.html');
-        document.getElementById('header-load').innerHTML = await headerRes.text();
-        const footerRes = await fetch('footer.html');
-        document.getElementById('footer-load').innerHTML = await footerRes.text();
-
-        const filename = window.location.pathname.split("/").pop() || 'index.html';
-        const menuId = 'menu-' + filename.replace('.html', '');
-        const activeMenu = document.getElementById(menuId);
-        if(activeMenu) activeMenu.classList.add('active');
-    }
-    loadConfig();
-
     function toggleMode(mode) {
         const body = document.getElementById('targetBody');
         const simpleBtn = document.getElementById('simpleBtn');
@@ -122,7 +161,12 @@
             proBtn.classList.remove('active');
         }
     }
+
+    function toggleLogin(l){ 
+        const b = document.getElementById('targetBody'); 
+        if(l){ b.classList.remove('is-logged-out'); b.classList.add('is-logged-in'); } 
+        else { b.classList.remove('is-logged-in'); b.classList.add('is-logged-out'); } 
+    }
 </script>
 </body>
 </html>
-

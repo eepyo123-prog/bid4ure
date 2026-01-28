@@ -5,140 +5,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bid4U - 프리미엄 통합 플랫폼</title>
     <style>
+        /* [1. 필수 디자인 - 외부 파일을 불러오기 전에도 미리 읽혀야 깨지지 않습니다] */
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-        
         :root {
             --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
-            --point-orange: #ff8c00; --bg-grey: #f8fafc; --border-light: #e2e8f0;
+            --footer-bg: #05102a; --point-orange: #ff8c00; --bg-grey: #f4f6f9;
+            --border-light: #e1e5eb;
         }
-
-        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #1e293b; visibility: hidden; }
-
-        /* [1. 히어로 섹션 개선] */
-        .main-content { padding: 40px 5%; max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; visibility: hidden; overflow-x: hidden; }
         
-        .hero-section { display: grid; grid-template-columns: 2.2fr 1fr; gap: 24px; height: 300px; }
+        /* 헤더 디자인 고정 (image_f6c756 깨짐 방지용) */
+        .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; min-height: 40px; }
+        header { padding: 25px 5%; text-align: center; background: #fff; min-height: 90px; }
+        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; text-decoration: none; }
+        .main-nav { background: var(--main-deep-blue); position: sticky; top: 0; z-index: 2000; min-height: 51px; }
+        .main-nav ul { display: flex; justify-content: center; list-style: none; margin: 0; padding: 0; }
+        .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; text-decoration: none; }
+        .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
+
+        /* [2. 본문 레이아웃 - 원본 디자인 완벽 보존] */
+        .main-content { padding: 30px 5%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 35px; }
+        .hero-section { display: grid; grid-template-columns: 2.3fr 1fr; gap: 20px; height: 280px; }
+        .hero-banner { background: linear-gradient(135deg, var(--main-deep-blue), var(--main-royal-blue)); border-radius: 15px; padding: 40px; color: white; height: 100%; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        .side-auth-box { background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border-light); height: 100%; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .status-container { background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border-light); }
+        .status-grid { display: grid; grid-template-columns: repeat(10, 1fr); border: 1px solid #eee; border-radius: 10px; overflow: hidden; }
+        .grid-col { text-align: center; border-right: 1px solid #eee; padding: 15px 2px; background: #fff; }
+        .grid-col:last-child { border-right: none; }
         
-        .hero-banner { 
-            background: linear-gradient(145deg, var(--main-deep-blue), var(--main-royal-blue)); 
-            border-radius: 24px; padding: 50px; color: white; position: relative;
-            box-shadow: 0 20px 40px rgba(10,31,77,0.15);
-        }
+        /* 상태 제어 */
+        .is-logged-in .view-logout { display: none !important; }
+        .is-logged-out .view-login { display: none !important; }
+        .is-logged-out .status-container { display: none !important; }
 
-        .side-auth-box { 
-            background: #fff; border-radius: 24px; padding: 30px; border: 1px solid var(--border-light); 
-            display: flex; flex-direction: column; justify-content: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
-        }
-
-        /* [2. 현황판 디자인 혁신 - 카드 스타일] */
-        .status-container { background: #fff; border-radius: 24px; padding: 32px; border: 1px solid var(--border-light); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        .status-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; } /* 2줄로 배치하여 가독성 확보 */
-        
-        .grid-col { 
-            background: #fdfdfd; border: 1px solid #f1f5f9; border-radius: 16px; padding: 18px 10px; 
-            transition: 0.3s; text-align: center;
-        }
-        .grid-col:hover { transform: translateY(-3px); border-color: var(--point-orange); box-shadow: 0 10px 15px rgba(255,140,0,0.1); }
-        
-        .grid-label { font-size: 11px; color: #64748b; font-weight: 700; margin-bottom: 10px; display: block; }
-        .grid-icon { font-size: 20px; margin-bottom: 8px; display: block; }
-        .grid-count { font-size: 18px; font-weight: 800; color: #1e293b; }
-        .grid-count.active { color: var(--point-orange); }
-
-        /* [3. 버튼 및 공통 요소] */
-        .btn-login { 
-            background: var(--main-deep-blue); color: #fff; padding: 14px; border-radius: 12px; 
-            font-weight: 800; border: none; cursor: pointer; transition: 0.2s;
-        }
-        .btn-login:hover { background: var(--main-royal-blue); transform: scale(1.02); }
-
-        /* 섹션 타이틀 가독성 */
-        .section-title { font-size: 22px; font-weight: 900; color: var(--main-deep-blue); margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
-        .section-title::before { content:''; display:inline-block; width:4px; height:20px; background:var(--point-orange); border-radius:2px; }
-
-        @media (max-width: 1024px) {
-            .hero-section { grid-template-columns: 1fr; height: auto; }
-            .status-grid { grid-template-columns: repeat(2, 1fr); }
-        }
+        footer { background: var(--footer-bg); color: #fff; padding: 50px 5%; margin-top: 50px; }
     </style>
 </head>
-<body class="is-logged-in" id="mainBody">
+<body class="is-logged-out" id="mainBody">
 
 <div id="header-load"></div>
 
 <main class="main-content">
     <div class="hero-section">
         <div class="hero-banner">
-            <h1 style="font-size: 36px; font-weight: 900; margin-bottom: 15px;">수수료 200엔의 혁명</h1>
-            <p style="font-size: 16px; opacity: 0.8;">오사카 직영 물류센터 운영으로 한 차원 높은 속도를 경험하세요</p>
-            <div style="margin-top: 30px; display: flex; gap: 10px;">
-                <span style="background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 30px; font-size: 12px; font-weight: bold;">오늘의 면세 한도: $150</span>
-            </div>
+            <h1 style="font-size: 30px; font-weight: 900; margin-bottom: 10px;">수수료 200엔의 혁명</h1>
+            <p style="opacity: 0.9;">오사카 직영 물류센터 운영으로 한 차원 높은 속도를 경험하세요</p>
         </div>
-        
         <div class="side-auth-box">
+            <div class="login-form view-logout">
+                <input type="text" placeholder="아이디" style="width:100%; padding:12px; margin-bottom:8px; border:1px solid #eee; border-radius:6px;">
+                <input type="password" placeholder="비밀번호" style="width:100%; padding:12px; margin-bottom:8px; border:1px solid #eee; border-radius:6px;">
+                <button onclick="toggleLogin(true)" style="width:100%; background:var(--main-deep-blue); color:#fff; padding:12px; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">로그인</button>
+            </div>
             <div class="member-info view-login">
-                <div style="text-align:center; margin-bottom: 20px;">
-                    <span style="background:var(--point-orange); color:#fff; font-size:10px; padding:3px 10px; border-radius:20px; font-weight: 800;">BRONZE MEMBER</span>
-                    <div style="font-weight: 900; font-size: 22px; margin-top: 8px;">홍길동 님</div>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; border-top: 1px solid #f1f5f9; padding-top: 20px;">
-                    <div style="text-align: center;">
-                        <span style="font-size: 11px; color: #94a3b8;">사이버머니</span>
-                        <div style="font-size: 16px; font-weight: 800; color: var(--point-orange);">15,200원</div>
-                    </div>
-                    <div style="text-align: center;">
-                        <span style="font-size: 11px; color: #94a3b8;">할인쿠폰</span>
-                        <div style="font-size: 16px; font-weight: 800;">3장</div>
-                    </div>
+                <div style="font-weight: 900; text-align:center; font-size: 18px;">홍길동 님</div>
+                <div style="text-align:center; margin-top:5px;"><span style="background:var(--point-orange); color:#fff; font-size:10px; padding:2px 8px; border-radius:10px; font-weight: bold;">Bronze 등급</span></div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border-top: 1px solid #f1f1f1; padding-top: 20px; margin-top: 15px; text-align: center;">
+                    <div><span style="font-size:11px; color:#888;">사이버머니</span><div style="font-size: 14px; font-weight: 800; color: var(--point-orange);">15,200원</div></div>
+                    <div><span style="font-size:11px; color:#888;">할인쿠폰</span><div style="font-size: 14px; font-weight: 800;">3장</div></div>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="status-container">
-        <h3 class="section-title">대행신청 현황</h3>
+        <h3 style="font-size: 19px; font-weight: 800; color: var(--main-deep-blue); margin-bottom: 15px;">📊 대행신청 현황 (일본)</h3>
         <div class="status-grid">
-            <div class="grid-col"><span class="grid-label">실패</span><span class="grid-icon">🗑️</span><div class="grid-count">34</div></div>
-            <div class="grid-col"><span class="grid-label">입찰요청</span><span class="grid-icon">📝</span><div class="grid-count">0</div></div>
-            <div class="grid-col"><span class="grid-label">낙찰승인</span><span class="grid-icon">🔨</span><div class="grid-count active">16</div></div>
-            <div class="grid-col"><span class="grid-label">1차결제</span><span class="grid-icon">💳</span><div class="grid-count">0</div></div>
-            <div class="grid-col"><span class="grid-label">현지배송</span><span class="grid-icon">🚚</span><div class="grid-count">0</div></div>
-            <div class="grid-col"><span class="grid-label">통합진행</span><span class="grid-icon">📦</span><div class="grid-count">0</div></div>
-            <div class="grid-col"><span class="grid-label">2차요청</span><span class="grid-icon">📑</span><div class="grid-count">0</div></div>
-            <div class="grid-col"><span class="grid-label">2차완료</span><span class="grid-icon">💰</span><div class="grid-count">0</div></div>
-            <div class="grid-col"><span class="grid-label">국제배송</span><span class="grid-icon">✈️</span><div class="grid-count active">1</div></div>
-            <div class="grid-col"><span class="grid-label">배송완료</span><span class="grid-icon">🎁</span><div class="grid-count active">7</div></div>
-        </div>
+            <div class="grid-col"><span style="font-size:9px; display:block;">실패</span>🗑️<div style="font-size:14px; font-weight:800;">34</div></div>
+            <div class="grid-col"><span style="font-size:9px; display:block;">낙찰승인</span>🔨<div style="font-size:14px; font-weight:800; color:var(--point-orange);">16</div></div>
+            <div class="grid-col" style="border-right:none;"><span style="font-size:9px; display:block;">배송완료</span>🎁<div style="font-size:14px; font-weight:800; color:var(--point-orange);">7</div></div>
+            </div>
     </div>
 </main>
 
 <div id="footer-load"></div>
 
 <script>
-    // 기존 레이아웃 로드 함수 유지
     async function initLayout() {
         try {
             const [hRes, fRes] = await Promise.all([
                 fetch('header.html'),
                 fetch('footer.html')
             ]);
+            
             document.getElementById('header-load').innerHTML = await hRes.text();
             document.getElementById('footer-load').innerHTML = await fRes.text();
+
+            // 현재 메뉴 활성화
+            const path = window.location.pathname.split("/").pop() || 'index.html';
+            const menuId = 'menu-' + path.replace('.html', '');
+            const target = document.getElementById(menuId);
+            if(target) target.parentElement.classList.add('active');
+
+            // 로그인 UI 상태 동기화
+            if(document.body.classList.contains('is-logged-in')) toggleLogin(true);
+
         } catch (e) {
-            console.error(e);
+            console.error("Layout Fetch Error:", e);
         } finally {
+            // 모든 로드 완료 후 화면 공개
             document.body.style.visibility = 'visible';
         }
     }
+
     initLayout();
 
     function toggleLogin(l){
         const b = document.getElementById('mainBody');
-        if(l){ b.classList.replace('is-logged-out', 'is-logged-in'); }
-        else { b.classList.replace('is-logged-in', 'is-logged-out'); }
+        if(l){ b.classList.remove('is-logged-out'); b.classList.add('is-logged-in'); }
+        else { b.classList.remove('is-logged-in'); b.classList.add('is-logged-out'); }
     }
 </script>
 </body>
 </html>
+

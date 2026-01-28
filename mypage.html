@@ -7,68 +7,52 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-        
         :root {
             --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
             --point-orange: #ff8c00; --bg-grey: #f4f6f9; --border-light: #e1e5eb;
             --footer-bg: #05102a;
         }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; visibility: hidden; overflow-x: hidden; }
 
-        /* [1. 레이아웃 안정화] 로드 전 숨김 및 배경 고정 */
-        body { 
-            font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; 
-            visibility: hidden; overflow-x: hidden; 
-        }
-
-        /* [2. 헤더 스타일 고정 - 로고 중앙 정렬 및 공간 확보] */
+        /* [1. 헤더/네비 고정 스타일] */
         .top-util { height: 40px; background: var(--main-deep-blue); color: #fff; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; font-size: 12px; }
         header { height: 90px; background: #fff; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #eee; text-align: center; }
         .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); text-decoration: none; display: block; }
-        
-        /* 네비게이션 바 높이 51px 고정 및 중앙 정렬 */
         .main-nav { background: var(--main-deep-blue); position: sticky; top: 0; z-index: 2000; height: 51px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .main-nav ul { display: flex; justify-content: center; list-style: none; margin: 0; padding: 0; width: 100%; }
-        .main-nav li a { display: block; padding: 15px 25px; color: #fff; font-weight: 600; text-decoration: none; font-size: 15px; }
-        .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        .main-nav li a { display: block; padding: 15px 25px; color: #fff; font-weight: 600; font-size: 15px; }
 
-        /* [3. 공지사항 스타일 - 불러온 헤더의 공지사항이 깨지지 않게 유지] */
-        .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; border-bottom: 1px solid #222; }
-        .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; }
-        .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; white-space: nowrap; }
-        @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
-
-        /* [4. 우측 퀵 메뉴] */
-        .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 3000; background: #555; border-radius: 8px 0 0 8px; box-shadow: -2px 0 10px rgba(0,0,0,0.1); }
-        .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.2s; }
-
-        /* [5. 마이페이지 전용 레이아웃] */
-        .main-content { padding: 30px 5%; max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 260px 1fr; gap: 30px; align-items: start; }
+        /* [2. 마이페이지 레이아웃] */
+        .main-content { padding: 30px 5%; max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 260px 1fr; gap: 30px; }
         .side-menu-box { display: flex; flex-direction: column; gap: 20px; }
-        .user-profile { background: #fff; border: 1px solid var(--border-light); border-radius: 15px; padding: 25px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        .grade-DIAMOND { background: linear-gradient(135deg, #45B3E0, #B0E0E6); color: #fff; }
-        .user-grade { display: inline-block; font-size: 11px; padding: 4px 14px; border-radius: 20px; margin-top: 10px; font-weight: 800; }
+        .user-profile { background: #fff; border: 1px solid var(--border-light); border-radius: 15px; padding: 25px; text-align: center; }
+        .user-grade { display: inline-block; font-size: 11px; padding: 4px 14px; border-radius: 20px; margin-top: 10px; font-weight: 800; background: linear-gradient(135deg, #45B3E0, #B0E0E6); color: #fff; }
         .side-nav-card { background: #fff; border: 1px solid var(--border-light); border-radius: 15px; overflow: hidden; }
         .side-nav-card li a { display: block; padding: 16px 20px; font-size: 14px; border-bottom: 1px solid #f8f9fa; color: #555; text-decoration: none; }
         .side-nav-card li.active a { background: var(--main-royal-blue); color: #fff; font-weight: 700; }
 
-        .content-card { background: #fff; border: 1px solid var(--border-light); border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
+        /* [3. 대행 현황 그리드 - 클릭 스타일 추가] */
+        .content-card { background: #fff; border: 1px solid var(--border-light); border-radius: 20px; padding: 30px; margin-bottom: 30px; }
         .status-grid { display: grid; grid-template-columns: repeat(10, 1fr); border: 1px solid #eee; border-radius: 12px; overflow: hidden; margin-top: 15px; }
-        .grid-col { text-align: center; border-right: 1px solid #eee; padding: 15px 2px; cursor: pointer; transition: 0.2s; }
-        .grid-label { display: block; font-size: 9px; color: #777; margin-bottom: 6px; font-weight: 600; line-height: 1.1; }
-        .grid-count { font-size: 14px; font-weight: 800; color: #333; }
+        .grid-col { text-align: center; border-right: 1px solid #eee; padding: 15px 2px; cursor: pointer; transition: 0.2s; background: #fff; }
+        .grid-col:hover { background: #f8fafc; }
         .grid-col.active { background: #f0f7ff; }
         .grid-col.active .grid-count { color: var(--main-royal-blue); }
+        .grid-label { display: block; font-size: 9px; color: #777; margin-bottom: 6px; font-weight: 600; pointer-events: none; }
+        .grid-count { font-size: 16px; font-weight: 800; color: #333; pointer-events: none; }
 
-        /* [6. 푸터 디자인 복구 - 3열 그리드 고정] */
+        /* [4. 주문 내역 테이블 스타일] */
+        .order-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .order-table th { background: #f8fafc; padding: 12px; font-size: 13px; color: #475569; border-bottom: 2px solid #e2e8f0; text-align: left; }
+        .order-table td { padding: 15px 12px; font-size: 14px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+        .prod-thumb { width: 60px; height: 60px; border-radius: 6px; background-size: cover; background-position: center; border: 1px solid #eee; }
+
+        /* 퀵 메뉴 및 푸터 */
+        .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 3000; background: #555; border-radius: 8px 0 0 8px; }
+        .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
         footer { background: var(--footer-bg); color: #fff; padding: 50px 5%; margin-top: 50px; }
         .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; max-width: 1200px; margin: 0 auto; text-align: left; }
-        
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,31,77,0.8); z-index: 4000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-        
-        @media (max-width: 1024px) {
-            .main-content { grid-template-columns: 1fr; }
-            .status-grid { grid-template-columns: repeat(5, 1fr); }
-        }
     </style>
 </head>
 <body class="is-logged-in" id="mainBody">
@@ -78,17 +62,15 @@
 <div class="side-quick">
     <div class="side-btn" onclick="openCalc()"><i>🧮</i>계산기</div>
     <div class="side-btn"><i>💬</i>문의</div>
-    <div onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="background:#333; color:#fff; text-align:center; padding:10px; font-size:10px; cursor:pointer; border-radius: 0 0 0 8px;">TOP</div>
+    <div onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="background:#333; color:#fff; text-align:center; padding:10px; font-size:10px; cursor:pointer;">TOP</div>
 </div>
 
 <main class="main-content">
     <aside class="side-menu-box">
         <div class="user-profile">
             <div style="font-weight: 900; font-size: 20px;">홍길동 님</div>
-            <div class="user-grade grade-DIAMOND">DIAMOND 등급</div>
-            <div style="margin-top: 20px; font-size: 13px; color: #718096;">
-                사이버머니 <b style="color:var(--point-orange); font-size: 16px; margin-left: 5px;">15,200원</b>
-            </div>
+            <div class="user-grade">DIAMOND 등급</div>
+            <div style="margin-top: 20px; font-size: 13px; color: #718096;">사이버머니 <b style="color:var(--point-orange); font-size: 16px; margin-left: 5px;">15,200원</b></div>
         </div>
         <ul class="side-nav-card">
             <li><a href="#">나의 지갑</a></li>
@@ -101,28 +83,56 @@
 
     <div class="content-section">
         <section class="content-card">
-            <h2 style="font-size: 20px; font-weight: 800; color: var(--main-deep-blue); display: flex; align-items: center; gap: 10px;">
-                📊 나의 대행신청 현황
-            </h2>
-            <div class="status-grid">
-                <div class="grid-col active"><span class="grid-label">1차결제완료</span><div class="grid-count">1</div></div>
-                <div class="grid-col"><span class="grid-label">현지배송</span><div class="grid-count">0</div></div>
-                <div class="grid-col"><span class="grid-label">통합진행</span><div class="grid-count">0</div></div>
-                <div class="grid-col"><span class="grid-label">2차요청</span><div class="grid-count">0</div></div>
-                <div class="grid-col"><span class="grid-label">2차완료</span><div class="grid-count">0</div></div>
-                <div class="grid-col"><span class="grid-label">국제배송</span><div class="grid-count">1</div></div>
-                <div class="grid-col"><span class="grid-label">배송완료</span><div class="grid-count">7</div></div>
-                <div class="grid-col"><span class="grid-label">실패</span><div class="grid-count">34</div></div>
-                <div class="grid-col"><span class="grid-label">입찰요청</span><div class="grid-count">0</div></div>
-                <div class="grid-col" style="border-right:none;"><span class="grid-label">낙찰승인</span><div class="grid-count">15</div></div>
+            <h2 style="font-size: 20px; font-weight: 800; color: var(--main-deep-blue);">📊 나의 대행신청 현황</h2>
+            <div class="status-grid" id="statusGrid">
+                <div class="grid-col active" onclick="updateGuide(this, '1차결제완료', '대금 지불이 완료되었습니다. 현지 센터로 배송 중입니다.')"><span class="grid-label">1차결제완료</span><div class="grid-count">1</div></div>
+                <div class="grid-col" onclick="updateGuide(this, '현지배송', '현지 판매자가 물류센터로 상품을 발송한 상태입니다.')"><span class="grid-label">현지배송</span><div class="grid-count">0</div></div>
+                <div class="grid-col" onclick="updateGuide(this, '통합진행', '여러 상품을 하나로 묶어 배송 준비 중입니다.')"><span class="grid-label">통합진행</span><div class="grid-count">0</div></div>
+                <div class="grid-col" onclick="updateGuide(this, '2차요청', '국제 배송비 측정이 완료되어 결제 요청 중입니다.')"><span class="grid-label">2차요청</span><div class="grid-count">0</div></div>
+                <div class="grid-col" onclick="updateGuide(this, '2차완료', '국제 배송비 결제가 완료되어 출고 대기 중입니다.')"><span class="grid-label">2차완료</span><div class="grid-count">0</div></div>
+                <div class="grid-col" onclick="updateGuide(this, '국제배송', '항공/선편을 통해 한국으로 배송 중입니다.')"><span class="grid-label">국제배송</span><div class="grid-count">1</div></div>
+                <div class="grid-col" onclick="updateGuide(this, '배송완료', '고객님께 배송이 완료된 주문건입니다.')"><span class="grid-label">배송완료</span><div class="grid-count">7</div></div>
+                <div class="grid-col" onclick="updateGuide(this, '실패', '낙찰 실패 또는 주문 취소된 내역입니다.')"><span class="grid-label">실패</span><div class="grid-count">34</div></div>
+                <div class="grid-col" onclick="updateGuide(this, '입찰요청', '경매 입찰이 예약되어 대기 중인 상태입니다.')"><span class="grid-label">입찰요청</span><div class="grid-count">0</div></div>
+                <div class="grid-col" style="border-right:none;" onclick="updateGuide(this, '낙찰승인', '경매 낙찰 후 구매 승인 대기 상태입니다.')"><span class="grid-label">낙찰승인</span><div class="grid-count">15</div></div>
             </div>
-            <div style="margin-top: 25px; background: #f8fbff; border-left: 5px solid var(--main-royal-blue); padding: 20px; border-radius: 0 12px 12px 0; display: flex; gap: 15px;">
+            <div id="guideBox" style="margin-top: 25px; background: #f8fbff; border-left: 5px solid var(--main-royal-blue); padding: 20px; border-radius: 0 12px 12px 0; display: flex; gap: 15px;">
                 <div style="font-size: 24px;">💡</div>
                 <div>
-                    <strong style="display:block; font-size:15px; color:var(--main-deep-blue); margin-bottom:5px;">1차결제완료</strong>
-                    <p style="font-size:14px; color:#666; margin:0;">대금 지불이 완료되었습니다. 현지 센터로 배송 중입니다.</p>
+                    <strong id="guideTitle" style="display:block; font-size:15px; color:var(--main-deep-blue); margin-bottom:5px;">1차결제완료</strong>
+                    <p id="guideDesc" style="font-size:14px; color:#666; margin:0;">대금 지불이 완료되었습니다. 현지 센터로 배송 중입니다.</p>
                 </div>
             </div>
+        </section>
+
+        <section class="content-card">
+            <h2 style="font-size: 20px; font-weight: 800; color: var(--main-deep-blue);">📦 최근 주문 내역</h2>
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>상품정보</th>
+                        <th>주문일자</th>
+                        <th>상태</th>
+                        <th>관리</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div style="display:flex; gap:15px; align-items:center;">
+                                <div class="prod-thumb" style="background-image: url('https://picsum.photos/200/200?random=11');"></div>
+                                <div>
+                                    <div style="font-weight:700; font-size:14px;">[피규어] 마비노기 영웅전 - 피오나 스태츄</div>
+                                    <div style="font-size:12px; color:#888; margin-top:3px;">주문번호: B20260128-001</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>2026-01-28</td>
+                        <td><span style="color:var(--main-royal-blue); font-weight:700;">국제배송 중</span></td>
+                        <td><button style="border:1px solid #ddd; padding:5px 12px; border-radius:4px; font-size:12px;">문의하기</button></td>
+                    </tr>
+                </tbody>
+            </table>
         </section>
     </div>
 </main>
@@ -139,24 +149,22 @@
 <script>
     async function initLayout() {
         try {
-            const [hRes, fRes] = await Promise.all([
-                fetch('header.html'),
-                fetch('footer.html')
-            ]);
+            const [hRes, fRes] = await Promise.all([ fetch('header.html'), fetch('footer.html') ]);
             document.getElementById('header-load').innerHTML = await hRes.text();
             document.getElementById('footer-load').innerHTML = await fRes.text();
-
-            // 현재 페이지 활성화 처리
             const activeMenu = document.getElementById('menu-mypage');
             if(activeMenu) activeMenu.parentElement.classList.add('active');
-            
-        } catch (e) {
-            console.error("Layout Load Error:", e);
-        } finally {
-            document.body.style.visibility = 'visible';
-        }
+        } catch (e) { console.error(e); } finally { document.body.style.visibility = 'visible'; }
     }
     initLayout();
+
+    // [기능 추가] 단계별 가이드 업데이트 함수
+    function updateGuide(el, title, desc) {
+        document.querySelectorAll('.grid-col').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById('guideTitle').innerText = title;
+        document.getElementById('guideDesc').innerText = desc;
+    }
 
     function openCalc(){ document.getElementById('calcModal').style.display = 'flex'; }
     function closeCalc(){ document.getElementById('calcModal').style.display = 'none'; }

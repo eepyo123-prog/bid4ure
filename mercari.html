@@ -15,56 +15,48 @@
             --footer-bg: #05102a;
         }
 
-        /* [1. 레이아웃 안정화] 로드 전 숨김 및 필수 높이 확보 */
-        body { 
-            font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; 
-            transition: background 0.3s; overflow-x: hidden; visibility: hidden; 
-        }
-        #header-load { min-height: 200px; } 
-
-        ul, p, h1, h2, h3 { margin: 0; padding: 0; list-style: none; }
-        a { text-decoration: none; color: inherit; transition: 0.2s; }
-        * { box-sizing: border-box; }
-
-        /* [2. 헤더/네비게이션 스타일 고정 - 여기서 깨짐을 방지합니다] */
-        .top-util { min-height: 40px; background: var(--main-deep-blue); }
-        header { min-height: 90px; background: #fff; border-bottom: 1px solid #f1f1f1; }
-        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; text-decoration: none; }
+        /* [1. 레이아웃 안정화] 로드 전 숨김 및 필수 공간 확보 */
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; visibility: hidden; overflow-x: hidden; }
         
-        /* 네비게이션 높이 51px 고정 및 Sticky 설정 */
-        .main-nav { background: var(--main-deep-blue); position: sticky; top: 0; z-index: 2000; height: 51px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        /* [2. 헤더 디자인 고정 - 파일 로드 전에도 이 크기만큼 자리를 잡습니다] */
+        .top-util { height: 40px; background: var(--main-deep-blue); display: flex; align-items: center; padding: 0 5%; }
+        header { height: 90px; background: #fff; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #f1f1f1; }
+        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); text-decoration: none; }
+        
+        /* [핵심] 네비게이션 높이 51px 고정 및 최상단 고정 */
+        .main-nav { background: var(--main-deep-blue); position: sticky; top: 0; z-index: 2000; height: 51px; }
         .main-nav ul { display: flex; justify-content: center; list-style: none; margin: 0; padding: 0; }
         .main-nav li a { display: block; padding: 15px 25px; color: #fff; font-weight: 600; text-decoration: none; font-size: 15px; }
-        .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
 
-        /* [3. 모드 전환 바 - 네비게이션 바로 아래(51px 지점) 밀착 고정] */
+        /* [핵심] 모드 전환 바 - 네비게이션(51px) 바로 아래에 딱 붙여서 고정 */
         .mode-switcher-bar { 
-            background: #fff; border-bottom: 1px solid #ddd; padding: 10px 5%; 
+            background: #fff; border-bottom: 1px solid #ddd; padding: 0 5%; 
             display: flex; justify-content: flex-end; align-items: center; 
-            position: sticky; top: 51px; z-index: 1900; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky; top: 51px; z-index: 1900; height: 50px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         .toggle-box { display: flex; background: #eee; border-radius: 20px; padding: 3px; }
-        .mode-btn { padding: 6px 15px; border-radius: 17px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .mode-btn { padding: 6px 15px; border-radius: 17px; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.2s; }
         .mode-btn.active { background: var(--mercari-red); color: #fff; }
 
-        /* [4. 공지사항(Ticker) 애니메이션 복구] */
+        /* [3. 공지사항 애니메이션 복구 - 깨짐 방지를 위해 직접 선언] */
         .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
         .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; z-index: 10; }
         .ticker-text-wrapper { overflow: hidden; white-space: nowrap; flex: 1; }
         .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; }
         @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* [5. 모드 제어 클래스] */
+        /* [4. 모드 제어 및 그리드] */
         .simple-only { display: block; }
         .pro-only { display: none !important; }
         body.pro-mode .simple-only { display: none !important; }
         body.pro-mode .pro-only { display: block !important; }
         body.pro-mode { background-color: #fff; }
 
-        .auction-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; max-width: 1350px; margin: 30px auto; padding: 0 5%; }
-        body.pro-mode .auction-grid { grid-template-columns: repeat(5, 1fr); gap: 15px; }
+        .auction-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 1300px; margin: 30px auto; padding: 0 5%; }
+        body.pro-mode .auction-grid { grid-template-columns: repeat(5, 1fr); }
         .auction-item { background: #fff; border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; transition: 0.3s; }
-        
+
         .is-logged-in .view-logout { display: none !important; }
         .is-logged-out .view-login { display: none !important; }
         footer { background: var(--footer-bg); color: #fff; padding: 50px 5%; margin-top: 50px; }
@@ -87,38 +79,22 @@
     <div class="mercari-hero" style="background: linear-gradient(rgba(10,31,77,0.85), rgba(10,31,77,0.85)), url('https://picsum.photos/1200/400?grayscale'); padding: 60px 5%; text-align: center; color: #fff;">
         <h1 style="font-size:32px; font-weight: 900;">MERCARI JP</h1>
         <p style="opacity: 0.9; margin-top: 10px;">가장 안전한 일본 중고장터 이용 경험</p>
-        <div style="max-width: 750px; margin: 25px auto 0; position: relative;">
-            <input type="text" placeholder="상품명 또는 번호 입력" style="width: 100%; padding: 18px 30px; border-radius: 40px; border: none; color:#333; outline:none;">
-            <button style="position: absolute; right: 8px; top: 7px; background: var(--mercari-red); color: #fff; border: none; padding: 11px 35px; border-radius: 30px; font-weight: bold;">검색</button>
-        </div>
     </div>
 </section>
 
 <section class="pro-only" style="padding: 20px 5%; border-bottom: 1px solid #eee;">
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <h2 style="font-size: 20px; font-weight: 800; color: var(--mercari-red);">PRO SEARCH</h2>
-        <div style="display: flex; gap: 10px;">
-            <input type="text" placeholder="전문가 빠른 검색" style="padding: 8px 15px; border: 1px solid #ddd; border-radius: 5px; width: 300px;">
-            <button style="background: #333; color: #fff; padding: 8px 20px; border-radius: 5px; font-size: 13px;">필터적용</button>
-        </div>
+        <input type="text" placeholder="전문가 빠른 검색" style="padding: 8px 15px; border: 1px solid #ddd; border-radius: 5px; width: 400px;">
     </div>
 </section>
 
-<div class="mercari-info-bar" style="background: #fff; border-bottom: 1px solid #eee; padding: 18px 5%; display: flex; justify-content: center; gap: 45px; align-items: center;">
-    <div style="font-size: 15px; font-weight: 700; color: #444;">📦 오사카 <b>직영물류</b> 검수</div>
-    <div style="font-size: 15px; font-weight: 700; color: #444;">💰 수수료 <b>200엔</b> 혁명</div>
-</div>
-
-<main>
-    <div class="auction-grid">
-        <div class="auction-item">
-            <a href="mercariinfo.html">
-                <div style="width: 100%; aspect-ratio: 1/1; background-image: url('https://picsum.photos/400/400?random=62'); background-size: cover;"></div>
-                <div style="padding: 18px;">
-                    <div style="font-size: 14px; font-weight: 500;">올리브 그린 슬랙스 M</div>
-                    <div style="font-size: 19px; font-weight: 800; margin-top: 10px;">900엔 <span style="font-size: 12px; color: #888; font-weight: normal;">(약 8,730원)</span></div>
-                </div>
-            </a>
+<main class="auction-grid">
+    <div class="auction-item">
+        <div style="width: 100%; aspect-ratio: 1/1; background-image: url('https://picsum.photos/400/400?random=62'); background-size: cover;"></div>
+        <div style="padding: 15px;">
+            <div style="font-size: 14px;">올리브 그린 슬랙스 M</div>
+            <div style="font-size: 18px; font-weight: 800; margin-top: 10px;">900엔</div>
         </div>
     </div>
 </main>
@@ -126,7 +102,6 @@
 <div id="footer-load"></div>
 
 <script>
-    // [핵심] 레이아웃 통합 로드 및 메뉴 활성화
     async function initLayout() {
         try {
             const [hRes, fRes] = await Promise.all([
@@ -136,12 +111,12 @@
             document.getElementById('header-load').innerHTML = await hRes.text();
             document.getElementById('footer-load').innerHTML = await fRes.text();
             
-            // 메루카리 메뉴 활성화
+            // 메뉴 활성화
             const activeMenu = document.getElementById('menu-mercari');
             if(activeMenu) activeMenu.parentElement.classList.add('active');
 
             if(document.body.classList.contains('is-logged-in')) toggleLogin(true);
-        } catch (e) { console.error(e); } finally { document.body.style.visibility = 'visible'; }
+        } catch (e) { console.error("파일 로드 실패:", e); } finally { document.body.style.visibility = 'visible'; }
     }
     initLayout();
 
@@ -158,12 +133,6 @@
             simpleBtn.classList.add('active');
             proBtn.classList.remove('active');
         }
-    }
-
-    function toggleLogin(l){ 
-        const b = document.getElementById('targetBody'); 
-        if(l){ b.classList.replace('is-logged-out', 'is-logged-in'); } 
-        else { b.classList.replace('is-logged-in', 'is-logged-out'); } 
     }
 </script>
 </body>

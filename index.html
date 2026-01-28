@@ -6,27 +6,36 @@
     <title>Bid4U - 프리미엄 통합 플랫폼</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* [1. 테마 및 초기화 - 디자인 보존을 위해 CSS는 여기에 남겨둡니다] */
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         :root {
             --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
             --footer-bg: #05102a; --point-orange: #ff8c00; --bg-grey: #f4f6f9;
             --border-light: #e1e5eb;
         }
-        /* 로딩 전 깜빡임 방지 */
-        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); visibility: hidden; overflow-x: hidden; }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; visibility: hidden; overflow-x: hidden; }
         
-        /* [핵심] 헤더/푸터 CSS를 여기에 두어야 불러온 직후 즉시 디자인이 입혀집니다 */
-        .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; min-height: 40px; }
-        header { padding: 25px 5%; text-align: center; background: #fff; min-height: 90px; }
-        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; text-decoration: none; }
-        .main-nav { background: var(--main-deep-blue); box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 2000; }
-        .main-nav ul { display: flex; justify-content: center; }
-        .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; }
-        .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        /* [핵심] 공지사항 흐르는 효과 CSS 복구 */
         .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
+        .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; z-index: 10; }
+        .ticker-text-wrapper { overflow: hidden; white-space: nowrap; flex: 1; }
+        .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; }
+        @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* [2. 본문 레이아웃 - 원본 디자인 그대로 유지] */
+        /* 상태 제어 클래스 */
+        .is-logged-in .view-logout { display: none !important; }
+        .is-logged-out .view-login { display: none !important; }
+        .is-logged-out .status-container { display: none !important; }
+
+        /* 레이아웃 스타일 고정 */
+        .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; min-height: 40px; }
+        header { padding: 25px 5%; text-align: center; background: #fff; border-bottom: 1px solid #f1f1f1; }
+        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; text-decoration: none; }
+        .main-nav { background: var(--main-deep-blue); position: sticky; top: 0; z-index: 2000; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .main-nav ul { display: flex; justify-content: center; list-style: none; margin: 0; padding: 0; }
+        .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; text-decoration: none; }
+        .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+        /* 본문 디자인 보존 */
         .main-content { padding: 30px 5%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 35px; }
         .hero-section { display: grid; grid-template-columns: 2.3fr 1fr; gap: 20px; height: 280px; }
         .hero-banner { background: linear-gradient(135deg, var(--main-deep-blue), var(--main-royal-blue)); border-radius: 15px; padding: 40px; color: white; height: 100%; display: flex; flex-direction: column; justify-content: center; position: relative; }
@@ -34,10 +43,6 @@
         .status-container { background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border-light); }
         .status-grid { display: grid; grid-template-columns: repeat(10, 1fr); border: 1px solid #eee; border-radius: 10px; overflow: hidden; }
         .grid-col { text-align: center; border-right: 1px solid #eee; padding: 15px 2px; background: #fff; }
-        
-        .is-logged-in .view-logout { display: none !important; }
-        .is-logged-out .view-login { display: none !important; }
-        .is-logged-out .status-container { display: none !important; }
         
         footer { background: var(--footer-bg); color: #fff; padding: 50px 5%; margin-top: 50px; }
         .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1200px; margin: 0 auto; text-align: left; }
@@ -52,16 +57,39 @@
         <div class="hero-banner">
             <h1 style="font-size: 30px; font-weight: 900; margin-bottom: 10px;">수수료 200엔의 혁명</h1>
             <p style="opacity: 0.9;">오사카 직영 물류센터 운영으로 더 빠르게</p>
+            <div style="position: absolute; bottom: 20px; right: 20px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 10px 15px; border-radius: 8px; font-size: 11px;">오늘의 면세 한도 ($150)<br><b>약 202,500원 미만</b> 구매 시 면세</div>
         </div>
-        <div class="side-auth-box">
+        
+        <div class="side-auth-box" id="authBox">
             <div class="login-form view-logout">
                 <input type="text" placeholder="아이디" style="width:100%; padding:12px; border:1px solid #eee; border-radius:6px; margin-bottom:8px;">
                 <input type="password" placeholder="비밀번호" style="width:100%; padding:12px; border:1px solid #eee; border-radius:6px; margin-bottom:8px;">
                 <button onclick="toggleLogin(true)" style="width:100%; background:var(--main-deep-blue); color:#fff; padding:12px; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">로그인</button>
             </div>
             <div class="member-info view-login">
-                <div style="font-weight: 900; text-align:center;">홍길동 님</div>
+                <div style="font-weight: 900; text-align:center; font-size: 18px;">홍길동 님</div>
+                <div style="text-align:center; margin-top:5px;"><span style="background:var(--point-orange); color:#fff; font-size:10px; padding:2px 8px; border-radius:10px; font-weight: bold;">Bronze 등급</span></div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border-top: 1px solid #f1f1f1; padding-top: 20px; margin-top: 15px; text-align: center;">
+                    <div><span style="font-size:11px; color:#888;">사이버머니</span><div style="font-size: 14px; font-weight: 800; color: var(--point-orange);">15,200원</div></div>
+                    <div><span style="font-size:11px; color:#888;">할인쿠폰</span><div style="font-size: 14px; font-weight: 800;">3장</div></div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="status-container">
+        <h3 style="font-size: 19px; font-weight: 800; color: var(--main-deep-blue); margin-bottom: 15px;">📊 대행신청 현황 (일본)</h3>
+        <div class="status-grid">
+            <div class="grid-col"><span style="font-size:9px; display:block;">실패</span>🗑️<div style="font-size:14px; font-weight:800;">34</div></div>
+            <div class="grid-col"><span style="font-size:9px; display:block;">입찰요청</span>📝<div style="font-size:14px; font-weight:800;">0</div></div>
+            <div class="grid-col"><span style="font-size:9px; display:block;">낙찰승인</span>🔨<div style="font-size:14px; font-weight:800; color:var(--point-orange);">16</div></div>
+            <div class="grid-col"><span style="font-size:9px; display:block;">1차결제</span>💳<div style="font-size:14px; font-weight:800;">0</div></div>
+            <div class="grid-col"><span style="font-size:9px; display:block;">현지배송</span>🚚<div style="font-size:14px; font-weight:800;">0</div></div>
+            <div class="grid-col"><span style="font-size:9px; display:block;">통합진행</span>📦<div style="font-size:14px; font-weight:800;">0</div></div>
+            <div class="grid-col"><span style="font-size:9px; display:block;">2차요청</span>📑<div style="font-size:14px; font-weight:800;">0</div></div>
+            <div class="grid-col"><span style="font-size:9px; display:block;">2차완료</span>💳<div style="font-size:14px; font-weight:800;">0</div></div>
+            <div class="grid-col"><span style="font-size:9px; display:block;">국제배송</span>✈️<div style="font-size:14px; font-weight:800; color:var(--point-orange);">1</div></div>
+            <div class="grid-col" style="border-right:none;"><span style="font-size:9px; display:block;">배송완료</span>🎁<div style="font-size:14px; font-weight:800; color:var(--point-orange);">7</div></div>
         </div>
     </div>
 </main>
@@ -69,9 +97,9 @@
 <div id="footer-load"></div>
 
 <script>
-    // [핵심] 레이아웃 로드 및 깨짐 방지 스크립트
     async function initLayout() {
         try {
+            // [1] 헤더와 푸터 병렬 로드
             const [hRes, fRes] = await Promise.all([
                 fetch('header.html'),
                 fetch('footer.html')
@@ -80,29 +108,34 @@
             document.getElementById('header-load').innerHTML = await hRes.text();
             document.getElementById('footer-load').innerHTML = await fRes.text();
 
-            // 현재 메뉴 활성화
+            // [2] 메뉴 활성화 처리
             const path = window.location.pathname.split("/").pop() || 'index.html';
             const menuId = 'menu-' + path.replace('.html', '');
-            const target = document.getElementById(menuId);
-            if(target) target.parentElement.classList.add('active');
+            const targetMenu = document.getElementById(menuId);
+            if(targetMenu) targetMenu.parentElement.classList.add('active');
 
-            // 로그인 상태 동기화
-            if(document.body.classList.contains('is-logged-in')) toggleLogin(true);
+            // [3] 로그인 상태 동기화 (헤더가 로드된 후에 실행되어야 함)
+            if(document.body.classList.contains('is-logged-in')) {
+                toggleLogin(true);
+            }
 
         } catch (e) {
-            console.error("Layout Fetch Error:", e);
+            console.error("Layout Load Error:", e);
         } finally {
-            // 모든 로드 완료 후 화면 표시 (깜빡임 방지)
+            // [4] 모든 로드가 끝나면 화면 표시
             document.body.style.visibility = 'visible';
         }
     }
 
     initLayout();
 
-    function toggleLogin(l){
-        const b = document.getElementById('mainBody');
-        if(l){ b.classList.remove('is-logged-out'); b.classList.add('is-logged-in'); }
-        else { b.classList.remove('is-logged-in'); b.classList.add('is-logged-out'); }
+    function toggleLogin(isLogin){
+        const body = document.getElementById('mainBody');
+        if(isLogin){
+            body.classList.replace('is-logged-out', 'is-logged-in');
+        } else {
+            body.classList.replace('is-logged-in', 'is-logged-out');
+        }
     }
 </script>
 </body>

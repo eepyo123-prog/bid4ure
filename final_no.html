@@ -12,6 +12,7 @@
             --point-orange: #ff8c00;
             --bg-grey: #f4f6f9;
             --border-light: #e1e5eb;
+            --mercari-red: #ff0021;
         }
 
         body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; word-break: keep-all; }
@@ -20,67 +21,68 @@
         .calc-container { max-width: 900px; margin: 20px auto; padding: 15px; }
         .page-title { text-align: center; color: var(--main-deep-blue); font-size: 1.5rem; font-weight: 800; margin-bottom: 20px; }
 
-        /* [2. 카드 레이아웃] */
+        /* [2. 신규: 관세 안내 섹션 스타일] */
+        .customs-alert {
+            background: #fff5f5; border: 1px solid #feb2b2; border-radius: 12px;
+            padding: 15px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 4px 10px rgba(197, 48, 48, 0.05);
+        }
+        .customs-info h3 { color: #c53030; font-size: 14px; font-weight: 800; margin: 0 0 4px 0; }
+        .customs-info p { font-size: 12px; color: #744210; margin: 0; }
+        .customs-price { text-align: right; }
+        .customs-price .usd { display: block; font-size: 11px; color: #999; }
+        .customs-price .jpy { font-size: 18px; font-weight: 900; color: #c53030; }
+
+        /* [3. 카드 레이아웃] */
         .calc-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 20px; border: 1px solid #eee; }
         .card-header { background: var(--main-deep-blue); color: #fff; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
         .card-body { padding: 20px; }
 
-        /* [3. 폼 스타일] */
+        /* [4. 폼 스타일] */
         .form-group { margin-bottom: 15px; }
         .form-label { display: block; font-weight: 700; margin-bottom: 8px; color: var(--main-deep-blue); font-size: 14px; }
-        .form-input { width: 100%; padding: 12px; border: 1px solid var(--border-light); border-radius: 8px; font-size: 16px; outline: none; -webkit-appearance: none; }
-        .form-input:focus { border-color: var(--main-royal-blue); }
+        .form-input { width: 100%; padding: 12px; border: 1px solid var(--border-light); border-radius: 8px; font-size: 16px; outline: none; }
 
-        /* [4. 옵션 그리드 - 모바일 대응] */
+        /* [5. 옵션 그리드] */
         .option-title { font-size: 13px; font-weight: bold; margin: 20px 0 10px; color: #555; }
-        .option-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); 
-            gap: 8px; 
-            margin-bottom: 20px; 
-        }
-        .option-item {
-            border: 1px solid var(--border-light); border-radius: 8px; padding: 10px 5px; text-align: center; 
-            background: #fff; cursor: pointer; font-size: 12px; transition: 0.2s;
-        }
+        .option-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; margin-bottom: 20px; }
+        .option-item { border: 1px solid var(--border-light); border-radius: 8px; padding: 10px 5px; text-align: center; background: #fff; cursor: pointer; font-size: 12px; transition: 0.2s; }
         .option-item span { display: block; font-size: 10px; color: #999; margin-top: 2px; }
         .option-item.active { border-color: var(--point-orange); background: #fff8f0; color: var(--point-orange); font-weight: bold; }
 
         .advanced-options { background: #f8faff; padding: 15px; border-radius: 10px; border: 1px solid #eef2ff; margin-bottom: 20px; }
-        .btn-calc { width: 100%; padding: 16px; background: var(--point-orange); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        .btn-calc { width: 100%; padding: 16px; background: var(--point-orange); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
 
-        /* [5. 결과 화면] */
+        /* [6. 결과 화면] */
         #result-area { display: none; margin-top: 25px; }
-        .result-card { border: 2px solid var(--main-deep-blue); }
         .price-list { list-style: none; padding: 0; border-top: 1px dashed #eee; padding-top: 15px; margin-bottom: 15px; }
         .price-list li { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; color: #555; }
-        .price-list li.bold { font-weight: bold; color: var(--main-deep-blue); background: #f8faff; padding: 10px; border-radius: 6px; margin-top: 5px; }
+        .price-list li.bold { font-weight: bold; color: var(--main-deep-blue); background: #f8faff; padding: 10px; border-radius: 6px; }
 
-        /* [6. 결과 테이블 모바일 스크롤] */
-        .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 15px; border-radius: 8px; border: 1px solid #eee; }
+        .table-wrapper { overflow-x: auto; margin-top: 15px; border-radius: 8px; border: 1px solid #eee; }
         .grade-table { width: 100%; border-collapse: collapse; min-width: 300px; background: #fff; }
-        .grade-table th { background: #f1f3f8; color: var(--main-deep-blue); padding: 10px; font-size: 12px; text-align: center; }
+        .grade-table th { background: #f1f3f8; color: var(--main-deep-blue); padding: 10px; font-size: 12px; }
         .grade-table td { padding: 10px; text-align: center; border-bottom: 1px solid #eee; font-size: 12px; }
         .grade-table .best-price { color: var(--point-orange); font-weight: bold; }
 
-        .disclaimer { font-size: 11px; color: #999; text-align: center; margin-top: 15px; padding: 0 10px; }
-
-        /* [7. 미디어 쿼리 - 태블릿 이상] */
-        @media (min-width: 768px) {
-            .calc-container { padding: 30px; }
-            .page-title { font-size: 28px; }
-            .option-grid { grid-template-columns: repeat(4, 1fr); }
-            .card-header { font-size: 16px; padding: 15px 20px; }
-            .card-body { padding: 30px; }
-            .price-list li { font-size: 14px; }
-            .grade-table th, .grade-table td { font-size: 14px; padding: 12px; }
-        }
+        .disclaimer { font-size: 11px; color: #999; text-align: center; margin-top: 15px; }
     </style>
 </head>
 <body>
 
 <div class="calc-container">
     <h1 class="page-title">Bid4U 회원 등급별 계산기</h1>
+
+    <div class="customs-alert">
+        <div class="customs-info">
+            <h3>⚠️ 오늘의 무관세 마지노선</h3>
+            <p>자가사용 목적 기준 (미화 $150 미만)</p>
+        </div>
+        <div class="customs-price">
+            <span class="usd">$150.00</span>
+            <span class="jpy" id="customsLimitJPY">약 22,150￥</span>
+        </div>
+    </div>
 
     <div class="calc-card">
         <div class="card-header">
@@ -114,8 +116,6 @@
                     <div class="option-item" data-fee="600">80사이즈<span>600￥</span></div>
                     <div class="option-item" data-fee="800">100사이즈<span>800￥</span></div>
                     <div class="option-item" data-fee="1000">120사이즈<span>1000￥</span></div>
-                    <div class="option-item" data-fee="1200">140사이즈<span>1200￥</span></div>
-                    <div class="option-item" data-fee="1500">150이상<span>1500￥</span></div>
                 </div>
             </div>
 
@@ -124,28 +124,22 @@
     </div>
 
     <div id="result-area">
-        <div class="calc-card result-card">
+        <div class="calc-card" style="border: 2px solid var(--main-deep-blue);">
             <div class="card-header" style="background:var(--main-royal-blue)">최종 견적 결과</div>
             <div class="card-body">
                 <ul class="price-list">
                     <li><span>상품 원화 환산가</span><span id="wonPrice">0 원</span></li>
                     <li class="bold"><span>최종 대행가격 (수수료 포함)</span><span id="proxyPrice">0 원</span></li>
                 </ul>
-
                 <div class="option-title" style="text-align:center;">🏆 등급별 총 합계 (배송비 포함)</div>
                 <div class="table-wrapper">
                     <table class="grade-table">
                         <thead>
-                            <tr>
-                                <th>회원 등급</th>
-                                <th>배송 할인</th>
-                                <th>최종 합계</th>
-                            </tr>
+                            <tr><th>회원 등급</th><th>배송 할인</th><th>최종 합계</th></tr>
                         </thead>
                         <tbody id="gradeResultBody"></tbody>
                     </table>
                 </div>
-                
                 <div class="disclaimer">
                     ※ 최종 합계 = 상품가 + 대행가격 + 할인 배송비<br>
                     ※ 오사카 직영 물류센터 운영을 통해 최적의 가격을 제공합니다.
@@ -159,7 +153,6 @@
     const currentInspect = { fee: 0 };
     const currentSize = { fee: 0 };
     
-    // 등급별 데이터 (수정 가능)
     const grades = [
         { id: "BRONZE", discount: 0 },
         { id: "SILVER", discount: 500 },
@@ -168,6 +161,13 @@
         { id: "DIAMOND", discount: 2000 },
         { id: "B2B", discount: 3000 }
     ];
+
+    // [기능 추가] 관세컷 자동 계산
+    function updateCustomsLimit() {
+        const usdToJpyRate = 147.6; // 현재 시점 기준 환율 보정값
+        const limitJPY = Math.floor(150 * usdToJpyRate);
+        document.getElementById('customsLimitJPY').innerText = `약 ${limitJPY.toLocaleString()}￥`;
+    }
 
     function setupGrid(gridId, storageObj) {
         const items = document.querySelectorAll(`#${gridId} .option-item`);
@@ -180,21 +180,22 @@
         });
     }
 
-    setupGrid('inspectionGrid', currentInspect);
-    setupGrid('sizeGrid', currentSize);
+    window.onload = function() {
+        updateCustomsLimit();
+        setupGrid('inspectionGrid', currentInspect);
+        setupGrid('sizeGrid', currentSize);
+    };
 
     function calculate() {
         const price = parseFloat(document.getElementById('prodPrice').value) || 0;
         const weight = parseFloat(document.getElementById('prodWeight').value) || 0;
-        const rate = 9.94; // 고정 환율 예시
+        const rate = 9.94;
 
         if (price <= 0) { alert("상품 가격을 입력해주세요."); return; }
 
         const wonPrice = Math.round(price * rate);
-        // 기본 200엔 수수료 + 검수비 + 박스비
         const proxyPriceWon = Math.round((200 + currentInspect.fee + currentSize.fee) * rate); 
 
-        // 배송비 로직 (단순 시뮬레이션)
         let baseShipFee = 0;
         if (weight > 0) {
             baseShipFee = 12000 + (Math.ceil(weight * 2) / 2 - 0.5) * 1600;
@@ -210,7 +211,6 @@
         grades.forEach(g => {
             const finalShipFee = Math.max(0, baseShipFee - g.discount);
             const total = wonPrice + proxyPriceWon + finalShipFee;
-            
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td><strong>${g.id}</strong></td>
@@ -220,10 +220,8 @@
             tbody.appendChild(tr);
         });
 
-        // 결과 영역으로 부드럽게 스크롤
         document.getElementById('result-area').scrollIntoView({ behavior: 'smooth' });
     }
 </script>
-
 </body>
 </html>

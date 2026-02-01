@@ -8,93 +8,103 @@
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         
-        /* [1. 테마 변수] */
         :root {
             --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
             --footer-bg: #05102a; --point-orange: #ff8c00; --bg-grey: #f4f6f9;
             --border-light: #e1e5eb;
         }
-        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; overflow-x: hidden; }
-        * { box-sizing: border-box; }
-        a { text-decoration: none; color: inherit; }
 
-        /* [2. 공통 요소 CSS - header.html 로드 시 필요] */
-        .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
-        header { padding: 25px 5%; text-align: center; background: #fff; border-bottom: 1px solid #f1f1f1; }
-        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
-        .main-nav { background: var(--main-deep-blue); box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
-        .main-nav ul { display: flex; justify-content: center; list-style: none; padding: 0; margin: 0; }
-        .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; }
-        /* Active 메뉴 강조 스타일 */
+        /* [1. 레이아웃 안정화] 로딩 전 숨김 처리 */
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; visibility: hidden; overflow-x: hidden; }
+
+        /* [2. 헤더 스타일 고정 - 로고 및 네비 중앙 정렬] */
+        .top-util { height: 40px; background: var(--main-deep-blue); color: #fff; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; font-size: 12px; }
+        header { height: 90px; background: #fff; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #eee; text-align: center; }
+        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); text-decoration: none; display: block; margin: 0 auto; }
+        
+        .main-nav { background: var(--main-deep-blue); position: sticky; top: 0; z-index: 2000; height: 51px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .main-nav ul { display: flex; justify-content: center; list-style: none; margin: 0; padding: 0; width: 100%; }
+        .main-nav li a { display: block; padding: 15px 25px; color: #fff; font-weight: 600; text-decoration: none; font-size: 15px; }
         .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
 
-        /* [3. 퀵 메뉴 & 모달 CSS] */
-        .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 1000; background: #555; border-radius: 8px 0 0 8px; overflow: hidden; }
-        .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,31,77,0.8); z-index: 5000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-        .modal-content { background: #fff; width: 95%; max-width: 950px; height: 85vh; border-radius: 20px; overflow: hidden; position: relative; }
+        /* [3. 공지사항 스타일 - 중복 방지용 CSS] */
+        .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; border-bottom: 1px solid #222; }
+        .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; }
+        .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; white-space: nowrap; }
+        @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* [4. 라쿠텐 전용 레이아웃] */
-        .main-content { padding: 30px 5%; max-width: 1200px; margin: 0 auto; }
-        .search-wrap { background: #fff; border-radius: 15px; padding: 25px; border: 1px solid var(--border-light); margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
-        .search-title { font-size: 19px; font-weight: 800; color: var(--main-deep-blue); margin-bottom: 18px; border-bottom: 2px solid var(--main-deep-blue); padding-bottom: 8px; }
-        .search-box { display: flex; gap: 10px; margin-bottom: 20px; }
-        .search-box input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; outline: none; }
-        .btn-search { background: var(--main-deep-blue); color: #fff; padding: 0 30px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        .filter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; font-size: 13px; }
-        .filter-grid select, .filter-grid input { width: 100%; padding: 8px; border: 1px solid #eee; border-radius: 4px; outline: none; }
-
+        /* [4. 라쿠텐 검색 레이아웃] */
+        .main-content { padding: 30px 5%; max-width: 1240px; margin: 0 auto; }
+        .search-wrap { background: #fff; border-radius: 20px; padding: 30px; border: 1px solid var(--border-light); margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
+        .search-title { font-size: 22px; font-weight: 800; color: var(--main-deep-blue); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        
         /* [5. 상품 그리드] */
-        .rakuten-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-        .prod-card { background: #fff; border: 1px solid #eee; border-radius: 12px; overflow: hidden; transition: 0.3s; }
-        .prod-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-        .prod-img { width: 100%; aspect-ratio: 1/1; background-color: #f9f9f9; background-size: contain; background-repeat: no-repeat; background-position: center; border-bottom: 1px solid #f1f1f1; }
-        .prod-info { padding: 15px; }
-        .prod-name { font-size: 13px; font-weight: bold; color: #444; height: 40px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-bottom: 10px; }
-        .prod-price { color: var(--main-deep-blue); font-weight: 800; font-size: 16px; }
+        .rakuten-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; }
+        .prod-card { background: #fff; border: 1px solid #eee; border-radius: 15px; overflow: hidden; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .prod-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
+        .prod-img { width: 100%; aspect-ratio: 1/1; background-color: #fff; background-size: contain; background-repeat: no-repeat; background-position: center; border-bottom: 1px solid #f8fafc; }
+        .prod-info { padding: 20px; }
+        .prod-name { font-size: 14px; font-weight: 600; color: #1e293b; height: 44px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-bottom: 15px; line-height: 1.5; }
+        .prod-price { color: var(--main-deep-blue); font-weight: 800; font-size: 18px; }
         .price-krw { font-size: 11px; color: var(--point-orange); font-weight: normal; margin-left: 5px; }
 
-        @media (max-width: 768px) { .rakuten-grid { grid-template-columns: repeat(2, 1fr); } }
+        /* 우측 퀵 메뉴 */
+        .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 3000; background: #555; border-radius: 8px 0 0 8px; box-shadow: -2px 0 10px rgba(0,0,0,0.1); }
+        .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
+
+        /* [6. 푸터 디자인 복구 - 3열 정렬] */
+        footer { background: var(--footer-bg); color: #fff; padding: 50px 5%; margin-top: 50px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; max-width: 1200px; margin: 0 auto; text-align: left; }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,31,77,0.8); z-index: 4000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+
+        @media (max-width: 1024px) { .rakuten-grid { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body class="is-logged-out" id="mainBody">
 
 <div id="header-load"></div>
 
+<div class="side-quick">
+    <div class="side-btn" onclick="openCalc()"><i>🧮</i>계산기</div>
+    <div class="side-btn"><i>💬</i>문의</div>
+    <div onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="background:#333; color:#fff; text-align:center; padding:10px; font-size:10px; cursor:pointer; border-radius: 0 0 0 8px;">TOP</div>
+</div>
+
 <div class="modal-overlay" id="calcModal">
-    <div class="modal-content">
-        <span style="position:absolute; right:20px; top:15px; font-size:30px; cursor:pointer; z-index: 9999;" onclick="closeCalc()">&times;</span>
+    <div style="background: #fff; width: 95%; max-width: 950px; height: 80vh; border-radius: 25px; position: relative; overflow: hidden;">
+        <span style="position:absolute; right:20px; top:15px; font-size:30px; cursor:pointer; z-index: 9999; color:#333;" onclick="closeCalc()">&times;</span>
         <iframe src="final_no.html" style="width:100%; height:100%; border:none;"></iframe>
     </div>
 </div>
 
 <main class="main-content">
     <section class="search-wrap">
-        <h2 class="search-title">라쿠텐 상품 검색</h2>
-        <div class="search-box">
-            <input type="text" placeholder="검색어를 입력하세요 (예: 낚시 릴, 프라모델)">
-            <button class="btn-search">검색하기</button>
+        <h2 class="search-title">🇯🇵 라쿠텐 실시간 검색</h2>
+        <div style="display: flex; gap: 10px; margin-bottom: 25px;">
+            <input type="text" placeholder="일본 라쿠텐의 모든 상품을 한국어로 검색해보세요" style="flex: 1; padding: 15px 20px; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 15px; outline: none; background: #f8fafc;">
+            <button style="background: var(--main-deep-blue); color: #fff; padding: 0 40px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.2s;">검색</button>
         </div>
-        <div class="filter-grid">
-            <select><option>전체 카테고리</option></select>
-            <input type="number" placeholder="최소 가격">
-            <input type="number" placeholder="최대 가격">
-            <select><option>인기상품순</option></select>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
+            <select style="padding: 10px; border: 1px solid #eee; border-radius: 8px; background: #fff; font-size: 13px;"><option>카테고리 전체</option></select>
+            <input type="number" placeholder="최소 가격" style="padding: 10px; border: 1px solid #eee; border-radius: 8px; font-size: 13px;">
+            <input type="number" placeholder="최대 가격" style="padding: 10px; border: 1px solid #eee; border-radius: 8px; font-size: 13px;">
+            <select style="padding: 10px; border: 1px solid #eee; border-radius: 8px; background: #fff; font-size: 13px;"><option>인기상품순</option></select>
         </div>
     </section>
 
     <div class="rakuten-grid">
         <div class="prod-card">
-            <div class="prod-img" style="background-image: url('https://picsum.photos/300/300?random=11');"></div>
+            <div class="prod-img" style="background-image: url('https://picsum.photos/400/400?random=81');"></div>
             <div class="prod-info">
-                <div class="prod-name">MG 1/100 사자비 Ver.Ka 건프라</div>
+                <div class="prod-name">MG 1/100 사자비 Ver.Ka 한정판 건프라</div>
                 <div class="prod-price">9,800￥ <span class="price-krw">(약 97,412원)</span></div>
             </div>
         </div>
         <div class="prod-card">
-            <div class="prod-img" style="background-image: url('https://picsum.photos/300/300?random=12');"></div>
+            <div class="prod-img" style="background-image: url('https://picsum.photos/400/400?random=82');"></div>
             <div class="prod-info">
-                <div class="prod-name">시마노 22 스테라 스피닝 릴</div>
+                <div class="prod-name">시마노 22 스테라 C3000XG 스피닝 릴</div>
                 <div class="prod-price">78,500￥ <span class="price-krw">(약 780,290원)</span></div>
             </div>
         </div>
@@ -104,35 +114,22 @@
 <div id="footer-load"></div>
 
 <script>
-    // 공통 컴포넌트 로드 함수
-    async function loadConfig() {
-        // 헤더 로드
-        const headerRes = await fetch('header.html');
-        document.getElementById('header-load').innerHTML = await headerRes.text();
+    async function initLayout() {
+        try {
+            const [hRes, fRes] = await Promise.all([ fetch('header.html'), fetch('footer.html') ]);
+            document.getElementById('header-load').innerHTML = await hRes.text();
+            document.getElementById('footer-load').innerHTML = await fRes.text();
 
-        // 푸터 로드
-        const footerRes = await fetch('footer.html');
-        document.getElementById('footer-load').innerHTML = await footerRes.text();
-
-        // [핵심] 현재 페이지 메뉴 강조 (Active)
-        const filename = window.location.pathname.split("/").pop() || 'index.html';
-        const menuId = 'menu-' + filename.replace('.html', '').replace('auctions2', 'auctions2');
-        const activeMenu = document.getElementById(menuId);
-        if(activeMenu) activeMenu.classList.add('active');
+            // 현재 페이지 활성화 (rakuten.html)
+            const activeMenu = document.getElementById('menu-rakuten');
+            if(activeMenu) activeMenu.parentElement.classList.add('active');
+        } catch (e) { console.error(e); } finally { document.body.style.visibility = 'visible'; }
     }
-
-    loadConfig();
+    initLayout();
 
     function openCalc(){ document.getElementById('calcModal').style.display = 'flex'; }
     function closeCalc(){ document.getElementById('calcModal').style.display = 'none'; }
-    
-    // 로그인 상태 토글 함수 (헤더 로드 후 작동)
-    function toggleLogin(l){ 
-        const b = document.getElementById('mainBody'); 
-        if(l){ b.classList.remove('is-logged-out'); b.classList.add('is-logged-in'); } 
-        else { b.classList.remove('is-logged-in'); b.classList.add('is-logged-out'); } 
-    }
 </script>
-
 </body>
 </html>
+

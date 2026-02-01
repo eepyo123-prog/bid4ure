@@ -3,98 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bid4U - 대량 구매대행 신청</title>
+    <title>Bid4U - 개인구매대행 신청</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         
-        /* [1. 공통 테마 및 초기화] */
         :root {
             --main-deep-blue: #0a1f4d; --main-royal-blue: #1e3a8a; 
-            --footer-bg: #05102a; --point-orange: #ff8c00; --bg-grey: #f4f6f9;
-            --border-light: #e1e5eb; --bid-red: #e60012;
+            --point-orange: #ff8c00; --bg-grey: #f4f6f9; --border-light: #e1e5eb;
+            --footer-bg: #05102a; --bid-red: #e60012;
         }
-        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; line-height: 1.6; }
-        ul, p, h1, h2, h3 { margin: 0; padding: 0; list-style: none; }
-        a { text-decoration: none; color: inherit; transition: 0.2s; }
-        * { box-sizing: border-box; }
 
-        /* [2. 공통 요소 CSS - header.html 로드 시 필요] */
-        .top-util { padding: 10px 5%; display: flex; justify-content: space-between; background: var(--main-deep-blue); color: #fff; font-size: 12px; align-items: center; }
-        header { padding: 25px 5%; text-align: center; background: #fff; }
-        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); letter-spacing: -1px; }
-        .main-nav { background: var(--main-deep-blue); box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 2000; }
-        .main-nav ul { display: flex; justify-content: center; }
-        .main-nav li a { display: block; padding: 15px 25px; font-weight: 600; color: rgba(255,255,255,0.9); font-size: 15px; }
-        .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        /* [1. 레이아웃 안정화] 로딩 전 숨김 처리 */
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background-color: var(--bg-grey); color: #333; visibility: hidden; overflow-x: hidden; }
+
+        /* [2. 헤더 스타일 고정 - 로고 중앙 정렬] */
+        .top-util { height: 40px; background: var(--main-deep-blue); color: #fff; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; font-size: 12px; }
+        header { height: 90px; background: #fff; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #eee; text-align: center; }
+        .logo { font-size: 32px; font-weight: 900; color: var(--main-deep-blue); text-decoration: none; display: block; margin: 0 auto; }
         
-        /* 띠 공지사항(Ticker) 스타일 유지 */
-        .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; }
+        .main-nav { background: var(--main-deep-blue); position: sticky; top: 0; z-index: 2000; height: 51px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .main-nav ul { display: flex; justify-content: center; list-style: none; margin: 0; padding: 0; width: 100%; }
+        .main-nav li a { display: block; padding: 15px 25px; color: #fff; font-weight: 600; text-decoration: none; font-size: 15px; }
+        .main-nav li.active { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+        /* [3. 공지사항 스타일 - 중복 방지용 CSS] */
+        .ticker { background: #111; color: #bbb; height: 40px; overflow: hidden; display: flex; align-items: center; font-size: 13px; border-bottom: 1px solid #222; }
         .ticker-label { background: var(--point-orange); padding: 0 20px; height: 100%; display: flex; align-items: center; font-weight: bold; color: #fff; flex-shrink: 0; }
         .ticker-text { display: inline-block; padding-left: 100%; animation: ticker-scroll 30s linear infinite; white-space: nowrap; }
         @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* [3. 오퍼 페이지 특화 스타일] */
-        .main-content { padding: 30px 5%; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 240px 1fr; gap: 30px; }
-        .side-nav li.active a { background: var(--main-royal-blue); color: #fff; font-weight: bold; }
-        .product-item-card { border: 1px solid #eee; border-radius: 12px; padding: 20px; margin-bottom: 20px; background: #fff; position: relative; transition: 0.3s; }
-        .item-count-label { position: absolute; left: -10px; top: -10px; background: var(--main-deep-blue); color: #fff; padding: 2px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
-        .btn-add-product { width: 100%; padding: 15px; border: 2px dashed #ddd; background: #fafafa; color: var(--main-royal-blue); font-weight: 800; border-radius: 10px; cursor: pointer; }
+        /* [4. 오퍼 페이지 레이아웃] */
+        .main-content { padding: 30px 5%; max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 260px 1fr; gap: 30px; }
+        .side-menu-box { display: flex; flex-direction: column; gap: 20px; }
+        .user-profile { background: #fff; border: 1px solid var(--border-light); border-radius: 15px; padding: 25px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .side-nav-card { background: #fff; border: 1px solid var(--border-light); border-radius: 15px; overflow: hidden; }
+        .side-nav-card li a { display: block; padding: 16px 20px; font-size: 14px; border-bottom: 1px solid #f8f9fa; color: #555; text-decoration: none; }
+        .side-nav-card li.active a { background: var(--main-royal-blue); color: #fff; font-weight: 700; }
+
+        .content-card { background: #fff; border: 1px solid var(--border-light); border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
+        .product-item-card { border: 1px solid #eee; border-radius: 15px; padding: 25px; margin-bottom: 20px; background: #fff; position: relative; transition: 0.3s; }
+        .item-count-label { position: absolute; left: 15px; top: -12px; background: var(--main-deep-blue); color: #fff; padding: 4px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .btn-add-product { width: 100%; padding: 20px; border: 2px dashed #cbd5e1; background: #f8fafc; color: var(--main-royal-blue); font-weight: 800; border-radius: 15px; cursor: pointer; transition: 0.2s; }
+        .btn-add-product:hover { background: #f1f5f9; border-color: var(--main-royal-blue); }
+
+        /* 우측 퀵 메뉴 */
+        .side-quick { position: fixed; right: 0; top: 200px; width: 70px; z-index: 3000; background: #555; border-radius: 8px 0 0 8px; box-shadow: -2px 0 10px rgba(0,0,0,0.1); }
+        .side-btn { display: flex; flex-direction: column; align-items: center; padding: 12px 5px; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
+
+        /* [5. 푸터 디자인 복구 - 3열 정렬] */
+        footer { background: var(--footer-bg); color: #fff; padding: 50px 5%; margin-top: 50px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; max-width: 1200px; margin: 0 auto; text-align: left; }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,31,77,0.8); z-index: 4000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
     </style>
 </head>
 <body id="mainBody">
 
 <div id="header-load"></div>
 
+<div class="side-quick">
+    <div class="side-btn" onclick="openCalc()"><i>🧮</i>계산기</div>
+    <div class="side-btn"><i>💬</i>문의</div>
+    <div onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="background:#333; color:#fff; text-align:center; padding:10px; font-size:10px; cursor:pointer; border-radius: 0 0 0 8px;">TOP</div>
+</div>
+
 <main class="main-content">
-    <aside class="side-menu-box" style="display: flex; flex-direction: column; gap: 20px;">
-        <div class="user-profile" style="background: #fff; border: 1px solid var(--border-light); border-radius: 12px; padding: 20px; text-align: center;">
-            <div style="font-weight: 900; font-size: 18px;">홍길동 님</div>
-            <div class="user-grade" style="display: inline-block; background: var(--point-orange); color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 10px; margin-top: 5px;">BRONZE 등급</div>
+    <aside class="side-menu-box">
+        <div class="user-profile">
+            <div style="font-weight: 900; font-size: 20px;">홍길동 님</div>
+            <div style="display: inline-block; background: var(--point-orange); color: #fff; font-size: 11px; padding: 4px 12px; border-radius: 20px; margin-top: 10px; font-weight: 800;">BRONZE 등급</div>
         </div>
-        <ul class="side-nav" style="background: #fff; border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden;">
-            <li><a href="mypage.html" style="display: block; padding: 15px 20px; font-size: 14px; border-bottom: 1px solid #f1f1f1;">나의 지갑</a></li>
-            <li><a href="#" style="display: block; padding: 15px 20px; font-size: 14px; border-bottom: 1px solid #f1f1f1;">대행신청 현황</a></li>
-            <li class="active"><a href="offer.html" style="display: block; padding: 15px 20px; font-size: 14px; border-bottom: 1px solid #f1f1f1;">개인구매대행 신청</a></li>
-            <li><a href="#" style="display: block; padding: 15px 20px; font-size: 14px;">회원정보 수정</a></li>
+        <ul class="side-nav-card">
+            <li><a href="mypage.html">나의 지갑</a></li>
+            <li><a href="#">대행신청 현황</a></li>
+            <li class="active"><a href="offer.html">개인구매대행 신청</a></li>
+            <li><a href="#">회원정보 수정</a></li>
         </ul>
     </aside>
 
     <div class="content-section">
-        <section class="content-card" style="background: #fff; border: 1px solid var(--border-light); border-radius: 15px; padding: 25px;">
-            <h2 class="section-title" style="font-size: 18px; font-weight: 800; color: var(--main-deep-blue); margin-bottom: 20px; border-bottom: 2px solid #f1f1f1; padding-bottom: 10px;">📦 개인구매대행 멀티 신청</h2>
+        <section class="content-card">
+            <h2 style="font-size: 22px; font-weight: 800; color: var(--main-deep-blue); margin-bottom: 25px; display: flex; align-items: center; gap: 10px;">
+                📦 개인구매대행 멀티 신청
+            </h2>
+            
             <div id="product-list">
                 <div class="product-item-card" id="item-1">
                     <span class="item-count-label">상품 1</span>
-                    </div>
+                    <div style="padding-top: 10px; color: #64748b; font-size: 14px;">상품 정보를 입력해주세요.</div>
+                </div>
             </div>
-            <button type="button" class="btn-add-product" onclick="addProduct()">➕ 다른 상품 추가하기</button>
-            <button type="submit" class="btn-submit" style="width: 100%; padding: 18px; background: var(--main-deep-blue); color: #fff; border: none; border-radius: 10px; font-size: 17px; font-weight: 800; cursor: pointer; margin-top: 30px;">총 <span id="item-total">1</span>건 신청하기</button>
+
+            <button type="button" class="btn-add-product" onclick="addProduct()">
+                <span style="font-size: 18px; margin-right: 8px;">+</span> 다른 상품 추가하기
+            </button>
+
+            <button type="submit" style="width: 100%; padding: 20px; background: var(--main-deep-blue); color: #fff; border: none; border-radius: 15px; font-size: 18px; font-weight: 800; cursor: pointer; margin-top: 30px; box-shadow: 0 10px 20px rgba(10,31,77,0.2);">
+                총 <span id="item-total">1</span>건 신청하기
+            </button>
         </section>
     </div>
 </main>
 
+<div class="modal-overlay" id="calcModal">
+    <div style="background: #fff; width: 95%; max-width: 950px; height: 80vh; border-radius: 25px; position: relative; overflow: hidden;">
+        <span style="position:absolute; right:20px; top:15px; font-size:30px; cursor:pointer; z-index: 9999; color:#333;" onclick="closeCalc()">&times;</span>
+        <iframe src="final_no.html" style="width:100%; height:100%; border:none;"></iframe>
+    </div>
+</div>
+
 <div id="footer-load"></div>
 
 <script>
-    // 공통 컴포넌트 로드 및 메뉴 강조 스크립트
-    async function loadConfig() {
-        const headerRes = await fetch('header.html');
-        document.getElementById('header-load').innerHTML = await headerRes.text();
+    async function initLayout() {
+        try {
+            const [hRes, fRes] = await Promise.all([ fetch('header.html'), fetch('footer.html') ]);
+            document.getElementById('header-load').innerHTML = await hRes.text();
+            document.getElementById('footer-load').innerHTML = await fRes.text();
 
-        const footerRes = await fetch('footer.html');
-        document.getElementById('footer-load').innerHTML = await footerRes.text();
-
-        // 현재 페이지 메뉴 강조 (Active)
-        const filename = window.location.pathname.split("/").pop() || 'index.html';
-        const menuId = 'menu-' + filename.replace('.html', '');
-        const activeMenu = document.getElementById(menuId);
-        if(activeMenu) activeMenu.classList.add('active');
+            // 현재 페이지 활성화 (offer.html)
+            const activeMenu = document.getElementById('menu-offer');
+            if(activeMenu) activeMenu.parentElement.classList.add('active');
+        } catch (e) { console.error(e); } finally { document.body.style.visibility = 'visible'; }
     }
+    initLayout();
 
-    loadConfig();
-
-    // 구매대행 신청 페이지 전용 동적 폼 스크립트
+    // 상품 추가 기능
     let itemCount = 1;
     function addProduct() {
         itemCount++;
@@ -104,14 +139,17 @@
         newItem.id = 'item-' + itemCount;
         newItem.innerHTML = `
             <span class="item-count-label">상품 ${itemCount}</span>
-            <button type="button" class="btn-remove-item" onclick="removeItem(${itemCount})" style="position: absolute; right: 15px; top: 15px; cursor: pointer;">삭제</button>
-            `;
+            <button type="button" onclick="removeItem(${itemCount})" style="position: absolute; right: 20px; top: 20px; color: #ef4444; font-size: 12px; font-weight: bold; border: 1px solid #fee2e2; padding: 4px 10px; border-radius: 6px; background: #fff1f2;">삭제</button>
+            <div style="padding-top: 10px; color: #64748b; font-size: 14px;">새로운 상품 정보를 입력해주세요.</div>
+        `;
         list.appendChild(newItem);
         updateTotal();
     }
     function removeItem(id) { document.getElementById('item-' + id).remove(); updateTotal(); }
     function updateTotal() { document.getElementById('item-total').innerText = document.querySelectorAll('.product-item-card').length; }
+    
+    function openCalc(){ document.getElementById('calcModal').style.display = 'flex'; }
+    function closeCalc(){ document.getElementById('calcModal').style.display = 'none'; }
 </script>
-
 </body>
 </html>
